@@ -1,0 +1,68 @@
+# ---------------------------------------------------------------
+# Site backups — NEVER commit. The .wpress archive is ~1 GB, which
+# exceeds GitHub's 100 MB per-file hard limit. Kept locally only.
+# ---------------------------------------------------------------
+*.wpress
+*.wpress.*
+_backup-extracted/
+
+# ---------------------------------------------------------------
+# Database dumps — contain wp_users (emails + password hashes) and
+# wp_options (API keys, tokens, licence keys). Never commit these,
+# and especially not to a public repository.
+# ---------------------------------------------------------------
+*.sql
+*.sql.gz
+database.sql
+
+# ---------------------------------------------------------------
+# Secrets & site-local config
+# ---------------------------------------------------------------
+wp-config.php
+wp-config-local.php
+# All-in-One WP Migration archive metadata — leaks the hosting absolute
+# path, the hosting account name and an encrypted signature blob.
+wp-content/package.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+auth.json
+
+# ---------------------------------------------------------------
+# Media library — regenerated/synced separately, not source code
+# ---------------------------------------------------------------
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/litespeed/
+wp-content/backups-dup-lite/
+wp-content/ai1wm-backups/
+
+# ---------------------------------------------------------------
+# Security / plugin runtime state
+# ---------------------------------------------------------------
+wp-content/wflogs/
+wp-content/debug.log
+error_log
+*.log
+
+# ---------------------------------------------------------------
+# Build & tooling
+# ---------------------------------------------------------------
+node_modules/
+vendor/
+.sass-cache/
+*.map
+
+# ---------------------------------------------------------------
+# OS / editor cruft
+# ---------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.swp
