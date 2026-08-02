@@ -52,9 +52,10 @@ error_log
 # Build & tooling
 # ---------------------------------------------------------------
 node_modules/
-vendor/
+# Only a project-root Composer vendor dir. Plugin-level vendor/ folders are
+# shipped plugin code and must stay tracked, or deployed plugins break.
+/vendor/
 .sass-cache/
-*.map
 
 # ---------------------------------------------------------------
 # OS / editor cruft

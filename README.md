@@ -24,9 +24,20 @@ wp-content/
     astra/            stock Astra theme
     hello-elementor/  stock Hello Elementor theme (active)
     thetintteam/      Astra child theme (currently an empty stub)
+  plugins/            all 14 site plugins (see below)
   mu-plugins/         host-injected must-use plugins
   fonts/
 ```
+
+### Plugins tracked
+
+`contact-form-7`, `date-time-picker-for-contact-form-7`, `deployer-for-git`,
+`elementor`, `elementskit-lite`, `file-manager-advanced`, `fileorganizer`,
+`litespeed-cache`, `qi-addons-for-elementor`, `royal-elementor-addons`,
+`template-kit-import`, `wp-file-manager`.
+
+All are third-party code installable from wordpress.org. They are tracked so
+this repository is a complete, deployable `wp-content` tree.
 
 ## What is deliberately NOT in this repository
 
