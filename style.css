@@ -1,8 +1,8 @@
-﻿/**
- * Theme Name:   Friends Mobile HÃ¼rth
+/**
+ * Theme Name:   Friends Mobile Hürth
  * Theme URI:    https://github.com/hasangeeky-hue/Hurth-web
  * Description:  Standalone bilingual (DE/EN) theme for Friends Mobile,
- *               Luxemburger StraÃŸe 96, HÃ¼rth. Phone sales, repair and
+ *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
  * Version:      3.1.0
@@ -13,12 +13,12 @@
  */
 
 /* ==========================================================================
-   0. Fonts â€” self-hosted
+   0. Fonts — self-hosted
    Served from this theme, never from Google's servers. A German court has
    held that loading Google Fonts remotely transmits visitor IP addresses
    without consent and is unlawful, so these must stay local.
-   Both files are variable (100â€“900) latin subsets verified to contain
-   Ã¤ Ã¶ Ã¼ ÃŸ Ã„ Ã– Ãœ.
+   Both files are variable (100–900) latin subsets verified to contain
+   ä ö ü ß Ä Ö Ü.
    ========================================================================== */
 
 @font-face {
@@ -115,7 +115,7 @@ body {
 	overflow-x: hidden;
 }
 
-/* German compounds (Displayreparatur, DatenÃ¼bertragung) must break cleanly. */
+/* German compounds (Displayreparatur, Datenübertragung) must break cleanly. */
 [lang="de"] p, [lang="de"] li, [lang="de"] h1,
 [lang="de"] h2, [lang="de"] h3, [lang="de"] h4 {
 	hyphens: auto;
@@ -291,7 +291,7 @@ p:last-child { margin-bottom: 0; }
 .btn:active { transform: translateY(0); }
 
 /* Amber is reserved for the single primary action in a viewport
-   (Von Restorff isolation). Ink text only â€” white fails contrast. */
+   (Von Restorff isolation). Ink text only — white fails contrast. */
 .btn--accent { background: var(--c-accent); color: var(--c-ink); }
 .btn--accent:hover { background: var(--c-accent-dark); color: var(--c-ink); }
 
@@ -339,7 +339,7 @@ p:last-child { margin-bottom: 0; }
 }
 
 /* ==========================================================================
-   6. 3D tilt â€” interactive product/service imagery
+   6. 3D tilt — interactive product/service imagery
    Driven by --rx/--ry set in JS. Degrades to a flat card without JS.
    ========================================================================== */
 
@@ -374,7 +374,7 @@ p:last-child { margin-bottom: 0; }
 .tilt__lift { transform: translateZ(38px); }
 
 @media (hover: none) {
-	/* Touch has no hover â€” never hide anything behind it. */
+	/* Touch has no hover — never hide anything behind it. */
 	.tilt__inner { transform: none !important; }
 	.tilt__glare { display: none; }
 }
@@ -438,7 +438,7 @@ p:last-child { margin-bottom: 0; }
 .trustbar__item span { font-size: var(--step--1); color: var(--c-muted); }
 
 /* ==========================================================================
-   9. Page content â€” styles the existing imported HTML
+   9. Page content — styles the existing imported HTML
    ========================================================================== */
 
 .page-hero {
