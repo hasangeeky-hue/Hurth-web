@@ -1033,9 +1033,32 @@ add_action( 'after_switch_theme', 'hurth_purge_caches' );
  * secret has to be stored or shared in the repository.
  */
 function hurth_purge_key() {
+	/*
+	 * Reuse the Deployer for Git API secret when it is available. Whoever can
+	 * trigger a deploy can already replace the theme, so granting the same
+	 * holder a cache purge adds no privilege — and it means the purge can be
+	 * driven from wherever deploys are driven from.
+	 */
+	if ( class_exists( '\DeployerForGit\Helper' )
+		&& method_exists( '\DeployerForGit\Helper', 'get_api_secret' ) ) {
+		$secret = \DeployerForGit\Helper::get_api_secret();
+
+		if ( ! empty( $secret ) ) {
+			return (string) $secret;
+		}
+	}
+
 	return substr( hash_hmac( 'sha256', 'hurth-purge', wp_salt( 'auth' ) ), 0, 24 );
 }
 
+/**
+ * Purge on demand.
+ *
+ * The automatic version-change purge is not sufficient on its own: a cached
+ * page is served without ever executing PHP, so nothing in the theme can run
+ * to invalidate it. This gives an explicit, uncached entry point that always
+ * executes and always emits the purge header.
+ */
 function hurth_manual_purge() {
 	if ( ! isset( $_GET['hurth_purge'] ) ) {
 		return;
@@ -1048,6 +1071,14 @@ function hurth_manual_purge() {
 	}
 
 	hurth_purge_caches();
+
+	// Also ask LiteSpeed to drop the whole site, by tag and by URL prefix.
+	if ( ! headers_sent() ) {
+		header( 'X-LiteSpeed-Purge: *' );
+		header( 'X-LiteSpeed-Purge: tag=*', false );
+	}
+
+	nocache_headers();
 
 	wp_send_json_success( array(
 		'purged'  => true,
