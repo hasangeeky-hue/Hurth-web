@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Theme Name:   Hurth
  * Theme URI:    https://github.com/hasangeeky-hue/Hurth-web
- * Description:  Standalone custom theme for Friends Mobile, Hürth. No page
+ * Description:  Standalone custom theme for Friends Mobile, HÃ¼rth. No page
  *               builder, no parent theme, no plugin dependencies. Renders the
  *               site's existing page content directly. Deployed from GitHub.
  * Author:       hasangeeky-hue
- * Version:      2.0.2
+ * Version:      2.1.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -217,7 +217,7 @@ p:last-child { margin-bottom: 0; }
 }
 
 /* ==========================================================================
-   7. Content — styles the existing page HTML
+   7. Content â€” styles the existing page HTML
    ========================================================================== */
 
 .content-area { max-width: 74ch; }
@@ -236,7 +236,7 @@ p:last-child { margin-bottom: 0; }
 	background: var(--c-bg-alt); border-radius: 0 var(--radius) var(--radius) 0;
 }
 
-/* Icon lists: the existing markup is <ul><li><svg>…</svg> Label</li></ul> */
+/* Icon lists: the existing markup is <ul><li><svg>â€¦</svg> Label</li></ul> */
 .content-area ul {
 	list-style: none; margin: 1.4rem 0; padding: 0;
 	display: grid; gap: .7rem;

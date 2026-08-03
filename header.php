@@ -27,7 +27,7 @@
 		<?php else : ?>
 			<a class="site-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<?php
-				$hurth_name = get_bloginfo( 'name' );
+				$hurth_name = hurth_info( 'name' );
 				$hurth_bits = explode( ' ', $hurth_name, 2 );
 				echo esc_html( $hurth_bits[0] );
 				if ( ! empty( $hurth_bits[1] ) ) {

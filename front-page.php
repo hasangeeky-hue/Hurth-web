@@ -17,7 +17,7 @@ $hurth_front_id = (int) get_option( 'page_on_front' );
 	<div class="wrap hero__inner">
 		<div>
 			<span class="hero__eyebrow"><?php echo esc_html( hurth_info( 'region' ) ); ?></span>
-			<h1><?php echo esc_html( get_bloginfo( 'name' ) ); ?></h1>
+			<h1><?php echo esc_html( hurth_info( 'name' ) ); ?></h1>
 			<p class="hero__lead">
 				<?php esc_html_e( 'Smartphones, repairs and DHL services in one place.', 'hurth' ); ?>
 			</p>
@@ -73,12 +73,19 @@ if ( have_posts() ) :
 	<?php
 endif;
 
-// Service pages.
-$hurth_pages = get_pages( array(
-	'exclude'     => $hurth_front_id,
-	'sort_column' => 'menu_order,post_title',
-	'number'      => 6,
-) );
+// Service pages, in the order defined by hurth_nav_items() and skipping any
+// page that is effectively empty (the imported "Blog" page has no content).
+$hurth_pages = array();
+
+foreach ( array_keys( hurth_nav_items() ) as $hurth_slug ) {
+	$hurth_page = get_page_by_path( $hurth_slug );
+
+	if ( $hurth_page && 'publish' === $hurth_page->post_status
+		&& (int) $hurth_page->ID !== $hurth_front_id
+		&& hurth_page_has_content( $hurth_page ) ) {
+		$hurth_pages[] = $hurth_page;
+	}
+}
 
 if ( $hurth_pages ) :
 	?>

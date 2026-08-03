@@ -63,21 +63,6 @@ function hurth_assets() {
 add_action( 'wp_enqueue_scripts', 'hurth_assets' );
 
 /**
- * Fallback navigation when no menu has been assigned yet.
- *
- * Lists published pages so the site is never left without navigation.
- */
-function hurth_menu_fallback() {
-	echo '<ul>';
-	wp_list_pages( array(
-		'title_li' => '',
-		'depth'    => 1,
-		'exclude'  => get_option( 'page_on_front' ),
-	) );
-	echo '</ul>';
-}
-
-/**
  * Business details used across the templates.
  *
  * Kept in one place so they are edited once, in git.
@@ -87,6 +72,9 @@ function hurth_menu_fallback() {
  */
 function hurth_info( $key ) {
 	$info = array(
+		// Hard-coded so the brand never depends on the WordPress Site Title
+		// setting — which on a temporary domain is the hosting hostname.
+		'name'    => 'Friends Mobile',
 		'street'  => 'Luxemburger Straße 96',
 		'city'    => '50354 Hürth',
 		'region'  => 'Hürth · Köln',
@@ -95,6 +83,71 @@ function hurth_info( $key ) {
 	);
 
 	return isset( $info[ $key ] ) ? $info[ $key ] : '';
+}
+
+/**
+ * Navigation defined in code, so no WordPress menu needs creating.
+ *
+ * Keys are page slugs; values are the label to display. Slugs that do not
+ * resolve to a published page are skipped silently.
+ *
+ * @return array
+ */
+function hurth_nav_items() {
+	return array(
+		'services'              => __( 'Services', 'hurth' ),
+		'mobile-phone-repair'   => __( 'Repairs', 'hurth' ),
+		'explore-our-products'  => __( 'Products', 'hurth' ),
+		'old-moble-phone-buy-sell' => __( 'Buy & Sell', 'hurth' ),
+		'about'                 => __( 'About', 'hurth' ),
+		'contact'               => __( 'Contact', 'hurth' ),
+	);
+}
+
+/**
+ * Render the code-defined navigation.
+ *
+ * Used as the wp_nav_menu fallback, so an admin-created menu still wins if
+ * one is ever assigned to the primary location.
+ */
+function hurth_menu_fallback() {
+	$current = get_queried_object_id();
+
+	echo '<ul>';
+
+	printf(
+		'<li class="%s"><a href="%s">%s</a></li>',
+		is_front_page() ? 'current-menu-item' : '',
+		esc_url( home_url( '/' ) ),
+		esc_html__( 'Home', 'hurth' )
+	);
+
+	foreach ( hurth_nav_items() as $slug => $label ) {
+		$page = get_page_by_path( $slug );
+
+		if ( ! $page || 'publish' !== $page->post_status ) {
+			continue;
+		}
+
+		printf(
+			'<li class="%s"><a href="%s">%s</a></li>',
+			(int) $current === (int) $page->ID ? 'current-menu-item' : '',
+			esc_url( get_permalink( $page ) ),
+			esc_html( $label )
+		);
+	}
+
+	echo '</ul>';
+}
+
+/**
+ * Whether a page has enough content to be worth linking from the home page.
+ *
+ * @param WP_Post $page Page object.
+ * @return bool
+ */
+function hurth_page_has_content( $page ) {
+	return strlen( trim( wp_strip_all_tags( $page->post_content ) ) ) > 60;
 }
 
 /**
