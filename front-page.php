@@ -46,6 +46,31 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 				<?php
 				if ( $hurth_front_id && has_post_thumbnail( $hurth_front_id ) ) {
 					echo get_the_post_thumbnail( $hurth_front_id, 'large', array( 'class' => 'tilt__lift' ) );
+				} else {
+					/*
+					 * No featured image set, so an authored illustration stands in
+					 * rather than a blank panel. A real photo of the shop should
+					 * replace this — set a featured image on the front page.
+					 */
+					?>
+					<div class="hero__figure tilt__lift">
+						<svg viewBox="0 0 200 150" role="img"
+							aria-label="<?php echo esc_attr( 'de' === hurth_lang() ? 'Smartphone-Reparatur Illustration' : 'Phone repair illustration' ); ?>">
+							<rect x="62" y="16" width="76" height="126" rx="12"
+								fill="#fff" stroke="var(--c-brand)" stroke-width="3"/>
+							<rect x="70" y="28" width="60" height="94" rx="4" fill="var(--c-brand-tint)"/>
+							<circle cx="100" cy="132" r="4" fill="var(--c-brand)" opacity=".45"/>
+							<path d="M78 52l16 22-10 4 14 20" fill="none"
+								stroke="var(--c-accent)" stroke-width="3.4" stroke-linecap="round"/>
+							<path d="M140 96l16 16m0-16l-16 16" stroke="var(--c-trust)"
+								stroke-width="4" stroke-linecap="round"/>
+							<circle cx="46" cy="46" r="13" fill="none"
+								stroke="var(--c-brand)" stroke-width="3.4"/>
+							<path d="M56 56l12 12" stroke="var(--c-brand)"
+								stroke-width="3.4" stroke-linecap="round"/>
+						</svg>
+					</div>
+					<?php
 				}
 				?>
 				<span class="tilt__glare" aria-hidden="true"></span>

@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      4.0.0
+ * Version:      4.1.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -598,6 +598,77 @@ p:last-child { margin-bottom: 0; }
 }
 .form-notice--ok { background: #e8f5f0; border-color: var(--c-trust); color: #0b5b43; }
 .form-notice--bad { background: #fdeceb; border-color: #b0392f; color: #8c2c24; }
+
+/* ==========================================================================
+   9c. Booking — stepped request form
+   ========================================================================== */
+
+.steps {
+	display: flex; flex-wrap: wrap; gap: .4rem 1.6rem;
+	list-style: none; margin: 0 0 1.8rem; padding: 0;
+	font-size: var(--step--1); font-weight: 600; color: var(--c-muted);
+	counter-reset: step;
+}
+.steps li { display: flex; align-items: center; gap: .5rem; }
+.steps li span {
+	display: grid; place-items: center;
+	width: 26px; height: 26px; border-radius: 50%;
+	background: var(--c-line); color: var(--c-muted);
+	font-size: .8rem; font-weight: 700;
+	transition: background-color var(--t-in), color var(--t-in);
+}
+.steps li.is-active { color: var(--c-brand-dark); }
+.steps li.is-active span { background: var(--c-brand); color: #fff; }
+
+.step { border: 0; padding: 0; margin: 0; }
+.step-nav { display: flex; gap: .6rem; margin-bottom: .9rem; }
+.booking__note {
+	margin-top: 1rem; font-size: var(--step--1); color: var(--c-muted);
+}
+
+.booking-done {
+	max-width: 40rem; padding: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
+	background: var(--c-surface); border: 1px solid var(--c-line);
+	border-radius: var(--r-md); text-align: center;
+}
+.booking-done__tick {
+	width: 56px; height: 56px; margin: 0 auto 1rem; display: block;
+	fill: var(--c-trust);
+}
+.booking-done__actions {
+	display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center;
+	margin-top: 1.6rem;
+}
+
+/* ==========================================================================
+   9d. Illustration & decoration
+   Authored SVG rather than stock photography: no licensing exposure, no
+   extra HTTP requests, no layout shift, and it scales cleanly. Real photos
+   of the shop and workbench would still outperform this — see the README.
+   ========================================================================== */
+
+.hero__figure {
+	position: relative;
+	display: grid; place-items: center;
+	aspect-ratio: 4 / 3;
+	border-radius: var(--r-md);
+	background:
+		radial-gradient(60% 60% at 30% 25%, rgba(255, 255, 255, .9), transparent 70%),
+		linear-gradient(150deg, var(--c-brand-tint), #fff 70%);
+	border: 1px solid var(--c-line);
+	overflow: hidden;
+}
+.hero__figure svg { width: 62%; height: auto; }
+
+/* Subtle dotted field behind the illustration */
+.hero__figure::before {
+	content: ""; position: absolute; inset: 0;
+	background-image: radial-gradient(var(--c-line) 1.2px, transparent 1.2px);
+	background-size: 18px 18px; opacity: .55;
+}
+.hero__figure > * { position: relative; }
+
+.card__icon svg { width: 24px; height: 24px; fill: currentColor; }
 
 /* ==========================================================================
    10. CTA band

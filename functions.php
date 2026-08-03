@@ -269,8 +269,9 @@ function hurth_page_map() {
 		),
 		array(
 			'label'    => array( 'de' => 'Ankauf', 'en' => 'Sell Your Phone' ),
-			'de'       => 'old-moble-phone-buy-sell',
+			'de'       => 'handy-ankauf-huerth',
 			'en'       => 'en-sell-your-phone-huerth',
+			'fallback' => 'old-moble-phone-buy-sell',
 			'children' => array(
 				array( 'label' => array( 'de' => 'Defekte Geräte', 'en' => 'Broken Devices' ),
 					'de' => 'defekte-geraete-ankauf-huerth', 'en' => 'en-broken-device-buyback-huerth' ),
@@ -298,17 +299,72 @@ function hurth_page_map() {
 			'fallback' => 'about',
 		),
 		array(
-			'label'    => array( 'de' => 'Häufige Fragen', 'en' => 'FAQ' ),
-			'de'       => 'faq-huerth',
-			'en'       => 'en-faq',
+			'label'    => array( 'de' => 'Ratgeber', 'en' => 'Blog' ),
+			'de'       => 'blog',
+			'en'       => 'blog',
+			'children' => array(
+				array( 'label' => array( 'de' => 'Häufige Fragen', 'en' => 'FAQ' ),
+					'de' => 'faq-huerth', 'en' => 'en-faq' ),
+			),
 		),
 		array(
 			'label'    => array( 'de' => 'Kontakt', 'en' => 'Contact' ),
 			'de'       => 'contact',
 			'en'       => 'contact',
+			'children' => array(
+				array( 'label' => array( 'de' => 'Termin buchen', 'en' => 'Book an appointment' ),
+					'de' => 'book-an-appointment', 'en' => 'book-an-appointment' ),
+			),
 		),
 	);
 }
+
+/**
+ * Legacy pages that now duplicate a better page, and where they should go.
+ *
+ * The imported English originals compete with the newer English pages for
+ * the same terms. Rather than leave two versions ranking against each
+ * other, the older ones redirect permanently to the canonical page.
+ *
+ * @return array old slug => new slug
+ */
+function hurth_legacy_redirects() {
+	return array(
+		'mobile-phone-repair'      => 'en-phone-repair-huerth',
+		'old-moble-phone-buy-sell' => 'en-sell-your-phone-huerth',
+		'about'                    => 'en-about-us',
+		'services'                 => 'en-phone-repair-huerth',
+	);
+}
+
+/**
+ * Send the 301s.
+ *
+ * Only fires once the destination actually exists, so nothing breaks while
+ * the content import is still pending.
+ */
+function hurth_do_legacy_redirects() {
+	if ( is_admin() || ! is_page() ) {
+		return;
+	}
+
+	$slug = get_post_field( 'post_name', get_queried_object_id() );
+	$map  = hurth_legacy_redirects();
+
+	if ( ! isset( $map[ $slug ] ) ) {
+		return;
+	}
+
+	$target = get_page_by_path( $map[ $slug ] );
+
+	if ( ! $target || 'publish' !== $target->post_status ) {
+		return; // Destination not imported yet — leave the old page in place.
+	}
+
+	wp_safe_redirect( get_permalink( $target ), 301 );
+	exit;
+}
+add_action( 'template_redirect', 'hurth_do_legacy_redirects', 1 );
 
 /**
  * Resolve one map entry to a published page in the active language.
@@ -587,6 +643,55 @@ function hurth_assets() {
 			else if (a.href.indexOf('google.com/maps') > -1) { track('route', 'maps'); }
 			else if (a.href.indexOf('mailto:') === 0)    { track('email', a.href.slice(7)); }
 		}, { passive: true });
+
+		document.addEventListener('submit', function (e) {
+			if (e.target.querySelector('[name=\"hurth_contact_submit\"]')) {
+				track('form_submit', e.target.closest('.booking') ? 'booking' : 'contact');
+			}
+		}, { passive: true });
+	})();
+
+	// Booking steps. Progressive enhancement only: without JS every fieldset
+	// stays visible and the form still submits in one POST.
+	(function () {
+		var form = document.querySelector('.booking form');
+		if (!form) return;
+		var steps = form.querySelectorAll('.step');
+		var dots  = document.querySelectorAll('.booking .steps li');
+		var submit = form.querySelector('button[type=submit]');
+		if (steps.length < 2) return;
+
+		var at = 0;
+		var nav = document.createElement('div');
+		nav.className = 'step-nav';
+		var back = document.createElement('button');
+		var next = document.createElement('button');
+		back.type = next.type = 'button';
+		back.className = 'btn btn--ghost';
+		next.className = 'btn';
+		back.textContent = document.documentElement.lang.indexOf('de') === 0 ? 'Zurück' : 'Back';
+		next.textContent = document.documentElement.lang.indexOf('de') === 0 ? 'Weiter' : 'Next';
+		nav.appendChild(back); nav.appendChild(next);
+		submit.parentNode.insertBefore(nav, submit);
+
+		function show() {
+			steps.forEach(function (s, i) { s.hidden = i !== at; });
+			dots.forEach(function (d, i) { d.classList.toggle('is-active', i <= at); });
+			back.hidden = at === 0;
+			next.hidden = at === steps.length - 1;
+			submit.hidden = at !== steps.length - 1;
+		}
+
+		next.addEventListener('click', function () {
+			var bad = Array.prototype.slice.call(steps[at].querySelectorAll('[required]'))
+				.filter(function (f) { return !f.checkValidity(); });
+			if (bad.length) { bad[0].reportValidity(); return; }
+			at = Math.min(at + 1, steps.length - 1); show();
+		});
+		back.addEventListener('click', function () { at = Math.max(at - 1, 0); show(); });
+
+		document.querySelector('.booking .steps').removeAttribute('aria-hidden');
+		show();
 	})();
 	" );
 }
@@ -729,6 +834,58 @@ function hurth_excerpt_more() {
 add_filter( 'excerpt_more', 'hurth_excerpt_more' );
 
 /* -------------------------------------------------------------------------
+ * Cache purging
+ *
+ * LiteSpeed Cache serves pages for minutes after a deploy, so theme changes
+ * stayed invisible to real visitors while cache-busted checks passed. This
+ * purges on the events that actually change output.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Purge every cache we know how to reach.
+ */
+function hurth_purge_caches() {
+	// LiteSpeed Cache (active on this host).
+	do_action( 'litespeed_purge_all' );
+
+	// Common alternatives, harmless if absent.
+	do_action( 'wpfc_clear_all_cache' );
+
+	if ( function_exists( 'rocket_clean_domain' ) ) {
+		rocket_clean_domain();
+	}
+	if ( function_exists( 'w3tc_flush_all' ) ) {
+		w3tc_flush_all();
+	}
+	if ( function_exists( 'wp_cache_clear_cache' ) ) {
+		wp_cache_clear_cache();
+	}
+
+	// WordPress object cache.
+	wp_cache_flush();
+}
+
+/**
+ * Purge automatically when the deployed theme version changes.
+ *
+ * Deployer for Git replaces theme files without touching the database, so
+ * nothing else would invalidate the page cache after a deploy.
+ */
+function hurth_purge_on_version_change() {
+	if ( get_option( 'hurth_deployed_version' ) === HURTH_VERSION ) {
+		return;
+	}
+
+	update_option( 'hurth_deployed_version', HURTH_VERSION, false );
+	hurth_purge_caches();
+}
+add_action( 'init', 'hurth_purge_on_version_change', 1 );
+
+// Deployer for Git fires this after it installs a package.
+add_action( 'dfg_after_package_install', 'hurth_purge_caches', 20 );
+add_action( 'after_switch_theme', 'hurth_purge_caches' );
+
+/* -------------------------------------------------------------------------
  * Contact form — no plugin required
  *
  * Replaces the Contact Form 7 markup carried over in the imported Contact
@@ -759,9 +916,14 @@ function hurth_handle_contact() {
 	$opened  = isset( $_POST['hurth_opened'] ) ? (int) $_POST['hurth_opened'] : 0;
 	$elapsed = time() - $opened;
 
+	/*
+	 * Spam is dropped silently and the visitor is redirected as if nothing
+	 * happened. State travels in the URL rather than a transient: transients
+	 * were keyed on get_current_user_id(), which is 0 for every logged-out
+	 * visitor, so one person's error could surface to another.
+	 */
 	if ( ! wp_verify_nonce( $nonce, 'hurth_contact' ) || '' !== $trap || $elapsed < 3 ) {
-		set_transient( 'hurth_contact_state_' . get_current_user_id(), 'spam', 60 );
-		return;
+		hurth_contact_redirect( 'spam' );
 	}
 
 	$name    = sanitize_text_field( wp_unslash( $_POST['hurth_name'] ?? '' ) );
@@ -772,16 +934,21 @@ function hurth_handle_contact() {
 	$consent = isset( $_POST['hurth_consent'] );
 
 	if ( '' === $name || ! is_email( $email ) || '' === $message || ! $consent ) {
-		set_transient( 'hurth_contact_state_' . get_current_user_id(), 'invalid', 60 );
-		return;
+		hurth_contact_redirect( 'invalid' );
 	}
 
+	// Extra fields the booking page adds; absent on the plain contact form.
+	$device = sanitize_text_field( wp_unslash( $_POST['hurth_device'] ?? '' ) );
+	$when   = sanitize_text_field( wp_unslash( $_POST['hurth_when'] ?? '' ) );
+
 	$body = sprintf(
-		"Name: %s\nE-Mail: %s\nTelefon: %s\nAnliegen: %s\n\n%s\n\n---\nGesendet über %s",
+		"Name: %s\nE-Mail: %s\nTelefon: %s\nAnliegen: %s\nGerät: %s\nWunschzeit: %s\n\n%s\n\n---\nGesendet über %s",
 		$name,
 		$email,
 		$phone ? $phone : '-',
 		$service ? $service : '-',
+		$device ? $device : '-',
+		$when ? $when : '-',
 		$message,
 		home_url( '/' )
 	);
@@ -796,14 +963,23 @@ function hurth_handle_contact() {
 		)
 	);
 
-	$state = $sent ? 'sent' : 'failed';
-	set_transient( 'hurth_contact_state_' . get_current_user_id(), $state, 60 );
-
-	// Redirect after POST so a refresh cannot resend.
-	wp_safe_redirect( add_query_arg( 'sent', $sent ? '1' : '0', wp_get_referer() ? wp_get_referer() : home_url( '/' ) ) );
-	exit;
+	hurth_contact_redirect( $sent ? 'sent' : 'failed' );
 }
 add_action( 'template_redirect', 'hurth_handle_contact', 5 );
+
+/**
+ * Redirect after POST so a refresh cannot resend, carrying state in the URL.
+ *
+ * @param string $state sent|failed|invalid|spam.
+ */
+function hurth_contact_redirect( $state ) {
+	$back = wp_get_referer() ? wp_get_referer() : home_url( '/' );
+	$back = remove_query_arg( array( 'hcf' ), $back );
+
+	// Spam is redirected as a success so bots learn nothing from the response.
+	wp_safe_redirect( add_query_arg( 'hcf', 'spam' === $state ? 'sent' : $state, $back ) . '#kontakt' );
+	exit;
+}
 
 /**
  * Render the contact form.
@@ -835,23 +1011,20 @@ function hurth_contact_form() {
 		? array( 'Reparatur', 'Handy verkaufen', 'Neues Handy', 'Tarifberatung', 'Sonstiges' )
 		: array( 'Repair', 'Sell a device', 'New phone', 'Tariff advice', 'Other' );
 
-	$state  = get_transient( 'hurth_contact_state_' . get_current_user_id() );
+	$state  = isset( $_GET['hcf'] ) ? sanitize_key( wp_unslash( $_GET['hcf'] ) ) : '';
 	$notice = '';
 
-	if ( isset( $_GET['sent'] ) ) {
-		$ok     = ( '1' === $_GET['sent'] );
-		$notice = sprintf(
-			'<p class="form-notice form-notice--%s" role="status">%s</p>',
-			$ok ? 'ok' : 'bad',
-			esc_html( $ok ? $labels['sent'] : $labels['failed'] )
-		);
+	if ( 'sent' === $state ) {
+		$notice = '<p class="form-notice form-notice--ok" role="status">' . esc_html( $labels['sent'] ) . '</p>';
+	} elseif ( 'failed' === $state ) {
+		$notice = '<p class="form-notice form-notice--bad" role="alert">' . esc_html( $labels['failed'] ) . '</p>';
 	} elseif ( 'invalid' === $state ) {
 		$notice = '<p class="form-notice form-notice--bad" role="alert">' . esc_html( $labels['invalid'] ) . '</p>';
 	}
 
 	ob_start();
 	?>
-	<div class="contact-form">
+	<div class="contact-form" id="kontakt">
 		<h2><?php echo esc_html( $labels['title'] ); ?></h2>
 		<?php echo $notice; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
