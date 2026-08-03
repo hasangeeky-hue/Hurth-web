@@ -101,19 +101,22 @@ and the team will outperform any stock image for a local trust business.
 Replace the files in images/ keeping the same names, or set a featured image
 on the front page — that takes precedence over the hero photo automatically.
 
-## 360 degree product viewer
+## 360° product viewer
 
-hurth_spin( \, \ ) renders a drag-to-rotate viewer. It activates only
+`hurth_spin( $set, $alt )` renders a drag-to-rotate viewer. It activates only
 when a frame sequence exists:
 
-`
+```
 images/spin/<set>/frame-01.jpg
 images/spin/<set>/frame-02.jpg
 ...
-`
+```
 
-At least 8 frames are required; 24-36 gives smooth rotation. With fewer, it
-falls back to a single still so nothing breaks. Shoot on a turntable with
-fixed lighting and a constant camera position.
+At least 8 frames are required; 24–36 gives smooth rotation. With fewer, it
+falls back to a single still so nothing breaks.
+
+**Shooting the frames:** put the device on a turntable, keep the camera and
+lighting fixed, and take one photo every 10–15° of rotation. A half-day covers
+your top handsets and the assets last years.
 
 Supports pointer drag, touch swipe and left/right arrow keys.
