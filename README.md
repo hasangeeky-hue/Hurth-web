@@ -77,3 +77,43 @@ no active theme and no active plugins, which renders a completely blank front
 end while `wp-login.php` still works.
 
 The earlier `wp-content` archive of this repo remains in history at `b8f613f`.
+
+
+## Photography
+
+Placeholder photos are from [Pexels](https://www.pexels.com/license/) under the
+Pexels licence: free for commercial use, no attribution required, no permission
+needed. Sourced from the phone-repair collection and verified individually
+before use.
+
+| File | Used for |
+|---|---|
+| images/hero-repair.* | Front page hero |
+| images/service-hands.* | Photo band — Repair |
+| images/workbench.* | Photo band — Honest diagnosis |
+| images/detail-board.* | Photo band — Precision |
+
+Each ships as WebP with a JPEG fallback via hurth_picture(), with explicit
+width and height so nothing shifts while loading. Total payload 375 KB.
+
+**These are placeholders.** Real photographs of the Hürth shop, the workbench
+and the team will outperform any stock image for a local trust business.
+Replace the files in images/ keeping the same names, or set a featured image
+on the front page — that takes precedence over the hero photo automatically.
+
+## 360 degree product viewer
+
+hurth_spin( \, \ ) renders a drag-to-rotate viewer. It activates only
+when a frame sequence exists:
+
+`
+images/spin/<set>/frame-01.jpg
+images/spin/<set>/frame-02.jpg
+...
+`
+
+At least 8 frames are required; 24-36 gives smooth rotation. With fewer, it
+falls back to a single still so nothing breaks. Shoot on a turntable with
+fixed lighting and a constant camera position.
+
+Supports pointer drag, touch swipe and left/right arrow keys.

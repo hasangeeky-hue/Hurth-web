@@ -554,6 +554,91 @@ function hurth_page_has_content( $page ) {
  * ---------------------------------------------------------------------- */
 
 /**
+ * Responsive picture element for a theme image.
+ *
+ * Serves WebP with a JPEG fallback. Photos are licensed under the Pexels
+ * licence (free for commercial use, no attribution required) — see the
+ * credits in README.md. They are placeholders: real photographs of the
+ * Hürth shop, the workbench and the team will outperform any stock image
+ * for a local trust business.
+ *
+ * @param string $name  File stem inside images/.
+ * @param string $alt   Alternative text.
+ * @param array  $args  class, width, height, loading, fetchpriority, sizes.
+ * @return string
+ */
+function hurth_picture( $name, $alt, $args = array() ) {
+	$a = wp_parse_args( $args, array(
+		'class'         => '',
+		'width'         => 1200,
+		'height'        => 800,
+		'loading'       => 'lazy',
+		'fetchpriority' => '',
+		'sizes'         => '(max-width: 860px) 100vw, 50vw',
+	) );
+
+	$webp = get_theme_file_uri( 'images/' . $name . '.webp' );
+	$jpg  = get_theme_file_uri( 'images/' . $name . '.jpg' );
+
+	if ( ! file_exists( get_theme_file_path( 'images/' . $name . '.jpg' ) ) ) {
+		return '';
+	}
+
+	return sprintf(
+		'<picture><source type="image/webp" srcset="%s"><img src="%s" alt="%s" width="%d" height="%d" loading="%s"%s decoding="async" sizes="%s"%s></picture>',
+		esc_url( $webp ),
+		esc_url( $jpg ),
+		esc_attr( $alt ),
+		(int) $a['width'],
+		(int) $a['height'],
+		esc_attr( $a['loading'] ),
+		$a['fetchpriority'] ? ' fetchpriority="' . esc_attr( $a['fetchpriority'] ) . '"' : '',
+		esc_attr( $a['sizes'] ),
+		$a['class'] ? ' class="' . esc_attr( $a['class'] ) . '"' : ''
+	);
+}
+
+/**
+ * 360° product viewer.
+ *
+ * Renders a drag-to-rotate viewer when a numbered frame sequence exists at
+ * images/spin/<set>/frame-01.jpg … frame-NN.jpg. With no frames present it
+ * falls back to a single still, so the page is never broken by missing
+ * assets — the frames require a turntable shoot of the actual devices.
+ *
+ * @param string $set   Folder name under images/spin/.
+ * @param string $alt   Alternative text.
+ * @param string $still Fallback image stem in images/.
+ * @return string
+ */
+function hurth_spin( $set, $alt, $still = 'hero-repair' ) {
+	$dir    = get_theme_file_path( 'images/spin/' . $set );
+	$frames = is_dir( $dir ) ? glob( $dir . '/frame-*.jpg' ) : array();
+
+	if ( count( $frames ) < 8 ) {
+		return hurth_picture( $still, $alt, array( 'class' => 'spin__still' ) );
+	}
+
+	sort( $frames );
+	$urls = array_map(
+		function ( $f ) use ( $set ) {
+			return get_theme_file_uri( 'images/spin/' . $set . '/' . basename( $f ) );
+		},
+		$frames
+	);
+
+	return sprintf(
+		'<div class="spin" data-spin="%s" role="img" aria-label="%s" tabindex="0">
+			<img class="spin__frame" src="%s" alt="" width="900" height="900" decoding="async">
+			<span class="spin__hint" aria-hidden="true">360°</span>
+		</div>',
+		esc_attr( wp_json_encode( $urls ) ),
+		esc_attr( $alt ),
+		esc_url( $urls[0] )
+	);
+}
+
+/**
  * Preload the two self-hosted variable fonts.
  *
  * They are referenced from inside style.css, so the browser only discovers
@@ -692,6 +777,47 @@ function hurth_assets() {
 
 		document.querySelector('.booking .steps').removeAttribute('aria-hidden');
 		show();
+	})();
+
+	// 360 degree viewer. Drag, swipe or arrow-key through the frame sequence.
+	(function () {
+		document.querySelectorAll('.spin[data-spin]').forEach(function (el) {
+			var urls;
+			try { urls = JSON.parse(el.dataset.spin); } catch (e) { return; }
+			if (!urls || urls.length < 8) return;
+
+			var img = el.querySelector('.spin__frame');
+			var i = 0, dragging = false, lastX = 0, acc = 0;
+			var STEP = 6; // pixels of travel per frame
+
+			urls.forEach(function (u) { var p = new Image(); p.src = u; });
+
+			function draw(n) {
+				i = ((n % urls.length) + urls.length) % urls.length;
+				img.src = urls[i];
+			}
+
+			function start(x) { dragging = true; lastX = x; el.classList.add('is-dragging'); }
+			function move(x) {
+				if (!dragging) return;
+				acc += x - lastX; lastX = x;
+				while (Math.abs(acc) >= STEP) {
+					draw(i + (acc > 0 ? 1 : -1));
+					acc += acc > 0 ? -STEP : STEP;
+				}
+			}
+			function end() { dragging = false; acc = 0; el.classList.remove('is-dragging'); }
+
+			el.addEventListener('pointerdown', function (e) { start(e.clientX); el.setPointerCapture(e.pointerId); });
+			el.addEventListener('pointermove', function (e) { move(e.clientX); });
+			el.addEventListener('pointerup', end);
+			el.addEventListener('pointercancel', end);
+
+			el.addEventListener('keydown', function (e) {
+				if (e.key === 'ArrowRight') { draw(i + 1); e.preventDefault(); }
+				if (e.key === 'ArrowLeft')  { draw(i - 1); e.preventDefault(); }
+			});
+		});
 	})();
 	" );
 }

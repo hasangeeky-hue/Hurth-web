@@ -44,8 +44,18 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 		<div class="hero__media tilt">
 			<div class="tilt__inner">
 				<?php
+				$hurth_hero_alt = ( 'de' === hurth_lang() )
+					? 'Zerlegtes Smartphone mit Werkzeug auf der Reparatur-Arbeitsmatte'
+					: 'Disassembled smartphone with tools on a repair mat';
+
 				if ( $hurth_front_id && has_post_thumbnail( $hurth_front_id ) ) {
 					echo get_the_post_thumbnail( $hurth_front_id, 'large', array( 'class' => 'tilt__lift' ) );
+				} elseif ( $hurth_photo = hurth_picture(
+					'hero-repair',
+					$hurth_hero_alt,
+					array( 'class' => 'tilt__lift', 'loading' => 'eager', 'fetchpriority' => 'high' )
+				) ) {
+					echo $hurth_photo; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				} else {
 					/*
 					 * No featured image set, so an authored illustration stands in
@@ -151,6 +161,60 @@ if ( $hurth_cards ) :
 	<?php
 endif;
 
+// Photo band — repair, buy-back and craftsmanship, each linking onward.
+$hurth_de    = ( 'de' === hurth_lang() );
+$hurth_bands = array(
+	array( 'service-hands', $hurth_de ? 'Reparatur' : 'Repair',
+		$hurth_de ? 'Techniker öffnet ein Smartphone mit einem Präzisionsschraubendreher' : 'Technician opening a smartphone with a precision screwdriver',
+		'handy-reparatur-huerth', 'en-phone-repair-huerth' ),
+	array( 'workbench', $hurth_de ? 'Ehrliche Diagnose' : 'Honest diagnosis',
+		$hurth_de ? 'Zerlegtes Smartphone mit Akku und Platine auf der Arbeitsmatte' : 'Disassembled smartphone with battery and logic board on a work mat',
+		'handy-ankauf-huerth', 'en-sell-your-phone-huerth' ),
+	array( 'detail-board', $hurth_de ? 'Präzision' : 'Precision',
+		$hurth_de ? 'Nahaufnahme einer Smartphone-Platine mit Pinzette' : 'Close-up of a smartphone logic board with tweezers',
+		'displaytausch-huerth', 'en-screen-replacement-huerth' ),
+);
+?>
+
+<section class="section photo-band">
+	<div class="wrap">
+		<div class="photo-band__grid">
+			<?php
+			foreach ( $hurth_bands as $b ) {
+				$page = get_page_by_path( $hurth_de ? $b[3] : $b[4] );
+				$img  = hurth_picture( $b[0], $b[2], array(
+					'width'  => 900,
+					'height' => 600,
+					'sizes'  => '(max-width: 780px) 100vw, 33vw',
+				) );
+
+				if ( ! $img ) {
+					continue;
+				}
+
+				echo '<figure class="photo-band__item tilt"><div class="tilt__inner">';
+				echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<span class="tilt__glare" aria-hidden="true"></span></div>';
+				echo '<figcaption>';
+
+				if ( $page && 'publish' === $page->post_status ) {
+					printf(
+						'<a href="%s">%s</a>',
+						esc_url( get_permalink( $page ) . $hurth_q ),
+						esc_html( $b[1] )
+					);
+				} else {
+					echo esc_html( $b[1] );
+				}
+
+				echo '</figcaption></figure>';
+			}
+			?>
+		</div>
+	</div>
+</section>
+
+<?php
 $hurth_posts = get_posts( array( 'numberposts' => 3 ) );
 
 if ( $hurth_posts ) :

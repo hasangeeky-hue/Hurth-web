@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      4.2.1
+ * Version:      4.3.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -668,7 +668,52 @@ p:last-child { margin-bottom: 0; }
 }
 .hero__figure > * { position: relative; }
 
-.card__icon svg { width: 24px; height: 24px; fill: currentColor; }
+/* Photos — width/height are always set in markup so nothing shifts on load. */
+.hero__media picture, .photo-band picture { display: block; }
+.hero__media img {
+	width: 100%; height: auto;
+	border-radius: var(--r-md); box-shadow: var(--sh-rest);
+}
+
+.photo-band__grid {
+	display: grid; gap: var(--gap);
+	grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+}
+.photo-band__item { margin: 0; }
+.photo-band__item img {
+	width: 100%; height: auto; aspect-ratio: 3 / 2;
+	object-fit: cover; border-radius: var(--r-md);
+	box-shadow: var(--sh-rest);
+}
+.photo-band__item figcaption {
+	margin-top: .7rem;
+	font-family: var(--font-head); font-weight: 600;
+	font-size: var(--step-0);
+}
+.photo-band__item figcaption a { text-decoration: none; }
+.photo-band__item figcaption a:hover { text-decoration: underline; }
+
+/* --- 360° viewer ------------------------------------------------------- */
+
+.spin {
+	position: relative; display: block;
+	border-radius: var(--r-md); overflow: hidden;
+	cursor: grab; touch-action: pan-y;
+	background: var(--c-surface);
+}
+.spin.is-dragging { cursor: grabbing; }
+.spin img {
+	width: 100%; height: auto; display: block;
+	user-select: none; -webkit-user-drag: none;
+}
+.spin__hint {
+	position: absolute; right: .8rem; bottom: .8rem;
+	padding: .3rem .7rem; border-radius: var(--r-pill);
+	background: rgba(10, 27, 42, .82); color: #fff;
+	font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+	pointer-events: none;
+}
+.spin:focus-visible { outline: 3px solid var(--c-accent); outline-offset: 2px; }
 
 /* ==========================================================================
    10. CTA band
