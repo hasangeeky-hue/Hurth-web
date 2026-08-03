@@ -12,7 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HURTH_VERSION', '3.0.0' );
+/*
+ * Read the version from style.css rather than hardcoding it. A literal here
+ * silently went stale: deploys bumped the stylesheet header while this stayed
+ * at 3.0.0, so the version-change cache purge compared equal every time and
+ * never fired. Deriving it means the two can no longer disagree.
+ */
+define( 'HURTH_VERSION', wp_get_theme( get_template() )->get( 'Version' ) ?: '0' );
 
 /* -------------------------------------------------------------------------
  * Verified business data
