@@ -110,7 +110,35 @@ $hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 				<?php echo esc_html( hurth_info( 'name' ) . ' ' . hurth_info( 'city_tag' ) ); ?>.
 				<?php echo esc_html( hurth_t( 'rights' ) ); ?>
 			</span>
-			<span><?php echo esc_html( hurth_info( 'town' ) . ' · Köln' ); ?></span>
+
+			<span>
+				<?php
+				/*
+				 * Impressum and Datenschutzerklärung must be reachable from every
+				 * page of a German commercial site. The German pages are the legally
+				 * binding versions; the English ones are convenience translations.
+				 */
+				$hurth_legal = ( 'en' === hurth_lang() )
+					? array( 'en-imprint' => 'Imprint', 'en-privacy-policy' => 'Privacy Policy' )
+					: array( 'impressum' => 'Impressum', 'datenschutz' => 'Datenschutz' );
+
+				$hurth_links = array();
+
+				foreach ( $hurth_legal as $hurth_slug => $hurth_label ) {
+					$hurth_page = get_page_by_path( $hurth_slug );
+
+					if ( $hurth_page && 'publish' === $hurth_page->post_status ) {
+						$hurth_links[] = sprintf(
+							'<a href="%s">%s</a>',
+							esc_url( get_permalink( $hurth_page ) . $hurth_q ),
+							esc_html( $hurth_label )
+						);
+					}
+				}
+
+				echo wp_kses_post( implode( ' · ', $hurth_links ) );
+				?>
+			</span>
 		</div>
 
 	</div>
