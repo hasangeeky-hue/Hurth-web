@@ -1,72 +1,66 @@
-# Hurth-web
+# Hurth
 
-Working repository for **dev.aurenastarseed.com** (WordPress development site).
+Child theme of **Hello Elementor** for [dev.aurenastarseed.com](https://dev.aurenastarseed.com),
+deployed from this repository by the **Deployer for Git** WordPress plugin.
 
-## Site facts
+The repository root *is* the theme root — `style.css` sits at the top level.
+Deployer for Git requires this: it unpacks the branch zip into
+`wp-content/themes/<repo-name>/`, so this repo lands at
+`wp-content/themes/Hurth-web/`.
 
-| | |
+## Connecting this repo to the site
+
+**WP Admin → Deployer for Git → Install Theme**
+
+| Field | Value |
 |---|---|
-| Site URL | `https://dev.aurenastarseed.com` |
-| WordPress | 6.8.6 |
-| PHP | 8.3.30 |
-| Database | MariaDB 11.8.8 (prefix `wp_`) |
-| Active theme | `hello-elementor` |
-| Page builder | Elementor |
-| Host | Hostinger (LiteSpeed) |
+| Provider | GitHub |
+| Repository URL | `https://github.com/hasangeeky-hue/Hurth-web` |
+| Branch | `main` |
+| Private repository | unchecked |
 
-## What is in this repository
+Two things the plugin is strict about:
 
-Only version-controllable site code lives here:
+- The URL must have **no `.git` suffix** — the validator regex rejects the dot.
+- The branch field **defaults to `master`**. This repo uses `main`, so type it.
 
-```
-wp-content/
-  themes/
-    astra/            stock Astra theme
-    hello-elementor/  stock Hello Elementor theme (active)
-    thetintteam/      Astra child theme (currently an empty stub)
-  plugins/            all 14 site plugins (see below)
-  mu-plugins/         host-injected must-use plugins
-  fonts/
-```
+Then activate **Hurth** under Appearance → Themes.
 
-### Plugins tracked
+## Workflow after setup
 
-`contact-form-7`, `date-time-picker-for-contact-form-7`, `deployer-for-git`,
-`elementor`, `elementskit-lite`, `file-manager-advanced`, `fileorganizer`,
-`litespeed-cache`, `qi-addons-for-elementor`, `royal-elementor-addons`,
-`template-kit-import`, `wp-file-manager`.
+1. Changes are committed and pushed to `main` here.
+2. In WP Admin → Deployer for Git, click update on the package
+   (or let it auto-update on commit).
+3. The site pulls the new zip and replaces `wp-content/themes/Hurth-web/`.
 
-All are third-party code installable from wordpress.org. They are tracked so
-this repository is a complete, deployable `wp-content` tree.
+The installer runs with `clear_destination => true`, so that folder is wiped
+and replaced on every deploy. Never edit theme files directly on the server —
+those edits are destroyed by the next deploy. Edit here, push, deploy.
 
-## What is deliberately NOT in this repository
+## What deploys from here
 
-These are excluded by [`.gitignore`](.gitignore) and must stay out:
+- `style.css` — all custom CSS
+- `functions.php` — hooks, filters, custom PHP
+- Template overrides copied from `hello-elementor` and edited
+- Custom assets (JS, images, fonts) added to this folder
 
-| Excluded | Why |
-|---|---|
-| `*.wpress` | The 1.02 GB site backup. Exceeds GitHub's 100 MB per-file hard limit. |
-| `database.sql` | Contains `wp_users` (emails + password hashes) and `wp_options` (API keys, licence keys). |
-| `wp-content/uploads/` | 686 MB media library — synced separately, not source. |
-| `wp-content/package.json` | Migration metadata leaking the hosting absolute path and account name. |
-| `wp-content/wflogs/` | Wordfence runtime state. |
-| `wp-config.php`, `.env` | Site credentials. |
+## What does NOT deploy from here
+
+This site is built with Elementor. Page layouts, sections and their styling are
+stored as JSON in the `wp_postmeta` database table — not in theme files. So
+pushing here **cannot** change page designs, menus, widgets or Customizer
+settings. Those need the WordPress REST/MCP API or a database change.
 
 ## Local backup
 
-The full site backup is kept **locally only**, in this folder:
+The full site backup stays in this folder, untracked:
 
 ```
 dev-aurenastarseed-com-20260801-095812-duurrrde6qpd.wpress   1.02 GB
 ```
 
-It is an All-in-One WP Migration archive: 19,779 files, 0.94 GB uncompressed.
-Restore it by uploading through the All-in-One WP Migration plugin, not via git.
+An All-in-One WP Migration archive — 19,779 files, 0.94 GB uncompressed.
+Restore it through that plugin, not via git.
 
-## Important: the design is in the database, not in these files
-
-This site is built with Elementor. Page layouts, section structure and styling
-are stored as JSON inside `wp_postmeta` in the database — not in theme files.
-The theme layer in this repository is stock vendor code, so **committing and
-deploying this repository does not move the site's design.** Moving the design
-requires the database, which is excluded here for security reasons.
+The previous `wp-content/` archive that lived in this repo is still in git
+history at commit `b8f613f` if it is ever needed.

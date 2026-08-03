@@ -1,0 +1,26 @@
+/**
+ * Theme Name:   Hurth
+ * Theme URI:    https://github.com/hasangeeky-hue/Hurth-web
+ * Description:  Child theme of Hello Elementor for dev.aurenastarseed.com.
+ *               Deployed from GitHub by the Deployer for Git plugin.
+ * Author:       hasangeeky-hue
+ * Template:     hello-elementor
+ * Version:      1.0.0
+ * License:      GNU General Public License v2 or later
+ * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:  hurth
+ */
+
+/* ==========================================================================
+   Brand tokens
+   ========================================================================== */
+
+:root {
+	--hurth-color-primary: #1a1a1a;
+	--hurth-color-accent: #c8a97e;
+	--hurth-spacing-section: 5rem;
+}
+
+/* ==========================================================================
+   Custom styles — everything below deploys straight from git.
+   ========================================================================== */

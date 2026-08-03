@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------
-# Site backups — NEVER commit. The .wpress archive is ~1 GB, which
-# exceeds GitHub's 100 MB per-file hard limit. Kept locally only.
+# Site backups — NEVER commit. The .wpress archive is ~1 GB, far over
+# GitHub's 100 MB per-file hard limit. Kept in this folder locally only.
 # ---------------------------------------------------------------
 *.wpress
 *.wpress.*
@@ -8,21 +8,15 @@ _backup-extracted/
 
 # ---------------------------------------------------------------
 # Database dumps — contain wp_users (emails + password hashes) and
-# wp_options (API keys, tokens, licence keys). Never commit these,
-# and especially not to a public repository.
+# wp_options (API keys, licence keys). This repo is public.
 # ---------------------------------------------------------------
 *.sql
 *.sql.gz
-database.sql
 
 # ---------------------------------------------------------------
 # Secrets & site-local config
 # ---------------------------------------------------------------
 wp-config.php
-wp-config-local.php
-# All-in-One WP Migration archive metadata — leaks the hosting absolute
-# path, the hosting account name and an encrypted signature blob.
-wp-content/package.json
 .env
 .env.*
 !.env.example
@@ -31,31 +25,23 @@ wp-content/package.json
 auth.json
 
 # ---------------------------------------------------------------
-# Media library — regenerated/synced separately, not source code
+# Extracted WordPress tree — this repo is now the theme itself, so a
+# wp-content/ folder here would be a local scratch copy, not source.
 # ---------------------------------------------------------------
-wp-content/uploads/
-wp-content/upgrade/
-wp-content/cache/
-wp-content/litespeed/
-wp-content/backups-dup-lite/
-wp-content/ai1wm-backups/
-
-# ---------------------------------------------------------------
-# Security / plugin runtime state
-# ---------------------------------------------------------------
-wp-content/wflogs/
-wp-content/debug.log
-error_log
-*.log
+wp-content/
 
 # ---------------------------------------------------------------
 # Build & tooling
 # ---------------------------------------------------------------
 node_modules/
-# Only a project-root Composer vendor dir. Plugin-level vendor/ folders are
-# shipped plugin code and must stay tracked, or deployed plugins break.
-/vendor/
 .sass-cache/
+
+# ---------------------------------------------------------------
+# Logs
+# ---------------------------------------------------------------
+*.log
+error_log
+debug.log
 
 # ---------------------------------------------------------------
 # OS / editor cruft
