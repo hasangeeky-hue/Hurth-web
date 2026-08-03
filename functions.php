@@ -845,7 +845,21 @@ add_filter( 'excerpt_more', 'hurth_excerpt_more' );
  * Purge every cache we know how to reach.
  */
 function hurth_purge_caches() {
-	// LiteSpeed Cache (active on this host).
+	/*
+	 * LiteSpeed caches at the web-server level on this host, with no
+	 * LiteSpeed Cache plugin installed — so the plugin action below has
+	 * nothing listening to it. Server-level LSCache is purged by sending a
+	 * response header instead, which is the only mechanism that reaches it.
+	 *
+	 * This must run on a request that actually executes PHP. Cached page
+	 * responses never do, which is why the purge has to ride along with the
+	 * deploy REST call (/wp-json/dfg/v1/package_update), where it does.
+	 */
+	if ( ! headers_sent() ) {
+		header( 'X-LiteSpeed-Purge: *' );
+	}
+
+	// LiteSpeed Cache plugin, if it is ever installed.
 	do_action( 'litespeed_purge_all' );
 
 	// Common alternatives, harmless if absent.
@@ -884,6 +898,52 @@ add_action( 'init', 'hurth_purge_on_version_change', 1 );
 // Deployer for Git fires this after it installs a package.
 add_action( 'dfg_after_package_install', 'hurth_purge_caches', 20 );
 add_action( 'after_switch_theme', 'hurth_purge_caches' );
+
+/**
+ * On-demand purge, for when a deploy lands but the cache survives it.
+ *
+ * Reachable at any URL with ?hurth_purge=<key>, where the key is derived
+ * from this installation's own salts — so it is unguessable and nothing
+ * secret has to be stored or shared in the repository.
+ */
+function hurth_purge_key() {
+	return substr( hash_hmac( 'sha256', 'hurth-purge', wp_salt( 'auth' ) ), 0, 24 );
+}
+
+function hurth_manual_purge() {
+	if ( ! isset( $_GET['hurth_purge'] ) ) {
+		return;
+	}
+
+	$given = sanitize_text_field( wp_unslash( $_GET['hurth_purge'] ) );
+
+	if ( ! hash_equals( hurth_purge_key(), $given ) ) {
+		return;
+	}
+
+	hurth_purge_caches();
+
+	wp_send_json_success( array(
+		'purged'  => true,
+		'version' => HURTH_VERSION,
+	) );
+}
+add_action( 'init', 'hurth_manual_purge', 2 );
+
+/**
+ * Surface the purge URL to logged-in administrators only.
+ */
+function hurth_show_purge_url() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	printf(
+		'<!-- purge: %s -->' . "\n",
+		esc_url( add_query_arg( 'hurth_purge', hurth_purge_key(), home_url( '/' ) ) )
+	);
+}
+add_action( 'wp_head', 'hurth_show_purge_url', 99 );
 
 /* -------------------------------------------------------------------------
  * Contact form — no plugin required
