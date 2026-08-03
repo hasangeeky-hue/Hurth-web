@@ -2,17 +2,21 @@
 /**
  * Standard page template.
  *
- * Page content is stored as plain HTML in post_content, so the_content()
- * renders it directly — no page builder required.
- *
  * @package Hurth
  */
 
 get_header();
+
+$hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 ?>
 
 <div class="page-hero">
 	<div class="wrap">
+		<ul class="breadcrumb">
+			<li><a href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_home' ) ); ?></a></li>
+			<li aria-hidden="true">/</li>
+			<li><?php the_title(); ?></li>
+		</ul>
 		<h1><?php the_title(); ?></h1>
 		<?php if ( has_excerpt() ) : ?>
 			<p><?php echo esc_html( get_the_excerpt() ); ?></p>

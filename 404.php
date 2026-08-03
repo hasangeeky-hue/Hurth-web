@@ -6,24 +6,24 @@
  */
 
 get_header();
+
+$hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 ?>
 
 <div class="page-hero">
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Page not found', 'hurth' ); ?></h1>
-		<p><?php esc_html_e( 'That page does not exist or has moved.', 'hurth' ); ?></p>
+		<h1><?php echo esc_html( hurth_t( 'notfound_h1' ) ); ?></h1>
+		<p><?php echo esc_html( hurth_t( 'notfound_p' ) ); ?></p>
 	</div>
 </div>
 
 <div class="section">
 	<div class="wrap content-area">
 		<p>
-			<a class="btn" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php esc_html_e( 'Back to home', 'hurth' ); ?>
+			<a class="btn" href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>">
+				<?php echo esc_html( hurth_t( 'back_home' ) ); ?>
 			</a>
 		</p>
-
-		<h2><?php esc_html_e( 'Looking for one of these?', 'hurth' ); ?></h2>
 		<?php hurth_menu_fallback(); ?>
 	</div>
 </div>

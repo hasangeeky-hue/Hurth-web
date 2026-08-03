@@ -1,11 +1,13 @@
 <?php
 /**
- * Fallback template — also used for the blog and archive listings.
+ * Blog listing, archives, search, and template of last resort.
  *
  * @package Hurth
  */
 
 get_header();
+
+$hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 ?>
 
 <div class="page-hero">
@@ -17,10 +19,9 @@ get_header();
 			} elseif ( is_archive() ) {
 				the_archive_title();
 			} elseif ( is_search() ) {
-				/* translators: %s: search query. */
-				printf( esc_html__( 'Search results for %s', 'hurth' ), '&ldquo;' . esc_html( get_search_query() ) . '&rdquo;' );
+				echo esc_html( hurth_t( 'search_for' ) ) . ' &ldquo;' . esc_html( get_search_query() ) . '&rdquo;';
 			} else {
-				esc_html_e( 'Latest posts', 'hurth' );
+				echo esc_html( hurth_t( 'latest' ) );
 			}
 			?>
 		</h1>
@@ -39,9 +40,11 @@ get_header();
 					<article <?php post_class( 'card' ); ?>>
 						<span class="card__meta"><?php echo esc_html( get_the_date() ); ?></span>
 						<h3>
-							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+							<a class="card__link" href="<?php echo esc_url( get_permalink() . $hurth_q ); ?>">
+								<?php the_title(); ?>
+							</a>
 						</h3>
-						<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( get_the_content() ), 24 ) ); ?></p>
+						<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( get_the_content() ), 26 ) ); ?></p>
 					</article>
 					<?php
 				endwhile;
@@ -59,7 +62,7 @@ get_header();
 
 		<?php else : ?>
 			<div class="content-area">
-				<p><?php esc_html_e( 'Nothing found here yet.', 'hurth' ); ?></p>
+				<p><?php echo esc_html( hurth_t( 'nothing' ) ); ?></p>
 			</div>
 		<?php endif; ?>
 	</div>

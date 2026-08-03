@@ -5,41 +5,69 @@
  * @package Hurth
  */
 
+$hurth_state = hurth_open_state();
+$hurth_lang  = hurth_lang();
+$hurth_q     = ( 'en' === $hurth_lang ) ? '?lang=en' : '';
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="profile" href="https://gmpg.org/xfn/11">
+	<meta name="theme-color" content="#0059a9">
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<a class="skip-link" href="#main"><?php esc_html_e( 'Skip to content', 'hurth' ); ?></a>
+<a class="skip-link" href="#main"><?php echo esc_html( hurth_t( 'skip' ) ); ?></a>
+
+<div class="topbar">
+	<div class="wrap topbar__inner">
+
+		<a href="tel:<?php echo esc_attr( hurth_info( 'phone_href' ) ); ?>">
+			<?php echo esc_html( hurth_info( 'phone' ) ); ?>
+		</a>
+
+		<span class="status <?php echo $hurth_state['open'] ? '' : 'status--closed'; ?>">
+			<?php
+			if ( $hurth_state['open'] ) {
+				echo esc_html( hurth_t( 'open_now' ) . ' · ' . hurth_t( 'until' ) . ' ' . $hurth_state['until'] );
+			} else {
+				echo esc_html( hurth_t( 'closed_now' ) );
+			}
+			?>
+		</span>
+
+		<span class="topbar__hide-sm">
+			<?php echo esc_html( hurth_info( 'street' ) . ', ' . hurth_info( 'zip' ) . ' ' . hurth_info( 'town' ) ); ?>
+		</span>
+
+		<span class="topbar__spacer"></span>
+
+		<nav class="lang-switch" aria-label="Sprache / Language">
+			<a href="<?php echo esc_url( remove_query_arg( 'lang' ) ); ?>"
+				aria-current="<?php echo 'de' === $hurth_lang ? 'true' : 'false'; ?>" hreflang="de">DE</a>
+			<a href="<?php echo esc_url( add_query_arg( 'lang', 'en' ) ); ?>"
+				aria-current="<?php echo 'en' === $hurth_lang ? 'true' : 'false'; ?>" hreflang="en">EN</a>
+		</nav>
+
+	</div>
+</div>
 
 <header class="site-header">
 	<div class="wrap site-header__bar">
 
-		<?php if ( has_custom_logo() ) : ?>
-			<?php the_custom_logo(); ?>
-		<?php else : ?>
-			<a class="site-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php
-				$hurth_name = hurth_info( 'name' );
-				$hurth_bits = explode( ' ', $hurth_name, 2 );
-				echo esc_html( $hurth_bits[0] );
-				if ( ! empty( $hurth_bits[1] ) ) {
-					echo ' <span>' . esc_html( $hurth_bits[1] ) . '</span>';
-				}
-				?>
-				<span class="site-brand__tag"><?php echo esc_html( hurth_info( 'tagline' ) ); ?></span>
-			</a>
-		<?php endif; ?>
+		<a class="site-brand" href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>">
+			<span class="site-brand__mark" aria-hidden="true">F</span>
+			<span class="site-brand__text">
+				<?php echo esc_html( hurth_info( 'name' ) ); ?>
+				<span class="site-brand__tag"><?php echo esc_html( hurth_info( 'city_tag' ) ); ?></span>
+			</span>
+		</a>
 
 		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-			<span class="screen-reader-text"><?php esc_html_e( 'Toggle menu', 'hurth' ); ?></span>
+			<span class="screen-reader-text"><?php echo esc_html( hurth_t( 'menu' ) ); ?></span>
 			<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none"
 				stroke="currentColor" stroke-width="2" stroke-linecap="round">
 				<path d="M3 6h18M3 12h18M3 18h18" />
