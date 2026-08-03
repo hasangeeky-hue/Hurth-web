@@ -1,66 +1,79 @@
 # Hurth
 
-Child theme of **Hello Elementor** for [dev.aurenastarseed.com](https://dev.aurenastarseed.com),
-deployed from this repository by the **Deployer for Git** WordPress plugin.
+Standalone WordPress theme for **Friends Mobile** — Mobile & DHL Service Center,
+Luxemburger Straße 96, 50354 Hürth.
 
-The repository root *is* the theme root — `style.css` sits at the top level.
-Deployer for Git requires this: it unpacks the branch zip into
-`wp-content/themes/<repo-name>/`, so this repo lands at
-`wp-content/themes/Hurth-web/`.
+**No page builder. No parent theme. No plugin dependencies.**
 
-## Connecting this repo to the site
+## Why this exists
 
-**WP Admin → Deployer for Git → Install Theme**
+The site was built in Elementor, with the layout stored as JSON in the database.
+That made the design unreachable from git. But the pages also carry their
+content as **plain HTML in `post_content`** — headings, paragraphs, images and
+lists — so a hand-written theme can render all of it directly.
+
+This theme does exactly that. Everything visual now lives in files, in git.
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `style.css` | Full design system — tokens, layout, components, responsive |
+| `functions.php` | Theme setup, menus, asset loading, business details |
+| `header.php` | Sticky header, responsive navigation |
+| `footer.php` | Footer with address and service area |
+| `front-page.php` | Home — hero, page content, service cards, latest posts |
+| `page.php` | Standard pages |
+| `single.php` | Blog posts |
+| `index.php` | Blog listing, archives, search |
+| `404.php` | Not found |
+
+Business details (address, service area, tagline) are centralised in
+`hurth_info()` in `functions.php` — edit them once, there.
+
+## Deploying
+
+**WP Admin → Deployer for Git → Deploy Theme**
 
 | Field | Value |
 |---|---|
 | Provider | GitHub |
 | Repository URL | `https://github.com/hasangeeky-hue/Hurth-web` |
-| Branch | `main` |
-| Private repository | unchecked |
+| Branch | `master` or `main` — both exist and track the same commit |
 
-Two things the plugin is strict about:
+The URL must have **no `.git` suffix**; the plugin's validator regex rejects it.
 
-- The URL must have **no `.git` suffix** — the validator regex rejects the dot.
-- The branch field **defaults to `master`**. This repo uses `main`, so type it.
+Installs to `wp-content/themes/Hurth-web/`. Activate **Hurth** under
+Appearance → Themes.
 
-Then activate **Hurth** under Appearance → Themes.
+The installer runs with `clear_destination => true`, so that folder is wiped and
+replaced on every deploy. **Never edit theme files on the server** — those edits
+are destroyed by the next deploy. Edit here, push, deploy.
 
-## Workflow after setup
+## What still needs a plugin
 
-1. Changes are committed and pushed to `main` here.
-2. In WP Admin → Deployer for Git, click update on the package
-   (or let it auto-update on commit).
-3. The site pulls the new zip and replaces `wp-content/themes/Hurth-web/`.
+Honest limits of going plugin-free:
 
-The installer runs with `clear_destination => true`, so that folder is wiped
-and replaced on every deploy. Never edit theme files directly on the server —
-those edits are destroyed by the next deploy. Edit here, push, deploy.
-
-## What deploys from here
-
-- `style.css` — all custom CSS
-- `functions.php` — hooks, filters, custom PHP
-- Template overrides copied from `hello-elementor` and edited
-- Custom assets (JS, images, fonts) added to this folder
-
-## What does NOT deploy from here
-
-This site is built with Elementor. Page layouts, sections and their styling are
-stored as JSON in the `wp_postmeta` database table — not in theme files. So
-pushing here **cannot** change page designs, menus, widgets or Customizer
-settings. Those need the WordPress REST/MCP API or a database change.
+- **Contact forms.** The contact page markup is Contact Form 7 output. Without
+  CF7 active the form renders but will not send. It needs either CF7 kept on, or
+  a custom handler added to `functions.php`.
+- **Elementor layouts.** Section arrangement inside pages came from Elementor.
+  This theme restyles the content it left behind; it does not reproduce
+  builder-specific layouts.
 
 ## Local backup
-
-The full site backup stays in this folder, untracked:
 
 ```
 dev-aurenastarseed-com-20260801-095812-duurrrde6qpd.wpress   1.02 GB
 ```
 
-An All-in-One WP Migration archive — 19,779 files, 0.94 GB uncompressed.
-Restore it through that plugin, not via git.
+All-in-One WP Migration archive, 1 Aug 2026 — 19,779 files, 0.94 GB
+uncompressed, including the full database. Untracked and gitignored.
 
-The previous `wp-content/` archive that lived in this repo is still in git
-history at commit `b8f613f` if it is ever needed.
+**Do not re-run the import.** AIOWM clears `template`, `stylesheet` and
+`active_plugins` before importing and only restores them on success. A failed
+import — likely, since the free tier caps well below 1 GB — leaves the site with
+no active theme and no active plugins, which renders a completely blank front
+end while `wp-login.php` still works.
+
+The earlier `wp-content` archive of this repo remains in history at `b8f613f`.
