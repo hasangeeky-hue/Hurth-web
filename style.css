@@ -1,16 +1,49 @@
-/**
- * Theme Name:   Friends Mobile Hürth
+﻿/**
+ * Theme Name:   Friends Mobile HÃ¼rth
  * Theme URI:    https://github.com/hasangeeky-hue/Hurth-web
  * Description:  Standalone bilingual (DE/EN) theme for Friends Mobile,
- *               Luxemburger Straße 96, Hürth. Phone sales, repair and
+ *               Luxemburger StraÃŸe 96, HÃ¼rth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      3.0.0
+ * Version:      3.1.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  hurth
  */
+
+/* ==========================================================================
+   0. Fonts â€” self-hosted
+   Served from this theme, never from Google's servers. A German court has
+   held that loading Google Fonts remotely transmits visitor IP addresses
+   without consent and is unlawful, so these must stay local.
+   Both files are variable (100â€“900) latin subsets verified to contain
+   Ã¤ Ã¶ Ã¼ ÃŸ Ã„ Ã– Ãœ.
+   ========================================================================== */
+
+@font-face {
+	font-family: "Inter";
+	src: url("fonts/inter-var-latin.woff2") format("woff2-variations"),
+	     url("fonts/inter-var-latin.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+	               U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122,
+	               U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Jost";
+	src: url("fonts/jost-var-latin.woff2") format("woff2-variations"),
+	     url("fonts/jost-var-latin.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+	               U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122,
+	               U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 /* ==========================================================================
    1. Design tokens
@@ -82,7 +115,7 @@ body {
 	overflow-x: hidden;
 }
 
-/* German compounds (Displayreparatur, Datenübertragung) must break cleanly. */
+/* German compounds (Displayreparatur, DatenÃ¼bertragung) must break cleanly. */
 [lang="de"] p, [lang="de"] li, [lang="de"] h1,
 [lang="de"] h2, [lang="de"] h3, [lang="de"] h4 {
 	hyphens: auto;
@@ -258,7 +291,7 @@ p:last-child { margin-bottom: 0; }
 .btn:active { transform: translateY(0); }
 
 /* Amber is reserved for the single primary action in a viewport
-   (Von Restorff isolation). Ink text only — white fails contrast. */
+   (Von Restorff isolation). Ink text only â€” white fails contrast. */
 .btn--accent { background: var(--c-accent); color: var(--c-ink); }
 .btn--accent:hover { background: var(--c-accent-dark); color: var(--c-ink); }
 
@@ -306,7 +339,7 @@ p:last-child { margin-bottom: 0; }
 }
 
 /* ==========================================================================
-   6. 3D tilt — interactive product/service imagery
+   6. 3D tilt â€” interactive product/service imagery
    Driven by --rx/--ry set in JS. Degrades to a flat card without JS.
    ========================================================================== */
 
@@ -341,7 +374,7 @@ p:last-child { margin-bottom: 0; }
 .tilt__lift { transform: translateZ(38px); }
 
 @media (hover: none) {
-	/* Touch has no hover — never hide anything behind it. */
+	/* Touch has no hover â€” never hide anything behind it. */
 	.tilt__inner { transform: none !important; }
 	.tilt__glare { display: none; }
 }
@@ -405,7 +438,7 @@ p:last-child { margin-bottom: 0; }
 .trustbar__item span { font-size: var(--step--1); color: var(--c-muted); }
 
 /* ==========================================================================
-   9. Page content — styles the existing imported HTML
+   9. Page content â€” styles the existing imported HTML
    ========================================================================== */
 
 .page-hero {

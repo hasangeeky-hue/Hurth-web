@@ -288,6 +288,23 @@ function hurth_page_has_content( $page ) {
  * Assets
  * ---------------------------------------------------------------------- */
 
+/**
+ * Preload the two self-hosted variable fonts.
+ *
+ * They are referenced from inside style.css, so the browser only discovers
+ * them after the stylesheet parses. Preloading removes that round trip and
+ * protects Largest Contentful Paint.
+ */
+function hurth_preload_fonts() {
+	foreach ( array( 'inter-var-latin', 'jost-var-latin' ) as $file ) {
+		printf(
+			'<link rel="preload" as="font" type="font/woff2" crossorigin href="%s">' . "\n",
+			esc_url( get_theme_file_uri( 'fonts/' . $file . '.woff2' ) )
+		);
+	}
+}
+add_action( 'wp_head', 'hurth_preload_fonts', 1 );
+
 function hurth_assets() {
 	wp_enqueue_style( 'hurth-style', get_stylesheet_uri(), array(), HURTH_VERSION );
 
@@ -336,6 +353,31 @@ function hurth_assets() {
 				inner.style.setProperty('--ry', '0deg');
 			});
 		});
+	})();
+
+	// Conversion measurement. Records the three actions that matter for a
+	// walk-in shop: phone calls, WhatsApp, and route requests. Fires into
+	// dataLayer/gtag if either exists, and always leaves a console trace so
+	// the events are verifiable before any analytics tool is connected.
+	// No cookies, no identifiers, no third-party requests -> no consent
+	// banner required for this layer.
+	(function () {
+		function track(action, label) {
+			var payload = { event: 'hurth_conversion', action: action, label: label };
+			if (window.dataLayer && window.dataLayer.push) { window.dataLayer.push(payload); }
+			if (typeof window.gtag === 'function') {
+				window.gtag('event', action, { event_category: 'contact', event_label: label });
+			}
+			if (window.console && console.debug) { console.debug('[hurth]', action, label); }
+		}
+		document.addEventListener('click', function (e) {
+			var a = e.target.closest('a');
+			if (!a || !a.href) return;
+			if (a.href.indexOf('tel:') === 0)            { track('call', a.href.slice(4)); }
+			else if (a.href.indexOf('wa.me') > -1)       { track('whatsapp', 'sticky_bar'); }
+			else if (a.href.indexOf('google.com/maps') > -1) { track('route', 'maps'); }
+			else if (a.href.indexOf('mailto:') === 0)    { track('email', a.href.slice(7)); }
+		}, { passive: true });
 	})();
 	" );
 }
