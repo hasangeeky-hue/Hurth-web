@@ -232,46 +232,255 @@ function hurth_setup() {
 add_action( 'after_setup_theme', 'hurth_setup' );
 
 /**
- * Navigation, defined in code so no WordPress menu is required.
+ * The single source of truth for site structure.
  *
- * Slug => translation key.
+ * Each entry pairs the German page with its English counterpart and carries
+ * its own label, so navigation, the language switcher and hreflang all read
+ * from one place and cannot drift apart.
+ *
+ * 'fallback' names the original imported page to use when the newer one has
+ * not been imported yet, so navigation never renders empty.
+ *
+ * @return array
  */
-function hurth_nav_items() {
+function hurth_page_map() {
 	return array(
-		'mobile-phone-repair'      => 'nav_repair',
-		'old-moble-phone-buy-sell' => 'nav_buy',
-		'explore-our-products'     => 'nav_phones',
-		'about'                    => 'nav_about',
-		'contact'                  => 'nav_contact',
+		array(
+			'label'    => array( 'de' => 'Reparatur', 'en' => 'Repair' ),
+			'de'       => 'handy-reparatur-huerth',
+			'en'       => 'en-phone-repair-huerth',
+			'fallback' => 'mobile-phone-repair',
+			'children' => array(
+				array( 'label' => array( 'de' => 'iPhone Reparatur', 'en' => 'iPhone Repair' ),
+					'de' => 'iphone-reparatur-huerth', 'en' => 'en-iphone-repair-huerth' ),
+				array( 'label' => array( 'de' => 'Samsung Reparatur', 'en' => 'Samsung Repair' ),
+					'de' => 'samsung-reparatur-huerth', 'en' => 'en-samsung-repair-huerth' ),
+				array( 'label' => array( 'de' => 'Xiaomi, Pixel & andere', 'en' => 'Xiaomi, Pixel & others' ),
+					'de' => 'xiaomi-pixel-reparatur-huerth', 'en' => 'en-xiaomi-pixel-repair-huerth' ),
+				array( 'label' => array( 'de' => 'Displaytausch', 'en' => 'Screen Replacement' ),
+					'de' => 'displaytausch-huerth', 'en' => 'en-screen-replacement-huerth' ),
+				array( 'label' => array( 'de' => 'Akku wechseln', 'en' => 'Battery Replacement' ),
+					'de' => 'akku-wechseln-huerth', 'en' => 'en-battery-replacement-huerth' ),
+				array( 'label' => array( 'de' => 'Wasserschaden', 'en' => 'Water Damage' ),
+					'de' => 'wasserschaden-handy-huerth', 'en' => 'en-water-damage-huerth' ),
+				array( 'label' => array( 'de' => 'Ladebuchse & Kamera', 'en' => 'Charging Port & Camera' ),
+					'de' => 'ladebuchse-kamera-reparatur-huerth', 'en' => 'en-charging-port-camera-repair-huerth' ),
+			),
+		),
+		array(
+			'label'    => array( 'de' => 'Ankauf', 'en' => 'Sell Your Phone' ),
+			'de'       => 'old-moble-phone-buy-sell',
+			'en'       => 'en-sell-your-phone-huerth',
+			'children' => array(
+				array( 'label' => array( 'de' => 'Defekte Geräte', 'en' => 'Broken Devices' ),
+					'de' => 'defekte-geraete-ankauf-huerth', 'en' => 'en-broken-device-buyback-huerth' ),
+				array( 'label' => array( 'de' => 'Tablets & Smartwatches', 'en' => 'Tablets & Smartwatches' ),
+					'de' => 'tablet-smartwatch-ankauf-huerth', 'en' => 'en-tablet-smartwatch-buyback-huerth' ),
+				array( 'label' => array( 'de' => 'Inzahlungnahme', 'en' => 'Trade-In' ),
+					'de' => 'inzahlungnahme-huerth', 'en' => 'en-trade-in-huerth' ),
+			),
+		),
+		array(
+			'label'    => array( 'de' => 'Handys & Tarife', 'en' => 'Phones & Tariffs' ),
+			'de'       => 'explore-our-products',
+			'en'       => 'explore-our-products',
+			'children' => array(
+				array( 'label' => array( 'de' => 'Handytarife', 'en' => 'Mobile Tariffs' ),
+					'de' => 'handytarife-huerth', 'en' => 'en-mobile-tariffs-huerth' ),
+				array( 'label' => array( 'de' => 'Zubehör', 'en' => 'Accessories' ),
+					'de' => 'handy-zubehoer-huerth', 'en' => 'en-phone-accessories-huerth' ),
+			),
+		),
+		array(
+			'label'    => array( 'de' => 'Über uns', 'en' => 'About' ),
+			'de'       => 'ueber-uns',
+			'en'       => 'en-about-us',
+			'fallback' => 'about',
+		),
+		array(
+			'label'    => array( 'de' => 'Häufige Fragen', 'en' => 'FAQ' ),
+			'de'       => 'faq-huerth',
+			'en'       => 'en-faq',
+		),
+		array(
+			'label'    => array( 'de' => 'Kontakt', 'en' => 'Contact' ),
+			'de'       => 'contact',
+			'en'       => 'contact',
+		),
 	);
 }
 
+/**
+ * Resolve one map entry to a published page in the active language.
+ *
+ * Falls back to the other language, then to the legacy slug, so a partially
+ * imported site still navigates instead of rendering an empty menu.
+ *
+ * @param array $entry Map entry.
+ * @return WP_Post|null
+ */
+function hurth_resolve( $entry ) {
+	$lang  = hurth_lang();
+	$order = array( $entry[ $lang ] );
+
+	$order[] = ( 'en' === $lang ) ? $entry['de'] : $entry['en'];
+
+	if ( ! empty( $entry['fallback'] ) ) {
+		$order[] = $entry['fallback'];
+	}
+
+	foreach ( array_unique( $order ) as $slug ) {
+		$page = get_page_by_path( $slug );
+
+		if ( $page && 'publish' === $page->post_status ) {
+			return $page;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * The URL of the current page in the other language.
+ *
+ * Used by both the language switcher and hreflang so the two cannot
+ * disagree. Returns the real translated page where one exists, instead of
+ * the same URL with a query string bolted on — which was wrong before.
+ *
+ * @param string $target 'de' or 'en'.
+ * @return string
+ */
+function hurth_alt_url( $target ) {
+	$target = ( 'en' === $target ) ? 'en' : 'de';
+	$suffix = ( 'en' === $target ) ? '?lang=en' : '';
+
+	if ( ! is_page() ) {
+		return home_url( '/' ) . $suffix;
+	}
+
+	$id      = get_queried_object_id();
+	$current = get_post_field( 'post_name', $id );
+
+	foreach ( hurth_page_map() as $entry ) {
+		$nodes = array( $entry );
+
+		if ( ! empty( $entry['children'] ) ) {
+			$nodes = array_merge( $nodes, $entry['children'] );
+		}
+
+		foreach ( $nodes as $node ) {
+			$known = array( $node['de'], $node['en'] );
+
+			if ( ! empty( $node['fallback'] ) ) {
+				$known[] = $node['fallback'];
+			}
+
+			if ( ! in_array( $current, $known, true ) ) {
+				continue;
+			}
+
+			$page = get_page_by_path( $node[ $target ] );
+
+			if ( $page && 'publish' === $page->post_status ) {
+				return get_permalink( $page ) . $suffix;
+			}
+
+			// No translation exists — stay on this page rather than link to a 404.
+			return get_permalink( $id ) . $suffix;
+		}
+	}
+
+	return get_permalink( $id ) . $suffix;
+}
+
+/**
+ * Top-level pages for the footer and the home page card grid.
+ *
+ * @return array slug => label
+ */
+function hurth_nav_items() {
+	$lang  = hurth_lang();
+	$items = array();
+
+	foreach ( hurth_page_map() as $entry ) {
+		$page = hurth_resolve( $entry );
+
+		if ( $page ) {
+			$items[ $page->post_name ] = $entry['label'][ $lang ];
+		}
+	}
+
+	return $items;
+}
+
+/**
+ * Render navigation from the map, with dropdowns for the deeper sections.
+ */
 function hurth_menu_fallback() {
+	$lang    = hurth_lang();
+	$suffix  = ( 'en' === $lang ) ? '?lang=en' : '';
 	$current = get_queried_object_id();
-	$lang    = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 
 	echo '<ul>';
 
 	printf(
 		'<li class="%s"><a href="%s">%s</a></li>',
 		is_front_page() ? 'current-menu-item' : '',
-		esc_url( home_url( '/' ) . $lang ),
+		esc_url( home_url( '/' ) . $suffix ),
 		esc_html( hurth_t( 'nav_home' ) )
 	);
 
-	foreach ( hurth_nav_items() as $slug => $key ) {
-		$page = get_page_by_path( $slug );
+	foreach ( hurth_page_map() as $entry ) {
+		$page = hurth_resolve( $entry );
 
-		if ( ! $page || 'publish' !== $page->post_status ) {
+		if ( ! $page ) {
 			continue;
 		}
 
+		$kids = array();
+
+		if ( ! empty( $entry['children'] ) ) {
+			foreach ( $entry['children'] as $child ) {
+				$child_page = hurth_resolve( $child );
+
+				if ( $child_page ) {
+					$kids[] = array( $child_page, $child['label'][ $lang ] );
+				}
+			}
+		}
+
+		$classes = array();
+
+		if ( (int) $current === (int) $page->ID ) {
+			$classes[] = 'current-menu-item';
+		}
+		if ( $kids ) {
+			$classes[] = 'has-children';
+		}
+
 		printf(
-			'<li class="%s"><a href="%s">%s</a></li>',
-			(int) $current === (int) $page->ID ? 'current-menu-item' : '',
-			esc_url( get_permalink( $page ) . $lang ),
-			esc_html( hurth_t( $key ) )
+			'<li class="%s"><a href="%s">%s</a>',
+			esc_attr( implode( ' ', $classes ) ),
+			esc_url( get_permalink( $page ) . $suffix ),
+			esc_html( $entry['label'][ $lang ] )
 		);
+
+		if ( $kids ) {
+			echo '<ul class="submenu">';
+
+			foreach ( $kids as $kid ) {
+				printf(
+					'<li class="%s"><a href="%s">%s</a></li>',
+					(int) $current === (int) $kid[0]->ID ? 'current-menu-item' : '',
+					esc_url( get_permalink( $kid[0] ) . $suffix ),
+					esc_html( $kid[1] )
+				);
+			}
+
+			echo '</ul>';
+		}
+
+		echo '</li>';
 	}
 
 	echo '</ul>';
@@ -413,10 +622,22 @@ function hurth_head_meta() {
 	printf( '<meta property="og:locale" content="%s">' . "\n", 'en' === hurth_lang() ? 'en_GB' : 'de_DE' );
 	echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
 
-	$base = is_singular() ? get_permalink() : home_url( '/' );
-	printf( '<link rel="alternate" hreflang="de" href="%s">' . "\n", esc_url( $base ) );
-	printf( '<link rel="alternate" hreflang="en" href="%s">' . "\n", esc_url( add_query_arg( 'lang', 'en', $base ) ) );
-	printf( '<link rel="alternate" hreflang="x-default" href="%s">' . "\n", esc_url( $base ) );
+	/*
+	 * hreflang must point at the actual translated page. The earlier version
+	 * pointed the English alternate at the same German URL with ?lang=en,
+	 * which described content that did not exist there.
+	 */
+	$de_url = hurth_alt_url( 'de' );
+	$en_url = hurth_alt_url( 'en' );
+
+	printf( '<link rel="alternate" hreflang="de" href="%s">' . "\n", esc_url( $de_url ) );
+	printf( '<link rel="alternate" hreflang="en" href="%s">' . "\n", esc_url( $en_url ) );
+	printf( '<link rel="alternate" hreflang="x-default" href="%s">' . "\n", esc_url( $de_url ) );
+
+	// Canonical for the page actually being viewed.
+	if ( is_singular() ) {
+		printf( '<link rel="canonical" href="%s">' . "\n", esc_url( get_permalink() ) );
+	}
 }
 add_action( 'wp_head', 'hurth_head_meta', 2 );
 
@@ -506,6 +727,212 @@ function hurth_excerpt_more() {
 	return '&hellip;';
 }
 add_filter( 'excerpt_more', 'hurth_excerpt_more' );
+
+/* -------------------------------------------------------------------------
+ * Contact form — no plugin required
+ *
+ * Replaces the Contact Form 7 markup carried over in the imported Contact
+ * page, which renders but cannot send without that plugin active.
+ *
+ * Protections: WordPress nonce, a honeypot field invisible to humans, and a
+ * minimum fill time. No CAPTCHA, no third-party requests, no cookies.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Handle the submission before any output is sent.
+ */
+function hurth_handle_contact() {
+	if ( ! isset( $_POST['hurth_contact_submit'] ) ) {
+		return;
+	}
+
+	$state = 'error';
+
+	$nonce = isset( $_POST['hurth_contact_nonce'] )
+		? sanitize_text_field( wp_unslash( $_POST['hurth_contact_nonce'] ) ) : '';
+
+	// Honeypot: a real person never fills this in.
+	$trap = isset( $_POST['hurth_website'] )
+		? trim( sanitize_text_field( wp_unslash( $_POST['hurth_website'] ) ) ) : '';
+
+	// Bots submit near-instantly; humans do not.
+	$opened  = isset( $_POST['hurth_opened'] ) ? (int) $_POST['hurth_opened'] : 0;
+	$elapsed = time() - $opened;
+
+	if ( ! wp_verify_nonce( $nonce, 'hurth_contact' ) || '' !== $trap || $elapsed < 3 ) {
+		set_transient( 'hurth_contact_state_' . get_current_user_id(), 'spam', 60 );
+		return;
+	}
+
+	$name    = sanitize_text_field( wp_unslash( $_POST['hurth_name'] ?? '' ) );
+	$email   = sanitize_email( wp_unslash( $_POST['hurth_email'] ?? '' ) );
+	$phone   = sanitize_text_field( wp_unslash( $_POST['hurth_phone'] ?? '' ) );
+	$service = sanitize_text_field( wp_unslash( $_POST['hurth_service'] ?? '' ) );
+	$message = sanitize_textarea_field( wp_unslash( $_POST['hurth_message'] ?? '' ) );
+	$consent = isset( $_POST['hurth_consent'] );
+
+	if ( '' === $name || ! is_email( $email ) || '' === $message || ! $consent ) {
+		set_transient( 'hurth_contact_state_' . get_current_user_id(), 'invalid', 60 );
+		return;
+	}
+
+	$body = sprintf(
+		"Name: %s\nE-Mail: %s\nTelefon: %s\nAnliegen: %s\n\n%s\n\n---\nGesendet über %s",
+		$name,
+		$email,
+		$phone ? $phone : '-',
+		$service ? $service : '-',
+		$message,
+		home_url( '/' )
+	);
+
+	$sent = wp_mail(
+		hurth_info( 'email' ),
+		sprintf( '[Website] %s – %s', $service ? $service : 'Anfrage', $name ),
+		$body,
+		array(
+			'Content-Type: text/plain; charset=UTF-8',
+			'Reply-To: ' . $name . ' <' . $email . '>',
+		)
+	);
+
+	$state = $sent ? 'sent' : 'failed';
+	set_transient( 'hurth_contact_state_' . get_current_user_id(), $state, 60 );
+
+	// Redirect after POST so a refresh cannot resend.
+	wp_safe_redirect( add_query_arg( 'sent', $sent ? '1' : '0', wp_get_referer() ? wp_get_referer() : home_url( '/' ) ) );
+	exit;
+}
+add_action( 'template_redirect', 'hurth_handle_contact', 5 );
+
+/**
+ * Render the contact form.
+ *
+ * @return string
+ */
+function hurth_contact_form() {
+	$de = ( 'de' === hurth_lang() );
+
+	$labels = array(
+		'title'   => $de ? 'Schreiben Sie uns' : 'Send us a message',
+		'name'    => $de ? 'Name' : 'Name',
+		'email'   => $de ? 'E-Mail' : 'Email',
+		'phone'   => $de ? 'Telefon (optional)' : 'Phone (optional)',
+		'service' => $de ? 'Anliegen' : 'Subject',
+		'message' => $de ? 'Ihre Nachricht' : 'Your message',
+		'consent' => $de
+			? 'Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet werden.'
+			: 'I consent to my details being processed in order to answer my enquiry.',
+		'submit'  => $de ? 'Nachricht senden' : 'Send message',
+		'sent'    => $de ? 'Vielen Dank. Wir melden uns zeitnah bei Ihnen.' : 'Thank you. We will get back to you shortly.',
+		'failed'  => $de
+			? 'Die Nachricht konnte nicht gesendet werden. Bitte rufen Sie uns an.'
+			: 'The message could not be sent. Please call us instead.',
+		'invalid' => $de ? 'Bitte füllen Sie Name, E-Mail und Nachricht aus.' : 'Please complete name, email and message.',
+	);
+
+	$services = $de
+		? array( 'Reparatur', 'Handy verkaufen', 'Neues Handy', 'Tarifberatung', 'Sonstiges' )
+		: array( 'Repair', 'Sell a device', 'New phone', 'Tariff advice', 'Other' );
+
+	$state  = get_transient( 'hurth_contact_state_' . get_current_user_id() );
+	$notice = '';
+
+	if ( isset( $_GET['sent'] ) ) {
+		$ok     = ( '1' === $_GET['sent'] );
+		$notice = sprintf(
+			'<p class="form-notice form-notice--%s" role="status">%s</p>',
+			$ok ? 'ok' : 'bad',
+			esc_html( $ok ? $labels['sent'] : $labels['failed'] )
+		);
+	} elseif ( 'invalid' === $state ) {
+		$notice = '<p class="form-notice form-notice--bad" role="alert">' . esc_html( $labels['invalid'] ) . '</p>';
+	}
+
+	ob_start();
+	?>
+	<div class="contact-form">
+		<h2><?php echo esc_html( $labels['title'] ); ?></h2>
+		<?php echo $notice; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+
+		<form method="post" action="">
+			<?php wp_nonce_field( 'hurth_contact', 'hurth_contact_nonce' ); ?>
+			<input type="hidden" name="hurth_opened" value="<?php echo esc_attr( time() ); ?>">
+
+			<p class="hurth-hp" aria-hidden="true">
+				<label>Website<input type="text" name="hurth_website" tabindex="-1" autocomplete="off"></label>
+			</p>
+
+			<div class="form-row">
+				<label for="hurth_name"><?php echo esc_html( $labels['name'] ); ?> *</label>
+				<input id="hurth_name" type="text" name="hurth_name" required autocomplete="name">
+			</div>
+
+			<div class="form-row">
+				<label for="hurth_email"><?php echo esc_html( $labels['email'] ); ?> *</label>
+				<input id="hurth_email" type="email" name="hurth_email" required autocomplete="email">
+			</div>
+
+			<div class="form-row">
+				<label for="hurth_phone"><?php echo esc_html( $labels['phone'] ); ?></label>
+				<input id="hurth_phone" type="tel" name="hurth_phone" autocomplete="tel">
+			</div>
+
+			<div class="form-row">
+				<label for="hurth_service"><?php echo esc_html( $labels['service'] ); ?></label>
+				<select id="hurth_service" name="hurth_service">
+					<?php foreach ( $services as $s ) : ?>
+						<option value="<?php echo esc_attr( $s ); ?>"><?php echo esc_html( $s ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+
+			<div class="form-row">
+				<label for="hurth_message"><?php echo esc_html( $labels['message'] ); ?> *</label>
+				<textarea id="hurth_message" name="hurth_message" rows="6" required></textarea>
+			</div>
+
+			<div class="form-row form-row--check">
+				<label>
+					<input type="checkbox" name="hurth_consent" required>
+					<span><?php echo esc_html( $labels['consent'] ); ?></span>
+				</label>
+			</div>
+
+			<button class="btn btn--accent" type="submit" name="hurth_contact_submit" value="1">
+				<?php echo esc_html( $labels['submit'] ); ?>
+			</button>
+		</form>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+add_shortcode( 'hurth_contact', 'hurth_contact_form' );
+
+/**
+ * Strip the dead Contact Form 7 markup and render ours instead.
+ *
+ * The imported Contact page carries CF7 output that displays but cannot
+ * send. Removing the plugin leaves a form that silently fails, which is
+ * worse than no form at all.
+ */
+function hurth_replace_cf7( $content ) {
+	if ( is_admin() || ! is_page() || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+
+	if ( false === strpos( $content, 'wpcf7' ) && false === strpos( $content, 'admin-ajax.php#wpcf7' ) ) {
+		return $content;
+	}
+
+	// Remove the whole dead form, then append a working one.
+	$content = preg_replace( '#<form[^>]*wpcf7[^>]*>.*?</form>#is', '', $content );
+	$content = preg_replace( '#<form[^>]*admin-ajax\.php\#wpcf7[^>]*>.*?</form>#is', '', $content );
+	$content = preg_replace( '#<div[^>]*class="[^"]*wpcf7[^"]*"[^>]*>.*?</div>#is', '', $content );
+
+	return $content . hurth_contact_form();
+}
+add_filter( 'the_content', 'hurth_replace_cf7', 25 );
 
 /**
  * Repair the broken heading hierarchy in the imported posts.

@@ -46,9 +46,16 @@ $hurth_q     = ( 'en' === $hurth_lang ) ? '?lang=en' : '';
 		<span class="topbar__spacer"></span>
 
 		<nav class="lang-switch" aria-label="Sprache / Language">
-			<a href="<?php echo esc_url( remove_query_arg( 'lang' ) ); ?>"
+			<?php
+			/*
+			 * Points at the equivalent page in the other language, not at the
+			 * same URL with a query string. Where no translation exists the
+			 * visitor stays put instead of landing on a 404.
+			 */
+			?>
+			<a href="<?php echo esc_url( hurth_alt_url( 'de' ) ); ?>"
 				aria-current="<?php echo 'de' === $hurth_lang ? 'true' : 'false'; ?>" hreflang="de">DE</a>
-			<a href="<?php echo esc_url( add_query_arg( 'lang', 'en' ) ); ?>"
+			<a href="<?php echo esc_url( hurth_alt_url( 'en' ) ); ?>"
 				aria-current="<?php echo 'en' === $hurth_lang ? 'true' : 'false'; ?>" hreflang="en">EN</a>
 		</nav>
 
