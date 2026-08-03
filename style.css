@@ -1,7 +1,7 @@
 ﻿/**
  * Theme Name:   Hurth
  * Theme URI:    https://github.com/hasangeeky-hue/Hurth-web
- * Description:  Standalone custom theme for Friends Mobile, HÃ¼rth. No page
+ * Description:  Standalone custom theme for Friends Mobile, Hürth. No page
  *               builder, no parent theme, no plugin dependencies. Renders the
  *               site's existing page content directly. Deployed from GitHub.
  * Author:       hasangeeky-hue
@@ -217,7 +217,7 @@ p:last-child { margin-bottom: 0; }
 }
 
 /* ==========================================================================
-   7. Content â€” styles the existing page HTML
+   7. Content — styles the existing page HTML
    ========================================================================== */
 
 .content-area { max-width: 74ch; }
