@@ -193,16 +193,20 @@ $hurth_brands = array( 'Apple iPhone', 'Samsung Galaxy', 'Xiaomi', 'Google Pixel
 </section>
 
 <?php
-// Service pages, in navigation order, skipping anything without real content.
+// Service index — written labels and blurbs, not page titles and excerpts.
 $hurth_cards = array();
 
-foreach ( hurth_nav_items() as $hurth_slug => $hurth_key ) {
-	$hurth_page = get_page_by_path( $hurth_slug );
+foreach ( hurth_service_index() as $hurth_item ) {
+	$hurth_page = get_page_by_path( $hurth_item[ hurth_lang() ] );
+
+	if ( ! $hurth_page || 'publish' !== $hurth_page->post_status ) {
+		$hurth_page = get_page_by_path( $hurth_item['de'] );
+	}
 
 	if ( $hurth_page && 'publish' === $hurth_page->post_status
-		&& (int) $hurth_page->ID !== $hurth_front_id
-		&& hurth_page_has_content( $hurth_page ) ) {
-		$hurth_cards[] = $hurth_page;
+		&& (int) $hurth_page->ID !== $hurth_front_id ) {
+		$hurth_item['page'] = $hurth_page;
+		$hurth_cards[]      = $hurth_item;
 	}
 }
 
@@ -225,15 +229,15 @@ if ( $hurth_cards ) :
 					</p>
 				</div>
 			</div>
-			<div class="card-grid">
-				<?php foreach ( $hurth_cards as $hurth_page ) : ?>
+			<div class="card-grid card-grid--three">
+				<?php foreach ( $hurth_cards as $hurth_card ) : ?>
 					<article class="card">
 						<h3>
-							<a class="card__link" href="<?php echo esc_url( get_permalink( $hurth_page ) . $hurth_q ); ?>">
-								<?php echo esc_html( get_the_title( $hurth_page ) ); ?>
+							<a class="card__link" href="<?php echo esc_url( get_permalink( $hurth_card['page'] ) . $hurth_q ); ?>">
+								<?php echo esc_html( $hurth_card['title'] ); ?>
 							</a>
 						</h3>
-						<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( $hurth_page->post_content ), 24 ) ); ?></p>
+						<p><?php echo esc_html( $hurth_card['blurb'] ); ?></p>
 					</article>
 				<?php endforeach; ?>
 			</div>

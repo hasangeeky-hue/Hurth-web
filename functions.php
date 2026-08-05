@@ -456,6 +456,71 @@ function hurth_alt_url( $target ) {
 }
 
 /**
+ * The service index shown on the front page.
+ *
+ * Deliberately not derived from page titles and auto-excerpts. Doing that
+ * printed English titles on the German site and run-together fragments like
+ * "Select Your ServiceOld Mobile Phone Repair" pulled out of stripped
+ * Elementor markup. Labels and blurbs are written here instead.
+ *
+ * @return array
+ */
+function hurth_service_index() {
+	$de = ( 'de' === hurth_lang() );
+
+	return array(
+		array(
+			'de'    => 'handy-reparatur-huerth',
+			'en'    => 'en-phone-repair-huerth',
+			'title' => $de ? 'Reparatur' : 'Repair',
+			'blurb' => $de
+				? 'Display, Akku, Ladebuchse, Kamera, Wasserschaden. Diagnose und Preis, bevor wir das Gerät öffnen.'
+				: 'Screen, battery, charging port, camera, water damage. Diagnosis and price before we open the device.',
+		),
+		array(
+			'de'    => 'handy-ankauf-huerth',
+			'en'    => 'en-sell-your-phone-huerth',
+			'title' => $de ? 'Ankauf' : 'Buy-back',
+			'blurb' => $de
+				? 'Wir kaufen gebrauchte und defekte Geräte. Nachvollziehbare Bewertung statt einer Zahl ohne Erklärung.'
+				: 'We buy used and faulty devices. A valuation you can follow, not a number without explanation.',
+		),
+		array(
+			'de'    => 'explore-our-products',
+			'en'    => 'explore-our-products',
+			'title' => $de ? 'Neue Handys' : 'New phones',
+			'blurb' => $de
+				? 'Aktuelle Smartphones mit Beratung, die zu Ihrer tatsächlichen Nutzung passt — nicht zum größten Datenblatt.'
+				: 'Current smartphones with advice that fits how you actually use a phone, not the longest spec sheet.',
+		),
+		array(
+			'de'    => 'displaytausch-huerth',
+			'en'    => 'en-screen-replacement-huerth',
+			'title' => $de ? 'Displaytausch' : 'Screen replacement',
+			'blurb' => $de
+				? 'Der häufigste Schaden überhaupt — und der, bei dem Warten am teuersten wird.'
+				: 'The most common damage there is, and the one where waiting costs the most.',
+		),
+		array(
+			'de'    => 'akku-wechseln-huerth',
+			'en'    => 'en-battery-replacement-huerth',
+			'title' => $de ? 'Akkuwechsel' : 'Battery replacement',
+			'blurb' => $de
+				? 'Wenn das Handy mittags leer ist, obwohl es morgens voll war. Fast immer günstiger als ein neues Gerät.'
+				: 'When the phone is flat by lunchtime though it was full at breakfast. Almost always cheaper than a new device.',
+		),
+		array(
+			'de'    => 'wasserschaden-handy-huerth',
+			'en'    => 'en-water-damage-huerth',
+			'title' => $de ? 'Wasserschaden' : 'Water damage',
+			'blurb' => $de
+				? 'Hier zählt jede Minute. Was Sie in der ersten halben Stunde tun, entscheidet über Rettung oder Totalverlust.'
+				: 'Here minutes matter. What you do in the first half hour decides between recovery and total loss.',
+		),
+	);
+}
+
+/**
  * Top-level pages for the footer and the home page card grid.
  *
  * @return array slug => label

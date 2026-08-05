@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      5.1.0
+ * Version:      5.2.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -520,6 +520,19 @@ a:hover { color: var(--signal-deep); }
 
 /* Card with its own counter suppressed (blog listing shows dates instead) */
 .card-grid--dated .card::before { content: none; }
+
+/*
+ * Fixed three-across so six items fill two full rows. auto-fit produced four
+ * columns and left a single orphaned card beside a block of dead space.
+ */
+.card-grid--three { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 920px) {
+	.card-grid--three { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+	.card-grid--three { grid-template-columns: 1fr; }
+}
 
 /* ==========================================================================
    7b. Brand strip & statement block
