@@ -108,22 +108,89 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 	</div>
 </div>
 
-<?php if ( have_posts() ) : ?>
-	<div class="section">
-		<div class="wrap">
-			<?php
-			while ( have_posts() ) :
-				the_post();
-				?>
-				<article <?php post_class( 'content-area content-area--wide' ); ?>>
-					<?php the_content(); ?>
-				</article>
+<?php
+/*
+ * The front page is composed, not dumped.
+ *
+ * Rendering the assigned page's the_content() here printed the original
+ * imported Elementor body: English copy on a German-first site, repeated
+ * references to DHL after that service was dropped, and a vertical stack of
+ * brand logos each rendered as a full-width bordered box. It ran to roughly
+ * 6,800px, most of it dead space.
+ *
+ * The page body is deliberately not output. Everything on the front page is
+ * built from designed sections below.
+ */
+
+$hurth_brands = array( 'Apple iPhone', 'Samsung Galaxy', 'Xiaomi', 'Google Pixel', 'Huawei', 'OnePlus' );
+?>
+
+<section class="brandstrip">
+	<div class="wrap brandstrip__inner">
+		<span class="brandstrip__label">
+			<?php echo esc_html( 'de' === hurth_lang() ? 'Wir reparieren' : 'We repair' ); ?>
+		</span>
+		<ul>
+			<?php foreach ( $hurth_brands as $b ) : ?>
+				<li><?php echo esc_html( $b ); ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+</section>
+
+<section class="section">
+	<div class="wrap">
+		<div class="statement">
+			<p class="statement__lead">
 				<?php
-			endwhile;
-			?>
+				echo esc_html(
+					'de' === hurth_lang()
+						? 'Ein defektes Handy ist selten nur ein technisches Problem. Termine, Fotos, Bankgeschäfte, Nachrichten an die Familie — alles liegt auf einem Gerät, das plötzlich nicht mehr funktioniert.'
+						: 'A broken phone is rarely just a technical problem. Appointments, photos, banking, messages to family — it all sits on one device that has suddenly stopped working.'
+				);
+				?>
+			</p>
+			<div class="statement__cols">
+				<div>
+					<h3><?php echo esc_html( 'de' === hurth_lang() ? 'Preis vor der Reparatur' : 'Price before the repair' ); ?></h3>
+					<p>
+						<?php
+						echo esc_html(
+							'de' === hurth_lang()
+								? 'Wir sehen uns Ihr Gerät an, erklären verständlich, was defekt ist, und nennen den Preis. Erst danach entscheiden Sie. Keine Überraschung an der Kasse.'
+								: 'We look at your device, explain in plain language what has failed, and tell you the price. Then you decide. No surprise at the counter.'
+						);
+						?>
+					</p>
+				</div>
+				<div>
+					<h3><?php echo esc_html( 'de' === hurth_lang() ? 'Wir sagen auch ab' : 'We turn work down' ); ?></h3>
+					<p>
+						<?php
+						echo esc_html(
+							'de' === hurth_lang()
+								? 'Wenn eine Reparatur teurer wäre als der Wert des Geräts, sagen wir das. Wir verkaufen niemandem eine Reparatur, die sich nicht rechnet.'
+								: 'If a repair would cost more than the device is worth, we say so. We do not sell repairs that do not add up.'
+						);
+						?>
+					</p>
+				</div>
+				<div>
+					<h3><?php echo esc_html( 'de' === hurth_lang() ? 'Ihre Daten' : 'Your data' ); ?></h3>
+					<p>
+						<?php
+						echo esc_html(
+							'de' === hurth_lang()
+								? 'Bei den meisten Reparaturen ist kein Zugriff auf Ihre Inhalte nötig, und wir nehmen ihn auch nicht. Fotos, Nachrichten und Konten sind Ihre Angelegenheit.'
+								: 'Most repairs need no access to your content, and we do not take it. Photos, messages and accounts are yours.'
+						);
+						?>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
-<?php endif; ?>
+</section>
 
 <?php
 // Service pages, in navigation order, skipping anything without real content.
