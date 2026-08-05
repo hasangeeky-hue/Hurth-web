@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      5.3.0
+ * Version:      6.0.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -102,6 +102,69 @@
 
 	--fast: 120ms cubic-bezier(.2, .7, .3, 1);
 	--slow: 260ms cubic-bezier(.2, .7, .3, 1);
+}
+
+/* ==========================================================================
+   1b. Motion layer
+   The previous version was a print artefact — it would have looked identical
+   as a PDF. Nothing revealed, nothing had depth, nothing responded.
+
+   Scroll reveals use native CSS scroll-driven animation where the browser
+   supports it, so there is no JavaScript in the critical path and no layout
+   thrash. Everything degrades to simply visible.
+   ========================================================================== */
+
+@keyframes rise {
+	from { opacity: 0; transform: translateY(28px); }
+	to   { opacity: 1; transform: none; }
+}
+@keyframes riseIn {
+	from { opacity: 0; transform: translateY(46px) scale(.985); }
+	to   { opacity: 1; transform: none; }
+}
+@keyframes wipe {
+	from { clip-path: inset(0 100% 0 0); }
+	to   { clip-path: inset(0 0 0 0); }
+}
+@keyframes drift {
+	from { transform: translateY(3%); }
+	to   { transform: translateY(-3%); }
+}
+@keyframes marquee {
+	from { transform: translateX(0); }
+	to   { transform: translateX(-50%); }
+}
+
+@supports (animation-timeline: view()) {
+	.reveal {
+		animation: riseIn linear both;
+		animation-timeline: view();
+		animation-range: entry 8% cover 26%;
+	}
+	.reveal-rise {
+		animation: rise linear both;
+		animation-timeline: view();
+		animation-range: entry 4% cover 22%;
+	}
+	.reveal-wipe {
+		animation: wipe linear both;
+		animation-timeline: view();
+		animation-range: entry 12% cover 34%;
+	}
+	/* Parallax drift on imagery, driven by the scroll position of its own
+	   container rather than a scroll listener. */
+	.parallax img {
+		animation: drift linear both;
+		animation-timeline: view();
+		animation-range: cover;
+		will-change: transform;
+	}
+	/* Staggered children, so a grid assembles rather than appearing at once. */
+	.stagger > * {
+		animation: rise linear both;
+		animation-timeline: view();
+		animation-range: entry 2% cover 20%;
+	}
 }
 
 /* ==========================================================================
@@ -387,11 +450,50 @@ a:hover { color: var(--signal-deep); }
    5. Hero — type-led and asymmetric
    ========================================================================== */
 
+/*
+ * Dark, deep and lit. Minimal white was the safe choice and it read as
+ * empty; research on current premium sites is unambiguous that saturated
+ * colour and depth cues have replaced flat minimal tones.
+ */
 .hero {
 	position: relative;
-	padding-block: clamp(2.5rem, 1rem + 5vw, 5rem) 0;
+	padding-block: clamp(3rem, 1.5rem + 5vw, 6rem) 0;
 	overflow: hidden;
+	background: #060a12;
+	color: #e6ebf3;
 }
+
+/* Layered light sources, drifting slowly — depth without a WebGL payload. */
+.hero::before,
+.hero::after {
+	content: ""; position: absolute; pointer-events: none;
+	border-radius: 50%;
+	filter: blur(70px);
+	opacity: .7;
+}
+.hero::before {
+	width: 55vw; height: 55vw; max-width: 780px; max-height: 780px;
+	top: -18%; left: -12%;
+	background: radial-gradient(circle, #1d6ff0 0%, transparent 68%);
+}
+.hero::after {
+	width: 48vw; height: 48vw; max-width: 640px; max-height: 640px;
+	right: -8%; bottom: -22%;
+	background: radial-gradient(circle, #f0932b 0%, transparent 66%);
+	opacity: .55;
+}
+
+.hero__grid {
+	position: absolute; inset: 0; pointer-events: none;
+	background-image:
+		linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+	background-size: 56px 56px;
+	mask-image: radial-gradient(120% 90% at 50% 25%, #000 35%, transparent 78%);
+}
+
+.hero .wrap { position: relative; z-index: 1; }
+
 .hero__inner {
 	display: grid;
 	grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
@@ -401,10 +503,13 @@ a:hover { color: var(--signal-deep); }
 
 .hero__eyebrow {
 	display: inline-block; margin-bottom: 1.4rem;
-	padding-bottom: .5rem;
-	color: var(--signal);
-	border-bottom: 2px solid var(--signal);
+	padding: .4rem .9rem;
+	color: #cfe0ff;
+	background: rgba(29, 111, 240, .16);
+	border: 1px solid rgba(120, 170, 255, .34);
+	border-bottom: 1px solid rgba(120, 170, 255, .34);
 	letter-spacing: .16em;
+	backdrop-filter: blur(6px);
 }
 
 .hero h1 {
@@ -413,7 +518,21 @@ a:hover { color: var(--signal-deep); }
 	line-height: .93;
 	letter-spacing: -.045em;
 	margin-bottom: .35em;
+	color: #fff;
 }
+
+/* The headline wipes in line by line rather than simply being there. */
+@supports (animation-timeline: view()) {
+	.hero h1 { animation: riseIn .9s cubic-bezier(.16,.84,.3,1) both; }
+	.hero .lead { animation: rise .9s .12s cubic-bezier(.16,.84,.3,1) both; }
+	.hero__points { animation: rise .9s .2s cubic-bezier(.16,.84,.3,1) both; }
+	.hero__actions { animation: rise .9s .3s cubic-bezier(.16,.84,.3,1) both; }
+}
+
+.hero .lead { color: #a9b6cb; }
+.hero__points li { border-bottom-color: rgba(255,255,255,.13); color: #cbd4e1; }
+.hero__points { border-top-color: rgba(255,255,255,.13); }
+.hero__points li::before { color: #6ea8ff; }
 
 .hero__points {
 	list-style: none; margin: 2.2rem 0 0; padding: 0;
@@ -507,8 +626,39 @@ a:hover { color: var(--signal-deep); }
 	background: var(--paper);
 	border-right: 1px solid var(--rule);
 	border-bottom: 1px solid var(--rule);
-	transition: background-color var(--fast);
+	overflow: hidden;
+	transition: background-color var(--fast), transform var(--slow);
+	isolation: isolate;
 }
+
+/* Cursor-tracked light. --mx/--my are set in JS on pointermove. */
+.card::after {
+	content: ""; position: absolute; inset: 0; z-index: -1;
+	background: radial-gradient(
+		380px circle at var(--mx, 50%) var(--my, 0%),
+		rgba(0, 89, 169, .13), transparent 62%);
+	opacity: 0; transition: opacity var(--slow);
+}
+.card:hover::after { opacity: 1; }
+
+/* The signal rule wipes across the top edge on hover. */
+.card::before { position: relative; z-index: 1; }
+.card__rule {
+	position: absolute; inset: 0 auto auto 0;
+	height: 3px; width: 100%;
+	background: var(--signal);
+	transform: scaleX(0); transform-origin: left;
+	transition: transform var(--slow);
+}
+.card:hover .card__rule { transform: scaleX(1); }
+
+/* Title gains a sliding arrow. */
+.card h3 a::after {
+	content: " →"; display: inline-block;
+	transform: translateX(-4px); opacity: 0;
+	transition: transform var(--slow), opacity var(--slow);
+}
+.card:hover h3 a::after { transform: translateX(2px); opacity: 1; }
 .card::before {
 	content: counter(idx, decimal-leading-zero);
 	counter-increment: idx;
@@ -550,29 +700,40 @@ a:hover { color: var(--signal-deep); }
    7b. Brand strip & statement block
    ========================================================================== */
 
+/* Continuously scrolling marquee — motion at almost no cost. */
 .brandstrip {
-	border-top: 2px solid var(--ink);
 	background: var(--ink);
 	color: #fff;
-}
-.brandstrip__inner {
-	display: flex; align-items: baseline; flex-wrap: wrap;
-	gap: .8rem clamp(1rem, .5rem + 1.5vw, 2.2rem);
-	padding-block: 1.1rem;
+	overflow: hidden;
+	position: relative;
+	display: flex; align-items: center;
+	gap: 0;
 }
 .brandstrip__label {
+	flex: 0 0 auto;
+	padding: 1rem clamp(1rem, .6rem + 1.2vw, 1.8rem);
 	font-family: var(--mono); font-size: var(--t--1);
 	letter-spacing: .14em; text-transform: uppercase;
-	color: var(--flag);
+	color: var(--ink); background: var(--flag);
+	z-index: 2;
 }
+.brandstrip__track { overflow: hidden; flex: 1 1 auto; }
 .brandstrip ul {
-	display: flex; flex-wrap: wrap;
-	gap: .5rem clamp(1rem, .5rem + 1.5vw, 2.2rem);
-	list-style: none; margin: 0; padding: 0;
+	display: flex; align-items: center;
+	gap: clamp(1.6rem, 1rem + 2vw, 3.2rem);
+	list-style: none; margin: 0; padding: 0 clamp(1.6rem, 1rem + 2vw, 3.2rem);
+	width: max-content;
+	animation: marquee 34s linear infinite;
 }
+.brandstrip:hover ul { animation-play-state: paused; }
 .brandstrip li {
 	font-family: var(--display); font-weight: 600;
-	font-size: var(--t-0); letter-spacing: -.01em;
+	font-size: var(--t-1); letter-spacing: -.01em;
+	white-space: nowrap; color: #fff;
+}
+.brandstrip li::after {
+	content: "/"; margin-left: clamp(1.6rem, 1rem + 2vw, 3.2rem);
+	color: var(--flag); font-weight: 400;
 }
 
 .statement__lead {

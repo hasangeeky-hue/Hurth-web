@@ -16,6 +16,7 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 ?>
 
 <section class="hero">
+	<span class="hero__grid" aria-hidden="true"></span>
 	<div class="wrap hero__inner">
 		<div>
 			<span class="hero__eyebrow"><?php echo esc_html( hurth_t( 'hero_eyebrow' ) ); ?></span>
@@ -137,22 +138,31 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 $hurth_brands = array( 'Apple iPhone', 'Samsung Galaxy', 'Xiaomi', 'Google Pixel', 'Huawei', 'OnePlus' );
 ?>
 
-<section class="brandstrip">
-	<div class="wrap brandstrip__inner">
-		<span class="brandstrip__label">
-			<?php echo esc_html( 'de' === hurth_lang() ? 'Wir reparieren' : 'We repair' ); ?>
-		</span>
+<section class="brandstrip" aria-label="<?php echo esc_attr( 'de' === hurth_lang() ? 'Marken' : 'Brands' ); ?>">
+	<span class="brandstrip__label">
+		<?php echo esc_html( 'de' === hurth_lang() ? 'Wir reparieren' : 'We repair' ); ?>
+	</span>
+	<div class="brandstrip__track">
 		<ul>
-			<?php foreach ( $hurth_brands as $b ) : ?>
-				<li><?php echo esc_html( $b ); ?></li>
-			<?php endforeach; ?>
+			<?php
+			// Printed twice so the marquee loops seamlessly at -50%.
+			for ( $pass = 0; $pass < 2; $pass++ ) {
+				foreach ( $hurth_brands as $b ) {
+					printf(
+						'<li%s>%s</li>',
+						$pass ? ' aria-hidden="true"' : '',
+						esc_html( $b )
+					);
+				}
+			}
+			?>
 		</ul>
 	</div>
 </section>
 
 <section class="section">
 	<div class="wrap">
-		<div class="statement">
+		<div class="statement reveal">
 			<p class="statement__lead">
 				<?php
 				echo esc_html(
@@ -162,7 +172,7 @@ $hurth_brands = array( 'Apple iPhone', 'Samsung Galaxy', 'Xiaomi', 'Google Pixel
 				);
 				?>
 			</p>
-			<div class="statement__cols">
+			<div class="statement__cols stagger">
 				<div>
 					<h3><?php echo esc_html( 'de' === hurth_lang() ? 'Preis vor der Reparatur' : 'Price before the repair' ); ?></h3>
 					<p>
@@ -226,7 +236,7 @@ if ( $hurth_cards ) :
 	?>
 	<section class="section section--surface">
 		<div class="wrap">
-			<div class="band-head">
+			<div class="band-head reveal-rise">
 				<span class="band-head__no">01 / <?php echo esc_html( 'de' === hurth_lang() ? 'Leistungen' : 'Services' ); ?></span>
 				<div>
 					<h2><?php echo esc_html( hurth_t( 'what_we_do' ) ); ?></h2>
@@ -241,9 +251,9 @@ if ( $hurth_cards ) :
 					</p>
 				</div>
 			</div>
-			<div class="card-grid card-grid--three">
+			<div class="card-grid card-grid--three stagger">
 				<?php foreach ( $hurth_cards as $hurth_card ) : ?>
-					<article class="card">
+					<article class="card"><span class="card__rule" aria-hidden="true"></span>
 						<h3>
 							<a class="card__link" href="<?php echo esc_url( get_permalink( $hurth_card['page'] ) . $hurth_q ); ?>">
 								<?php echo esc_html( $hurth_card['title'] ); ?>
@@ -275,7 +285,7 @@ $hurth_bands = array(
 
 <section class="section photo-band">
 	<div class="wrap">
-		<div class="band-head">
+		<div class="band-head reveal-rise">
 			<span class="band-head__no">02 / <?php echo esc_html( 'de' === hurth_lang() ? 'Werkstatt' : 'Workshop' ); ?></span>
 			<div>
 				<h2>
@@ -291,7 +301,7 @@ $hurth_bands = array(
 		</div>
 	</div>
 	<div class="wrap">
-		<div class="photo-band__grid">
+		<div class="photo-band__grid stagger">
 			<?php
 			foreach ( $hurth_bands as $b ) {
 				$page = get_page_by_path( $hurth_de ? $b[3] : $b[4] );
@@ -305,7 +315,7 @@ $hurth_bands = array(
 					continue;
 				}
 
-				echo '<figure class="photo-band__item tilt"><div class="tilt__inner">';
+				echo '<figure class="photo-band__item tilt parallax"><div class="tilt__inner">';
 				echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '<span class="tilt__glare" aria-hidden="true"></span></div>';
 				echo '<figcaption>';
@@ -334,15 +344,15 @@ if ( $hurth_posts ) :
 	?>
 	<section class="section">
 		<div class="wrap">
-			<div class="band-head">
+			<div class="band-head reveal-rise">
 				<span class="band-head__no">03 / <?php echo esc_html( 'de' === hurth_lang() ? 'Ratgeber' : 'Journal' ); ?></span>
 				<div>
 					<h2><?php echo esc_html( hurth_t( 'from_blog' ) ); ?></h2>
 				</div>
 			</div>
-			<div class="card-grid card-grid--dated">
+			<div class="card-grid card-grid--dated stagger">
 				<?php foreach ( $hurth_posts as $hurth_post ) : ?>
-					<article class="card">
+					<article class="card"><span class="card__rule" aria-hidden="true"></span>
 						<span class="card__meta"><?php echo esc_html( get_the_date( '', $hurth_post ) ); ?></span>
 						<h3>
 							<a class="card__link" href="<?php echo esc_url( get_permalink( $hurth_post ) . $hurth_q ); ?>">

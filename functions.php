@@ -903,6 +903,49 @@ function hurth_assets() {
 		show();
 	})();
 
+	// Scroll reveals for browsers without native scroll-driven animation.
+	// Where animation-timeline: view() is supported the CSS handles it and
+	// this does nothing, so there is no duplicated work.
+	(function () {
+		if (CSS.supports('animation-timeline: view()')) return;
+		var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		var els = document.querySelectorAll('.reveal, .reveal-rise, .stagger > *');
+		if (!els.length) return;
+		if (calm || !('IntersectionObserver' in window)) {
+			els.forEach(function (el) { el.style.opacity = 1; });
+			return;
+		}
+		els.forEach(function (el) {
+			el.style.opacity = 0;
+			el.style.transform = 'translateY(28px)';
+			el.style.transition = 'opacity .7s cubic-bezier(.16,.84,.3,1), transform .7s cubic-bezier(.16,.84,.3,1)';
+		});
+		var io = new IntersectionObserver(function (entries) {
+			entries.forEach(function (e, i) {
+				if (!e.isIntersecting) return;
+				var d = (Array.prototype.indexOf.call(e.target.parentNode.children, e.target) % 6) * 60;
+				setTimeout(function () {
+					e.target.style.opacity = 1;
+					e.target.style.transform = 'none';
+				}, d);
+				io.unobserve(e.target);
+			});
+		}, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+		els.forEach(function (el) { io.observe(el); });
+	})();
+
+	// Cursor-tracked light on cards.
+	(function () {
+		if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+		document.addEventListener('pointermove', function (e) {
+			var card = e.target.closest('.card');
+			if (!card) return;
+			var r = card.getBoundingClientRect();
+			card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+			card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+		}, { passive: true });
+	})();
+
 	// Interactive 3D device: grab and rotate on both axes.
 	(function () {
 		document.querySelectorAll('.device3d').forEach(function (el) {
