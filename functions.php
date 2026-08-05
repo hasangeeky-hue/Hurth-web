@@ -710,6 +710,59 @@ function hurth_spin( $set, $alt, $still = 'hero-repair' ) {
 }
 
 /**
+ * Interactive 3D device.
+ *
+ * A real rectangular prism built in CSS 3D — six faces, genuine perspective,
+ * grab-and-rotate on both axes. This exists because the 360° frame viewer
+ * needs a turntable shoot that has not happened, so it rendered nothing.
+ * This needs no photography at all and works on day one.
+ *
+ * Auto-rotates gently until the visitor touches it, then hands over control.
+ *
+ * @param string $label Accessible label.
+ * @return string
+ */
+function hurth_device3d( $label = '' ) {
+	$de = ( 'de' === hurth_lang() );
+
+	if ( '' === $label ) {
+		$label = $de
+			? 'Interaktives 3D-Modell eines Smartphones — zum Drehen ziehen'
+			: 'Interactive 3D smartphone model — drag to rotate';
+	}
+
+	$hint = $de ? 'Ziehen zum Drehen' : 'Drag to rotate';
+
+	ob_start();
+	?>
+	<div class="device3d" role="img" aria-label="<?php echo esc_attr( $label ); ?>" tabindex="0">
+		<div class="device3d__stage">
+			<div class="device3d__body">
+				<div class="device3d__face device3d__face--front">
+					<div class="device3d__screen">
+						<span class="device3d__notch"></span>
+						<span class="device3d__glow"></span>
+					</div>
+				</div>
+				<div class="device3d__face device3d__face--back">
+					<div class="device3d__camera">
+						<i></i><i></i><i></i>
+					</div>
+					<span class="device3d__logo">F</span>
+				</div>
+				<div class="device3d__face device3d__face--right"></div>
+				<div class="device3d__face device3d__face--left"></div>
+				<div class="device3d__face device3d__face--top"></div>
+				<div class="device3d__face device3d__face--bottom"></div>
+			</div>
+		</div>
+		<span class="device3d__hint"><?php echo esc_html( $hint ); ?></span>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * Preload the two self-hosted variable fonts.
  *
  * They are referenced from inside style.css, so the browser only discovers
@@ -848,6 +901,61 @@ function hurth_assets() {
 
 		document.querySelector('.booking .steps').removeAttribute('aria-hidden');
 		show();
+	})();
+
+	// Interactive 3D device: grab and rotate on both axes.
+	(function () {
+		document.querySelectorAll('.device3d').forEach(function (el) {
+			var body = el.querySelector('.device3d__body');
+			if (!body) return;
+
+			var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			var rx = -12, ry = -28, dragging = false, lx = 0, ly = 0, idle = !calm, raf;
+
+			function apply() {
+				body.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+			}
+
+			function spin() {
+				if (idle) { ry += 0.22; apply(); }
+				raf = requestAnimationFrame(spin);
+			}
+
+			function start(x, y) {
+				dragging = true; idle = false;
+				lx = x; ly = y;
+				el.classList.add('is-dragging');
+			}
+			function move(x, y) {
+				if (!dragging) return;
+				ry += (x - lx) * 0.55;
+				rx -= (y - ly) * 0.45;
+				rx = Math.max(-70, Math.min(70, rx));
+				lx = x; ly = y;
+				apply();
+			}
+			function end() { dragging = false; el.classList.remove('is-dragging'); }
+
+			el.addEventListener('pointerdown', function (e) {
+				start(e.clientX, e.clientY);
+				el.setPointerCapture(e.pointerId);
+				e.preventDefault();
+			});
+			el.addEventListener('pointermove', function (e) { move(e.clientX, e.clientY); });
+			el.addEventListener('pointerup', end);
+			el.addEventListener('pointercancel', end);
+
+			el.addEventListener('keydown', function (e) {
+				var step = 8;
+				if (e.key === 'ArrowRight') { idle = false; ry += step; apply(); e.preventDefault(); }
+				if (e.key === 'ArrowLeft')  { idle = false; ry -= step; apply(); e.preventDefault(); }
+				if (e.key === 'ArrowUp')    { idle = false; rx = Math.max(-70, rx - step); apply(); e.preventDefault(); }
+				if (e.key === 'ArrowDown')  { idle = false; rx = Math.min(70, rx + step); apply(); e.preventDefault(); }
+			});
+
+			apply();
+			if (!calm) { raf = requestAnimationFrame(spin); }
+		});
 	})();
 
 	// 360 degree viewer. Drag, swipe or arrow-key through the frame sequence.

@@ -41,7 +41,19 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 			</div>
 		</div>
 
-		<div class="hero__media tilt">
+		<div class="hero__media">
+			<?php
+			/*
+			 * The interactive 3D device leads, because an interactive element
+			 * was asked for and the frame-sequence viewer renders nothing
+			 * without a turntable shoot. The workbench photo sits beneath it
+			 * so the page still shows real work, in colour.
+			 */
+			echo hurth_device3d(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
+		</div>
+
+		<div class="hero__photo tilt">
 			<div class="tilt__inner">
 				<?php
 				$hurth_hero_alt = ( 'de' === hurth_lang() )
