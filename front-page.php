@@ -143,7 +143,21 @@ if ( $hurth_cards ) :
 	?>
 	<section class="section section--surface">
 		<div class="wrap">
-			<h2 class="text-center"><?php echo esc_html( hurth_t( 'what_we_do' ) ); ?></h2>
+			<div class="band-head">
+				<span class="band-head__no">01 / <?php echo esc_html( 'de' === hurth_lang() ? 'Leistungen' : 'Services' ); ?></span>
+				<div>
+					<h2><?php echo esc_html( hurth_t( 'what_we_do' ) ); ?></h2>
+					<p>
+						<?php
+						echo esc_html(
+							'de' === hurth_lang()
+								? 'Drei Dinge, und die richtig: Reparatur, Ankauf, Verkauf.'
+								: 'Three things, done properly: repair, buy-back, sales.'
+						);
+						?>
+					</p>
+				</div>
+			</div>
 			<div class="card-grid">
 				<?php foreach ( $hurth_cards as $hurth_page ) : ?>
 					<article class="card">
@@ -177,6 +191,22 @@ $hurth_bands = array(
 ?>
 
 <section class="section photo-band">
+	<div class="wrap">
+		<div class="band-head">
+			<span class="band-head__no">02 / <?php echo esc_html( 'de' === hurth_lang() ? 'Werkstatt' : 'Workshop' ); ?></span>
+			<div>
+				<h2>
+					<?php
+					echo esc_html(
+						'de' === hurth_lang()
+							? 'Was auf der Werkbank passiert'
+							: 'What happens on the bench'
+					);
+					?>
+				</h2>
+			</div>
+		</div>
+	</div>
 	<div class="wrap">
 		<div class="photo-band__grid">
 			<?php
@@ -221,8 +251,13 @@ if ( $hurth_posts ) :
 	?>
 	<section class="section">
 		<div class="wrap">
-			<h2 class="text-center"><?php echo esc_html( hurth_t( 'from_blog' ) ); ?></h2>
-			<div class="card-grid">
+			<div class="band-head">
+				<span class="band-head__no">03 / <?php echo esc_html( 'de' === hurth_lang() ? 'Ratgeber' : 'Journal' ); ?></span>
+				<div>
+					<h2><?php echo esc_html( hurth_t( 'from_blog' ) ); ?></h2>
+				</div>
+			</div>
+			<div class="card-grid card-grid--dated">
 				<?php foreach ( $hurth_posts as $hurth_post ) : ?>
 					<article class="card">
 						<span class="card__meta"><?php echo esc_html( get_the_date( '', $hurth_post ) ); ?></span>
