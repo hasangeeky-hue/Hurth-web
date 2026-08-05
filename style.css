@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      6.0.0
+ * Version:      6.0.1
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -136,20 +136,27 @@
 }
 
 @supports (animation-timeline: view()) {
+	/*
+	 * Ranges end inside `entry`, never in `cover`. Ending in cover means an
+	 * element large enough to fill the viewport — or a very tall viewport —
+	 * can sit permanently part-way through its animation and render dimmed.
+	 * Finishing within entry guarantees full opacity as soon as the element
+	 * is properly on screen.
+	 */
 	.reveal {
 		animation: riseIn linear both;
 		animation-timeline: view();
-		animation-range: entry 8% cover 26%;
+		animation-range: entry 0% entry 70%;
 	}
 	.reveal-rise {
 		animation: rise linear both;
 		animation-timeline: view();
-		animation-range: entry 4% cover 22%;
+		animation-range: entry 0% entry 60%;
 	}
 	.reveal-wipe {
 		animation: wipe linear both;
 		animation-timeline: view();
-		animation-range: entry 12% cover 34%;
+		animation-range: entry 0% entry 75%;
 	}
 	/* Parallax drift on imagery, driven by the scroll position of its own
 	   container rather than a scroll listener. */
@@ -163,7 +170,7 @@
 	.stagger > * {
 		animation: rise linear both;
 		animation-timeline: view();
-		animation-range: entry 2% cover 20%;
+		animation-range: entry 0% entry 65%;
 	}
 }
 
@@ -533,6 +540,20 @@ a:hover { color: var(--signal-deep); }
 .hero__points li { border-bottom-color: rgba(255,255,255,.13); color: #cbd4e1; }
 .hero__points { border-top-color: rgba(255,255,255,.13); }
 .hero__points li::before { color: #6ea8ff; }
+
+/*
+ * The ghost button carries near-black text, which is invisible now the hero
+ * is dark — it rendered as an empty bordered box. Inverted inside the hero.
+ */
+.hero .btn--ghost {
+	color: #fff;
+	border-color: rgba(255, 255, 255, .42);
+	background: rgba(255, 255, 255, .06);
+	backdrop-filter: blur(6px);
+}
+.hero .btn--ghost:hover {
+	background: #fff; color: var(--ink); border-color: #fff;
+}
 
 .hero__points {
 	list-style: none; margin: 2.2rem 0 0; padding: 0;
