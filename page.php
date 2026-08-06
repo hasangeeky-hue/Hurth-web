@@ -49,7 +49,10 @@ $hurth_visual = hurth_page_visual( $hurth_slug );
 
 		<?php if ( $hurth_visual ) : ?>
 			<div class="page-hero__media">
-				<?php echo hurth_device3d( $hurth_visual ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php
+				// hurth_page_visual() returns array( fault, brand ).
+				echo hurth_device3d( $hurth_visual[0], '', $hurth_visual[1] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
 			</div>
 		<?php endif; ?>
 	</div>

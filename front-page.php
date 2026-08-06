@@ -50,7 +50,7 @@ $hurth_tick     = '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M504 2
 			 * without a turntable shoot. The workbench photo sits beneath it
 			 * so the page still shows real work, in colour.
 			 */
-			echo hurth_device3d(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo hurth_device3d( 'default', '', 'iphone' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
 

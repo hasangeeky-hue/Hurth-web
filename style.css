@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      7.2.0
+ * Version:      7.3.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -726,6 +726,97 @@ a:hover { color: var(--signal-soft); }
 .device3d__face--top { top: 0; transform: rotateX(90deg) translateZ(calc(var(--d) / 2)); }
 .device3d__face--bottom { bottom: 0; transform: rotateX(-90deg) translateZ(calc(var(--h) - var(--d) / 2)); }
 .device3d__hint { position: absolute; left: 0; bottom: 0; padding: .4rem .9rem; background: var(--flag); color: var(--ink); font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
+
+/* --- Brand geometry -----------------------------------------------------
+   Four genuinely different bodies, not one shape recoloured. Each models the
+   details a handset is actually recognised by.
+   ---------------------------------------------------------------------- */
+
+/* Punch-hole front camera (everything except iPhone). */
+.device3d__hole {
+	position: absolute; top: 15px; left: 50%;
+	width: 15px; height: 15px; border-radius: 50%;
+	background: #04070c; transform: translateX(-50%);
+	box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .14);
+}
+
+.device3d__brand {
+	position: absolute; inset: auto 0 26px 0; text-align: center;
+	font-family: var(--display); font-weight: 600; font-size: .82rem;
+	letter-spacing: .22em; text-transform: uppercase;
+	color: rgba(255, 255, 255, .3);
+}
+
+/* iPhone — square housing, three lenses in a triangle. */
+.device3d--b-iphone .device3d__camera--square-tri {
+	width: 104px; height: 104px; border-radius: 26px;
+	background: rgba(255, 255, 255, .06);
+	box-shadow: 0 0 0 1px rgba(255,255,255,.16) inset, 0 6px 18px rgba(0,0,0,.4);
+	display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 11px;
+}
+.device3d--b-iphone .device3d__camera i:nth-child(3) { grid-column: 1; width: 30px; }
+.device3d--b-iphone .device3d__face--back { background: linear-gradient(200deg, #3d4653 0%, #232b36 45%, #171d26 100%); }
+.device3d--b-iphone .device3d__face--right,
+.device3d--b-iphone .device3d__face--left { background: linear-gradient(180deg, #9aa6b6, #4a5462 45%, #8794a5); }
+
+/* Samsung — three bare lenses stacked vertically, no housing. */
+.device3d--b-samsung .device3d__camera--bare-stack {
+	width: 46px; height: 128px; border-radius: 0;
+	background: none; box-shadow: none; padding: 0;
+	display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+	top: 26px; left: 26px;
+}
+.device3d--b-samsung .device3d__camera i {
+	width: 40px; height: 40px;
+	box-shadow: 0 0 0 3px rgba(255,255,255,.1), 0 4px 12px rgba(0,0,0,.5);
+}
+.device3d--b-samsung .device3d__camera i:nth-child(3) { grid-column: auto; width: 40px; margin: 0; }
+.device3d--b-samsung .device3d__face--back { background: linear-gradient(200deg, #14322b 0%, #0d2028 45%, #08131c 100%); }
+.device3d--b-samsung .device3d__face { border-radius: 34px; }
+.device3d--b-samsung .device3d__face--right,
+.device3d--b-samsung .device3d__face--left { background: linear-gradient(180deg, #c3b389, #6d6144 45%, #b3a37c); }
+
+/* Google Pixel — the full-width camera bar, and a two-tone body split by it. */
+.device3d--b-pixel .device3d__bar {
+	position: absolute; top: 74px; left: 0; right: 0; height: 58px;
+	background: linear-gradient(180deg, #2b3240, #171c26);
+	box-shadow: 0 0 0 1px rgba(255,255,255,.18) inset, 0 8px 20px rgba(0,0,0,.45);
+	display: flex; align-items: center; gap: 14px; padding-inline: 30px;
+}
+.device3d--b-pixel .device3d__bar i {
+	width: 34px; height: 34px; border-radius: 50%;
+	background: radial-gradient(circle at 34% 30%, #6c7d94 0%, #070a10 70%);
+	box-shadow: 0 0 0 2px rgba(255,255,255,.16);
+}
+.device3d__flash {
+	width: 12px; height: 12px; border-radius: 50%;
+	background: #e8e2cf; box-shadow: 0 0 8px rgba(232,226,207,.7);
+	margin-left: auto;
+}
+.device3d--b-pixel .device3d__face--back {
+	background:
+		linear-gradient(180deg, #e6e8ec 0 74px, transparent 74px),
+		linear-gradient(180deg, transparent 132px, #b9bec8 132px),
+		linear-gradient(200deg, #cfd4dc, #aab1bd);
+}
+.device3d--b-pixel .device3d__brand { color: rgba(0,0,0,.42); }
+.device3d--b-pixel .device3d__face--right,
+.device3d--b-pixel .device3d__face--left { background: linear-gradient(180deg, #cfd4dc, #6f7683 45%, #c2c8d2); }
+
+/* Xiaomi — large square module, one oversized main lens. */
+.device3d--b-xiaomi .device3d__camera--square-big {
+	width: 116px; height: 116px; border-radius: 22px;
+	background: linear-gradient(160deg, rgba(255,255,255,.12), rgba(0,0,0,.35));
+	box-shadow: 0 0 0 1px rgba(255,255,255,.2) inset, 0 8px 22px rgba(0,0,0,.45);
+	display: block; padding: 12px; position: absolute; top: 24px; left: 24px;
+}
+.device3d--b-xiaomi .device3d__camera i { position: absolute; }
+.device3d--b-xiaomi .device3d__camera i:nth-child(1) { width: 56px; height: 56px; top: 12px; left: 12px; box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+.device3d--b-xiaomi .device3d__camera i:nth-child(2) { width: 30px; height: 30px; top: 16px; right: 14px; left: auto; }
+.device3d--b-xiaomi .device3d__camera i:nth-child(3) { width: 26px; height: 26px; bottom: 14px; right: 18px; left: auto; top: auto; margin: 0; }
+.device3d--b-xiaomi .device3d__face--back { background: linear-gradient(200deg, #2c1c3f 0%, #1a1230 45%, #0f0c1f 100%); }
+.device3d--b-xiaomi .device3d__face--right,
+.device3d--b-xiaomi .device3d__face--left { background: linear-gradient(180deg, #9c8fb5, #453d5c 45%, #8b7ea6); }
 
 /* --- Contextual variants ------------------------------------------------
    Geometry is identical across all of them; only the screen overlay and the

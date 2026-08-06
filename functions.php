@@ -721,8 +721,50 @@ function hurth_spin( $set, $alt, $still = 'hero-repair' ) {
  * @param string $label Accessible label.
  * @return string
  */
-function hurth_device3d( $variant = 'default', $label = '' ) {
+function hurth_device3d( $variant = 'default', $label = '', $brand = 'iphone' ) {
 	$de = ( 'de' === hurth_lang() );
+
+	/*
+	 * Brand geometry. These are the details people actually recognise a
+	 * handset by, so each is modelled rather than recoloured:
+	 *
+	 *   iphone   pill Dynamic Island; square housing, three lenses in a
+	 *            triangle; flat brushed sides
+	 *   samsung  centred punch-hole; three bare lenses stacked vertically
+	 *            with no housing; polished rails
+	 *   pixel    centred punch-hole; the full-width camera bar across the
+	 *            back, and a two-tone body split by it
+	 *   xiaomi   centred punch-hole; large square module with one oversized
+	 *            main lens and two smaller ones
+	 */
+	$brands = array(
+		'iphone' => array(
+			'name'   => 'iPhone',
+			'notch'  => 'island',
+			'camera' => 'square-tri',
+		),
+		'samsung' => array(
+			'name'   => 'Samsung Galaxy',
+			'notch'  => 'hole',
+			'camera' => 'bare-stack',
+		),
+		'pixel' => array(
+			'name'   => 'Google Pixel',
+			'notch'  => 'hole',
+			'camera' => 'bar',
+		),
+		'xiaomi' => array(
+			'name'   => 'Xiaomi',
+			'notch'  => 'hole',
+			'camera' => 'square-big',
+		),
+	);
+
+	if ( ! isset( $brands[ $brand ] ) ) {
+		$brand = 'iphone';
+	}
+
+	$b = $brands[ $brand ];
 
 	/*
 	 * Each variant states, in the model itself, what the page is about — a
@@ -766,7 +808,7 @@ function hurth_device3d( $variant = 'default', $label = '' ) {
 	}
 
 	if ( '' === $label ) {
-		$label = $variants[ $variant ][ $de ? 'de' : 'en' ];
+		$label = $b['name'] . ' — ' . $variants[ $variant ][ $de ? 'de' : 'en' ];
 	}
 
 	$hint = $de ? 'Ziehen zum Drehen' : 'Drag to rotate';
@@ -778,7 +820,7 @@ function hurth_device3d( $variant = 'default', $label = '' ) {
 	// it is meant to present. The camera variant opens showing its back.
 	$hurth_rot = ( 'camera' === $variant ) ? array( -10, -152 ) : array( -12, -28 );
 	?>
-	<div class="device3d device3d--<?php echo esc_attr( $variant ); ?>"
+	<div class="device3d device3d--<?php echo esc_attr( $variant ); ?> device3d--b-<?php echo esc_attr( $brand ); ?>"
 		data-rx="<?php echo esc_attr( $hurth_rot[0] ); ?>"
 		data-ry="<?php echo esc_attr( $hurth_rot[1] ); ?>"
 		role="img" aria-label="<?php echo esc_attr( $label ); ?>" tabindex="0">
@@ -786,16 +828,21 @@ function hurth_device3d( $variant = 'default', $label = '' ) {
 			<div class="device3d__body">
 				<div class="device3d__face device3d__face--front">
 					<div class="device3d__screen">
-						<span class="device3d__notch"></span>
+						<span class="device3d__<?php echo 'island' === $b['notch'] ? 'notch' : 'hole'; ?>"></span>
 						<span class="device3d__glow"></span>
 						<span class="device3d__fx" aria-hidden="true"></span>
 					</div>
 				</div>
 				<div class="device3d__face device3d__face--back">
-					<div class="device3d__camera">
-						<i></i><i></i><i></i>
-					</div>
-					<span class="device3d__logo">F</span>
+					<?php if ( 'bar' === $b['camera'] ) : ?>
+						<div class="device3d__bar"><i></i><i></i><span class="device3d__flash"></span></div>
+					<?php else : ?>
+						<div class="device3d__camera device3d__camera--<?php echo esc_attr( $b['camera'] ); ?>">
+							<i></i><i></i><i></i>
+						</div>
+					<?php endif; ?>
+					<span class="device3d__logo"><?php echo esc_html( 'iphone' === $brand ? 'F' : '' ); ?></span>
+					<span class="device3d__brand"><?php echo esc_html( $b['name'] ); ?></span>
 				</div>
 				<div class="device3d__face device3d__face--right"></div>
 				<div class="device3d__face device3d__face--left"></div>
@@ -820,41 +867,46 @@ function hurth_device3d( $variant = 'default', $label = '' ) {
  * @return string|false Variant name, or false for no visual.
  */
 function hurth_page_visual( $slug ) {
+	// slug => array( fault variant, brand geometry )
 	$map = array(
-		// Repair
-		'handy-reparatur-huerth'                => 'default',
-		'en-phone-repair-huerth'                => 'default',
-		'iphone-reparatur-huerth'               => 'default',
-		'en-iphone-repair-huerth'               => 'default',
-		'samsung-reparatur-huerth'              => 'default',
-		'en-samsung-repair-huerth'              => 'default',
-		'xiaomi-pixel-reparatur-huerth'         => 'default',
-		'en-xiaomi-pixel-repair-huerth'         => 'default',
-		// Fault-specific
-		'displaytausch-huerth'                  => 'crack',
-		'en-screen-replacement-huerth'          => 'crack',
-		'akku-wechseln-huerth'                  => 'battery',
-		'en-battery-replacement-huerth'         => 'battery',
-		'wasserschaden-handy-huerth'            => 'water',
-		'en-water-damage-huerth'                => 'water',
-		'ladebuchse-kamera-reparatur-huerth'    => 'camera',
-		'en-charging-port-camera-repair-huerth' => 'camera',
+		// Repair — brand pages show their own handset.
+		'handy-reparatur-huerth'                => array( 'default', 'iphone' ),
+		'en-phone-repair-huerth'                => array( 'default', 'iphone' ),
+		'iphone-reparatur-huerth'               => array( 'default', 'iphone' ),
+		'en-iphone-repair-huerth'               => array( 'default', 'iphone' ),
+		'samsung-reparatur-huerth'              => array( 'default', 'samsung' ),
+		'en-samsung-repair-huerth'              => array( 'default', 'samsung' ),
+		'xiaomi-pixel-reparatur-huerth'         => array( 'default', 'xiaomi' ),
+		'en-xiaomi-pixel-repair-huerth'         => array( 'default', 'xiaomi' ),
+
+		// Fault pages — spread across brands so the same body never repeats
+		// on adjacent pages.
+		'displaytausch-huerth'                  => array( 'crack', 'iphone' ),
+		'en-screen-replacement-huerth'          => array( 'crack', 'iphone' ),
+		'akku-wechseln-huerth'                  => array( 'battery', 'samsung' ),
+		'en-battery-replacement-huerth'         => array( 'battery', 'samsung' ),
+		'wasserschaden-handy-huerth'            => array( 'water', 'pixel' ),
+		'en-water-damage-huerth'                => array( 'water', 'pixel' ),
+		'ladebuchse-kamera-reparatur-huerth'    => array( 'camera', 'pixel' ),
+		'en-charging-port-camera-repair-huerth' => array( 'camera', 'pixel' ),
+
 		// Buy-back
-		'handy-ankauf-huerth'                   => 'buy',
-		'en-sell-your-phone-huerth'             => 'buy',
-		'old-moble-phone-buy-sell'              => 'buy',
-		'defekte-geraete-ankauf-huerth'         => 'crack',
-		'en-broken-device-buyback-huerth'       => 'crack',
-		'tablet-smartwatch-ankauf-huerth'       => 'buy',
-		'en-tablet-smartwatch-buyback-huerth'   => 'buy',
-		'inzahlungnahme-huerth'                 => 'buy',
-		'en-trade-in-huerth'                    => 'buy',
+		'handy-ankauf-huerth'                   => array( 'buy', 'samsung' ),
+		'en-sell-your-phone-huerth'             => array( 'buy', 'samsung' ),
+		'old-moble-phone-buy-sell'              => array( 'buy', 'samsung' ),
+		'defekte-geraete-ankauf-huerth'         => array( 'crack', 'xiaomi' ),
+		'en-broken-device-buyback-huerth'       => array( 'crack', 'xiaomi' ),
+		'tablet-smartwatch-ankauf-huerth'       => array( 'buy', 'pixel' ),
+		'en-tablet-smartwatch-buyback-huerth'   => array( 'buy', 'pixel' ),
+		'inzahlungnahme-huerth'                 => array( 'buy', 'iphone' ),
+		'en-trade-in-huerth'                    => array( 'buy', 'iphone' ),
+
 		// Sales
-		'explore-our-products'                  => 'new',
-		'handytarife-huerth'                    => 'new',
-		'en-mobile-tariffs-huerth'              => 'new',
-		'handy-zubehoer-huerth'                 => 'new',
-		'en-phone-accessories-huerth'           => 'new',
+		'explore-our-products'                  => array( 'new', 'iphone' ),
+		'handytarife-huerth'                    => array( 'new', 'samsung' ),
+		'en-mobile-tariffs-huerth'              => array( 'new', 'samsung' ),
+		'handy-zubehoer-huerth'                 => array( 'new', 'xiaomi' ),
+		'en-phone-accessories-huerth'           => array( 'new', 'xiaomi' ),
 	);
 
 	return isset( $map[ $slug ] ) ? $map[ $slug ] : false;
