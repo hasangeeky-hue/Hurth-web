@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      7.0.0
+ * Version:      7.1.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -726,6 +726,114 @@ a:hover { color: var(--signal-soft); }
 .device3d__face--top { top: 0; transform: rotateX(90deg) translateZ(calc(var(--d) / 2)); }
 .device3d__face--bottom { bottom: 0; transform: rotateX(-90deg) translateZ(calc(var(--h) - var(--d) / 2)); }
 .device3d__hint { position: absolute; left: 0; bottom: 0; padding: .4rem .9rem; background: var(--flag); color: var(--ink); font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
+
+/* --- Contextual variants ------------------------------------------------
+   Geometry is identical across all of them; only the screen overlay and the
+   stage lighting change, so each page states its own subject.
+   ---------------------------------------------------------------------- */
+
+.device3d__fx { position: absolute; inset: 0; pointer-events: none; }
+
+/* Cracked panel — impact origin near the top-left corner. */
+.device3d--crack .device3d__fx {
+	background:
+		linear-gradient(103deg, transparent 47.4%, rgba(255,255,255,.85) 47.7%, transparent 48.1%),
+		linear-gradient(66deg,  transparent 39.5%, rgba(255,255,255,.7)  39.8%, transparent 40.2%),
+		linear-gradient(140deg, transparent 33.5%, rgba(255,255,255,.62) 33.8%, transparent 34.2%),
+		linear-gradient(22deg,  transparent 61.5%, rgba(255,255,255,.5)  61.8%, transparent 62.2%),
+		radial-gradient(circle at 30% 26%, rgba(255,255,255,.5) 0 3px, transparent 4px),
+		radial-gradient(160px circle at 30% 26%, rgba(255,255,255,.16), transparent 70%);
+	mix-blend-mode: screen;
+}
+.device3d--crack { background:
+	radial-gradient(120% 90% at 22% 12%, #1d6ff0 0%, transparent 58%),
+	radial-gradient(110% 80% at 84% 26%, #6b7fa8 0%, transparent 52%),
+	radial-gradient(120% 95% at 60% 98%, #f5a03c 0%, transparent 44%),
+	linear-gradient(158deg, #0a1c33 0%, #060e1c 55%, #04101f 100%); }
+
+/* Drained cell — a battery outline with a low amber fill. */
+.device3d--battery .device3d__fx {
+	display: grid; place-items: center;
+}
+.device3d--battery .device3d__fx::before {
+	content: ""; width: 108px; height: 52px;
+	border: 4px solid rgba(255,255,255,.82); border-radius: 8px;
+	box-shadow: 7px 0 0 -14px rgba(255,255,255,.82), 0 0 30px rgba(0,0,0,.35);
+	background: linear-gradient(90deg, #ff6b5e 0 18%, transparent 18%);
+	background-clip: content-box; padding: 4px;
+}
+.device3d--battery {
+	background:
+		radial-gradient(120% 90% at 24% 14%, #b8590f 0%, transparent 56%),
+		radial-gradient(110% 80% at 82% 26%, #f5a03c 0%, transparent 50%),
+		radial-gradient(120% 95% at 58% 98%, #7a2f1a 0%, transparent 46%),
+		linear-gradient(158deg, #2a1408 0%, #100a12 55%, #0a0a14 100%);
+}
+
+/* Water — droplets and a cold cast. */
+.device3d--water .device3d__fx {
+	background:
+		radial-gradient(circle at 26% 30%, rgba(255,255,255,.5) 0 7px, transparent 8px),
+		radial-gradient(circle at 62% 22%, rgba(255,255,255,.42) 0 11px, transparent 12px),
+		radial-gradient(circle at 44% 58%, rgba(255,255,255,.38) 0 9px, transparent 10px),
+		radial-gradient(circle at 74% 68%, rgba(255,255,255,.45) 0 6px, transparent 7px),
+		radial-gradient(circle at 34% 78%, rgba(255,255,255,.32) 0 13px, transparent 14px),
+		linear-gradient(180deg, rgba(0,180,220,.16), rgba(0,60,120,.34));
+	mix-blend-mode: screen;
+}
+.device3d--water {
+	background:
+		radial-gradient(120% 90% at 24% 12%, #0d7fa8 0%, transparent 58%),
+		radial-gradient(110% 80% at 82% 28%, #00c2c7 0%, transparent 52%),
+		radial-gradient(120% 95% at 58% 98%, #0b3f8f 0%, transparent 48%),
+		linear-gradient(158deg, #04202e 0%, #05121f 55%, #030d18 100%);
+}
+
+/* Camera & port — the model rests showing its back. */
+.device3d--camera .device3d__body { transform: rotateX(-10deg) rotateY(-152deg); }
+.device3d--camera {
+	background:
+		radial-gradient(120% 90% at 22% 12%, #2b5cff 0%, transparent 56%),
+		radial-gradient(110% 80% at 84% 26%, #7a4bd0 0%, transparent 52%),
+		radial-gradient(120% 95% at 60% 98%, #f5a03c 0%, transparent 44%),
+		linear-gradient(158deg, #0a1330 0%, #060e1c 55%, #04101f 100%);
+}
+
+/* Buy-back — warmer, secondhand light. */
+.device3d--buy {
+	background:
+		radial-gradient(120% 90% at 24% 14%, #3fd39e 0%, transparent 54%),
+		radial-gradient(110% 80% at 82% 26%, #1d6ff0 0%, transparent 52%),
+		radial-gradient(120% 95% at 58% 98%, #f5a03c 0%, transparent 46%),
+		linear-gradient(158deg, #05231d 0%, #061020 55%, #04101f 100%);
+}
+
+/* New devices — the brightest, cleanest stage. */
+.device3d--new {
+	background:
+		radial-gradient(120% 90% at 20% 10%, #35a0ff 0%, transparent 58%),
+		radial-gradient(110% 80% at 86% 24%, #00e0c6 0%, transparent 52%),
+		radial-gradient(120% 95% at 62% 98%, #ffb457 0%, transparent 46%),
+		linear-gradient(158deg, #05213f 0%, #061224 55%, #04101f 100%);
+}
+
+/* --- Page hero with a model -------------------------------------------- */
+
+.page-hero--visual { padding-block: clamp(2rem, 1rem + 2.5vw, 3.4rem) 0; }
+.page-hero__split {
+	display: grid;
+	grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+	gap: clamp(1.5rem, .8rem + 2.5vw, 3.5rem);
+	align-items: center;
+}
+.page-hero__split > div:first-child { padding-bottom: clamp(1.5rem, 1rem + 2vw, 3rem); }
+.page-hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+.page-hero__media .device3d { min-height: clamp(300px, 32vw, 440px); border-bottom: 0; }
+
+@media (max-width: 880px) {
+	.page-hero__split { grid-template-columns: 1fr; }
+	.page-hero__media { order: -1; margin-bottom: 1.5rem; }
+}
 
 .spin { position: relative; display: block; cursor: grab; touch-action: pan-y; border: 1px solid var(--rule-strong); }
 .spin.is-dragging { cursor: grabbing; }

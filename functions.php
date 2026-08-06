@@ -722,26 +722,74 @@ function hurth_spin( $set, $alt, $still = 'hero-repair' ) {
  * @param string $label Accessible label.
  * @return string
  */
-function hurth_device3d( $label = '' ) {
+function hurth_device3d( $variant = 'default', $label = '' ) {
 	$de = ( 'de' === hurth_lang() );
 
+	/*
+	 * Each variant states, in the model itself, what the page is about — a
+	 * cracked panel on the screen-replacement page, a drained cell on the
+	 * battery page, and so on. The geometry is identical; only the screen
+	 * overlay and the stage lighting change.
+	 */
+	$variants = array(
+		'default' => array(
+			'de' => 'Interaktives 3D-Modell eines Smartphones — zum Drehen ziehen',
+			'en' => 'Interactive 3D smartphone model — drag to rotate',
+		),
+		'crack' => array(
+			'de' => '3D-Modell mit gesprungenem Display — zum Drehen ziehen',
+			'en' => '3D model with a cracked screen — drag to rotate',
+		),
+		'battery' => array(
+			'de' => '3D-Modell mit schwachem Akku — zum Drehen ziehen',
+			'en' => '3D model showing a drained battery — drag to rotate',
+		),
+		'water' => array(
+			'de' => '3D-Modell mit Wasserschaden — zum Drehen ziehen',
+			'en' => '3D model showing water damage — drag to rotate',
+		),
+		'camera' => array(
+			'de' => '3D-Modell mit Kamera und Ladebuchse — zum Drehen ziehen',
+			'en' => '3D model showing camera and charging port — drag to rotate',
+		),
+		'buy' => array(
+			'de' => '3D-Modell eines Gebrauchtgeräts — zum Drehen ziehen',
+			'en' => '3D model of a used device — drag to rotate',
+		),
+		'new' => array(
+			'de' => '3D-Modell eines neuen Smartphones — zum Drehen ziehen',
+			'en' => 'Interactive 3D model of a new smartphone — drag to rotate',
+		),
+	);
+
+	if ( ! isset( $variants[ $variant ] ) ) {
+		$variant = 'default';
+	}
+
 	if ( '' === $label ) {
-		$label = $de
-			? 'Interaktives 3D-Modell eines Smartphones — zum Drehen ziehen'
-			: 'Interactive 3D smartphone model — drag to rotate';
+		$label = $variants[ $variant ][ $de ? 'de' : 'en' ];
 	}
 
 	$hint = $de ? 'Ziehen zum Drehen' : 'Drag to rotate';
 
 	ob_start();
 	?>
-	<div class="device3d" role="img" aria-label="<?php echo esc_attr( $label ); ?>" tabindex="0">
+	<?php
+	// Starting rotation, so the JS does not snap a variant away from the face
+	// it is meant to present. The camera variant opens showing its back.
+	$hurth_rot = ( 'camera' === $variant ) ? array( -10, -152 ) : array( -12, -28 );
+	?>
+	<div class="device3d device3d--<?php echo esc_attr( $variant ); ?>"
+		data-rx="<?php echo esc_attr( $hurth_rot[0] ); ?>"
+		data-ry="<?php echo esc_attr( $hurth_rot[1] ); ?>"
+		role="img" aria-label="<?php echo esc_attr( $label ); ?>" tabindex="0">
 		<div class="device3d__stage">
 			<div class="device3d__body">
 				<div class="device3d__face device3d__face--front">
 					<div class="device3d__screen">
 						<span class="device3d__notch"></span>
 						<span class="device3d__glow"></span>
+						<span class="device3d__fx" aria-hidden="true"></span>
 					</div>
 				</div>
 				<div class="device3d__face device3d__face--back">
@@ -760,6 +808,57 @@ function hurth_device3d( $label = '' ) {
 	</div>
 	<?php
 	return ob_get_clean();
+}
+
+/**
+ * Which 3D variant a page should show, keyed by slug.
+ *
+ * Pages not listed get no device — About, FAQ, Impressum and
+ * Datenschutz are read, not looked at, and a decorative model there would
+ * only push the text down.
+ *
+ * @param string $slug Page slug.
+ * @return string|false Variant name, or false for no visual.
+ */
+function hurth_page_visual( $slug ) {
+	$map = array(
+		// Repair
+		'handy-reparatur-huerth'                => 'default',
+		'en-phone-repair-huerth'                => 'default',
+		'iphone-reparatur-huerth'               => 'default',
+		'en-iphone-repair-huerth'               => 'default',
+		'samsung-reparatur-huerth'              => 'default',
+		'en-samsung-repair-huerth'              => 'default',
+		'xiaomi-pixel-reparatur-huerth'         => 'default',
+		'en-xiaomi-pixel-repair-huerth'         => 'default',
+		// Fault-specific
+		'displaytausch-huerth'                  => 'crack',
+		'en-screen-replacement-huerth'          => 'crack',
+		'akku-wechseln-huerth'                  => 'battery',
+		'en-battery-replacement-huerth'         => 'battery',
+		'wasserschaden-handy-huerth'            => 'water',
+		'en-water-damage-huerth'                => 'water',
+		'ladebuchse-kamera-reparatur-huerth'    => 'camera',
+		'en-charging-port-camera-repair-huerth' => 'camera',
+		// Buy-back
+		'handy-ankauf-huerth'                   => 'buy',
+		'en-sell-your-phone-huerth'             => 'buy',
+		'old-moble-phone-buy-sell'              => 'buy',
+		'defekte-geraete-ankauf-huerth'         => 'crack',
+		'en-broken-device-buyback-huerth'       => 'crack',
+		'tablet-smartwatch-ankauf-huerth'       => 'buy',
+		'en-tablet-smartwatch-buyback-huerth'   => 'buy',
+		'inzahlungnahme-huerth'                 => 'buy',
+		'en-trade-in-huerth'                    => 'buy',
+		// Sales
+		'explore-our-products'                  => 'new',
+		'handytarife-huerth'                    => 'new',
+		'en-mobile-tariffs-huerth'              => 'new',
+		'handy-zubehoer-huerth'                 => 'new',
+		'en-phone-accessories-huerth'           => 'new',
+	);
+
+	return isset( $map[ $slug ] ) ? $map[ $slug ] : false;
 }
 
 /**
@@ -953,7 +1052,11 @@ function hurth_assets() {
 			if (!body) return;
 
 			var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			var rx = -12, ry = -28, dragging = false, lx = 0, ly = 0, idle = !calm, raf;
+			var rx = parseFloat(el.dataset.rx);
+			var ry = parseFloat(el.dataset.ry);
+			if (isNaN(rx)) { rx = -12; }
+			if (isNaN(ry)) { ry = -28; }
+			var dragging = false, lx = 0, ly = 0, idle = !calm, raf;
 
 			function apply() {
 				body.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
