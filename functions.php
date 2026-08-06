@@ -34,17 +34,16 @@ function hurth_info( $key ) {
 	$info = array(
 		'name'     => 'Friends Mobile',
 		'city_tag' => 'Hürth',
-		'street'   => 'Luxemburger Straße 96',
+		'street'   => 'Kaulardstraße 13-15',
 		'zip'      => '50354',
 		'town'     => 'Hürth',
 		'country'  => 'DE',
-		'phone'    => '+49 221 9928321',
-		'phone_href' => '+492219928321',
-		'email'    => 'info@friendsmobile.de',
-		'lat'      => '50.8768',
-		'lng'      => '6.8730',
-		'maps'     => 'https://www.google.com/maps/search/?api=1&query=Friends+Mobile+Luxemburger+Stra%C3%9Fe+96+50354+H%C3%BCrth',
+		'phone'    => '+49 172 4054913',
+		'phone_href' => '+491724054913',
+		'email'    => 'huerth@friendsmobile.de',
+		'maps'     => 'https://www.google.com/maps/search/?api=1&query=Friends+Mobile+Kaulardstra%C3%9Fe+13-15+50354+H%C3%BCrth',
 		'founded'  => '2004',
+		'languages' => 'Deutsch · Türkçe · English',
 	);
 
 	return isset( $info[ $key ] ) ? $info[ $key ] : '';
@@ -1241,14 +1240,15 @@ function hurth_schema() {
 			'addressLocality' => hurth_info( 'town' ),
 			'addressCountry'  => hurth_info( 'country' ),
 		),
-		'geo'         => array(
-			'@type'     => 'GeoCoordinates',
-			'latitude'  => hurth_info( 'lat' ),
-			'longitude' => hurth_info( 'lng' ),
-		),
+		/*
+		 * No geo block. The coordinates here were for the previous address and
+		 * are wrong for Kaulardstraße; asserting unverified coordinates in
+		 * structured data is worse than omitting them, and Google geocodes the
+		 * postal address anyway.
+		 */
 		'openingHoursSpecification' => $spec,
 		'areaServed'  => array( 'Hürth', 'Efferen', 'Frechen', 'Brühl', 'Sülz', 'Ehrenfeld', 'Köln' ),
-		'availableLanguage' => array( 'German', 'English' ),
+		'availableLanguage' => array( 'German', 'Turkish', 'English' ),
 		'hasOfferCatalog' => array(
 			'@type' => 'OfferCatalog',
 			'name'  => 'Services',
@@ -1648,6 +1648,44 @@ function hurth_replace_cf7( $content ) {
 	return $content . hurth_contact_form();
 }
 add_filter( 'the_content', 'hurth_replace_cf7', 25 );
+
+/**
+ * Correct superseded contact details inside imported content.
+ *
+ * The pages were written against Luxemburger Straße 96 and the 0221 number,
+ * which the owner has since confirmed are wrong — the shop is at
+ * Kaulardstraße 13-15 with the 0172 number and the huerth@ mailbox. Those
+ * strings are baked into stored post content, which git cannot reach.
+ *
+ * This rewrites them on output so every page, including the Impressum and
+ * the privacy policy, is consistent immediately.
+ *
+ * It is a display-layer fix. The stored content still holds the old values,
+ * so a theme change would bring them back — see README for the permanent
+ * search-and-replace.
+ *
+ * @param string $content Post content.
+ * @return string
+ */
+function hurth_fix_contact_details( $content ) {
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$swap = array(
+		'Luxemburger Straße 96'  => 'Kaulardstraße 13-15',
+		'Luxemburger Strasse 96' => 'Kaulardstraße 13-15',
+		'Luxemburger Stra&szlig;e 96' => 'Kaulardstra&szlig;e 13-15',
+		'tel:+492219928321'      => 'tel:+491724054913',
+		'+49 221 9928321'        => '+49 172 4054913',
+		'+492219928321'          => '+491724054913',
+		'info@friendsmobile.de'  => 'huerth@friendsmobile.de',
+	);
+
+	return strtr( $content, $swap );
+}
+add_filter( 'the_content', 'hurth_fix_contact_details', 30 );
+add_filter( 'the_excerpt', 'hurth_fix_contact_details', 30 );
 
 /**
  * Repair the broken heading hierarchy in the imported posts.

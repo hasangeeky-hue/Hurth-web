@@ -120,3 +120,41 @@ lighting fixed, and take one photo every 10–15° of rotation. A half-day cover
 your top handsets and the assets last years.
 
 Supports pointer drag, touch swipe and left/right arrow keys.
+
+## Contact details — permanent correction
+
+The site was originally built against **Luxemburger Straße 96** with the 0221
+number. The owner has since confirmed the correct details:
+
+| Field | Value |
+|---|---|
+| Address | Kaulardstraße 13-15, 50354 Hürth |
+| Phone | +49 172 4054913 |
+| Email | huerth@friendsmobile.de |
+| Hours | Mon–Fri 10:00–18:30 · Sat 10:00–15:00 · Sun closed |
+| Languages | Deutsch · Türkçe · English |
+
+`hurth_info()` carries the correct values, so anything the theme renders —
+header, footer, schema, buttons — is right.
+
+**Imported page content is a different matter.** The old address and number
+are baked into stored `post_content`, which git cannot reach.
+`hurth_fix_contact_details()` rewrites them on output, so the live site is
+consistent today. That is a display-layer fix: switch theme and the old
+values return.
+
+To correct it permanently, run a database search-and-replace (WP-CLI, or a
+plugin such as Better Search Replace):
+
+```
+Luxemburger Straße 96  ->  Kaulardstraße 13-15
++49 221 9928321        ->  +49 172 4054913
++492219928321          ->  +491724054913
+info@friendsmobile.de  ->  huerth@friendsmobile.de
+```
+
+Then `hurth_fix_contact_details()` can be removed.
+
+**Also update, outside the website:** the Google Business Profile, and any
+directory listing showing the old address. Inconsistent name/address/phone
+across the web is one of the more damaging things for local map ranking.

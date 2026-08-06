@@ -94,6 +94,10 @@ $hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 			<div>
 				<h3><?php echo esc_html( hurth_t( 'f_areas' ) ); ?></h3>
 				<p><?php echo esc_html( hurth_t( 'areas' ) ); ?></p>
+				<p style="margin-top:1.1rem">
+					<strong><?php echo esc_html( 'de' === hurth_lang() ? 'Unser Team spricht' : 'Our team speaks' ); ?></strong><br>
+					<?php echo esc_html( hurth_info( 'languages' ) ); ?>
+				</p>
 				<p style="margin-top:1rem">
 					<a class="btn btn--light" href="<?php echo esc_url( hurth_info( 'maps' ) ); ?>"
 						target="_blank" rel="noopener">
