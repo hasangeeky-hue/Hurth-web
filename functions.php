@@ -863,6 +863,67 @@ function hurth_device3d( $variant = 'default', $label = '', $brand = 'iphone' ) 
 }
 
 /**
+ * A row of all four handsets, interactive, for every page.
+ *
+ * Each page previously carried a single model and the four brands were
+ * spread across different pages — which is not the same as four per page.
+ * This puts iPhone, Samsung, Pixel and Xiaomi side by side wherever it is
+ * placed, every one draggable.
+ *
+ * @param string $state  Screen state applied to all four.
+ * @param string $title  Optional heading.
+ * @return string
+ */
+function hurth_device_lineup( $state = 'default', $title = '' ) {
+	$de = ( 'de' === hurth_lang() );
+
+	if ( '' === $title ) {
+		$title = $de ? 'Alle Marken — zum Drehen ziehen' : 'Every brand — drag to rotate';
+	}
+
+	$brands = array(
+		array( 'iphone',  'Apple iPhone' ),
+		array( 'samsung', 'Samsung Galaxy' ),
+		array( 'pixel',   'Google Pixel' ),
+		array( 'xiaomi',  'Xiaomi' ),
+	);
+
+	ob_start();
+	?>
+	<section class="section lineup-band">
+		<span class="glow" aria-hidden="true"></span>
+		<div class="wrap">
+			<div class="band-head reveal-rise">
+				<span class="band-head__no">3D / <?php echo esc_html( $de ? 'Geräte' : 'Devices' ); ?></span>
+				<div>
+					<h2><?php echo esc_html( $title ); ?></h2>
+					<p>
+						<?php
+						echo esc_html(
+							$de
+								? 'Wir reparieren und kaufen alle vier. Ziehen Sie jedes Modell, um es zu drehen.'
+								: 'We repair and buy all four. Drag any model to rotate it.'
+						);
+						?>
+					</p>
+				</div>
+			</div>
+
+			<div class="lineup stagger">
+				<?php foreach ( $brands as $b ) : ?>
+					<figure class="lineup__item">
+						<?php echo hurth_device3d( $state, '', $b[0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<figcaption><?php echo esc_html( $b[1] ); ?></figcaption>
+					</figure>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * Compact angled device for cards and listings.
  *
  * The service cards were pure text. A full hurth_device3d() in each would
@@ -1183,63 +1244,91 @@ function hurth_assets() {
 		}, { passive: true });
 	})();
 
-	// Interactive 3D device: grab and rotate on both axes.
+	// Interactive 3D devices: grab and rotate on both axes.
+	//
+	// One shared animation frame drives every model on the page. Each used to
+	// own a requestAnimationFrame loop, which was fine for a single hero but
+	// costs real battery once there are five. Models also idle only while
+	// they are actually on screen.
 	(function () {
-		document.querySelectorAll('.device3d').forEach(function (el) {
+		var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		var nodes = document.querySelectorAll('.device3d');
+		if (!nodes.length) return;
+
+		var models = [];
+
+		nodes.forEach(function (el) {
 			var body = el.querySelector('.device3d__body');
 			if (!body) return;
 
-			var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 			var rx = parseFloat(el.dataset.rx);
 			var ry = parseFloat(el.dataset.ry);
 			if (isNaN(rx)) { rx = -12; }
 			if (isNaN(ry)) { ry = -28; }
-			var dragging = false, lx = 0, ly = 0, idle = !calm, raf;
 
-			function apply() {
-				body.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
-			}
+			var m = {
+				el: el, body: body, rx: rx, ry: ry,
+				dragging: false, lx: 0, ly: 0,
+				idle: !calm, visible: true
+			};
 
-			function spin() {
-				if (idle) { ry += 0.22; apply(); }
-				raf = requestAnimationFrame(spin);
-			}
-
-			function start(x, y) {
-				dragging = true; idle = false;
-				lx = x; ly = y;
-				el.classList.add('is-dragging');
-			}
-			function move(x, y) {
-				if (!dragging) return;
-				ry += (x - lx) * 0.55;
-				rx -= (y - ly) * 0.45;
-				rx = Math.max(-70, Math.min(70, rx));
-				lx = x; ly = y;
-				apply();
-			}
-			function end() { dragging = false; el.classList.remove('is-dragging'); }
+			m.apply = function () {
+				m.body.style.transform =
+					'rotateX(' + m.rx.toFixed(2) + 'deg) rotateY(' + m.ry.toFixed(2) + 'deg)';
+			};
 
 			el.addEventListener('pointerdown', function (e) {
-				start(e.clientX, e.clientY);
+				m.dragging = true; m.idle = false;
+				m.lx = e.clientX; m.ly = e.clientY;
+				el.classList.add('is-dragging');
 				el.setPointerCapture(e.pointerId);
 				e.preventDefault();
 			});
-			el.addEventListener('pointermove', function (e) { move(e.clientX, e.clientY); });
-			el.addEventListener('pointerup', end);
-			el.addEventListener('pointercancel', end);
-
+			el.addEventListener('pointermove', function (e) {
+				if (!m.dragging) return;
+				m.ry += (e.clientX - m.lx) * 0.55;
+				m.rx -= (e.clientY - m.ly) * 0.45;
+				m.rx = Math.max(-70, Math.min(70, m.rx));
+				m.lx = e.clientX; m.ly = e.clientY;
+				m.apply();
+			});
+			['pointerup', 'pointercancel'].forEach(function (ev) {
+				el.addEventListener(ev, function () {
+					m.dragging = false; el.classList.remove('is-dragging');
+				});
+			});
 			el.addEventListener('keydown', function (e) {
-				var step = 8;
-				if (e.key === 'ArrowRight') { idle = false; ry += step; apply(); e.preventDefault(); }
-				if (e.key === 'ArrowLeft')  { idle = false; ry -= step; apply(); e.preventDefault(); }
-				if (e.key === 'ArrowUp')    { idle = false; rx = Math.max(-70, rx - step); apply(); e.preventDefault(); }
-				if (e.key === 'ArrowDown')  { idle = false; rx = Math.min(70, rx + step); apply(); e.preventDefault(); }
+				var s = 8;
+				if (e.key === 'ArrowRight') { m.idle = false; m.ry += s; m.apply(); e.preventDefault(); }
+				if (e.key === 'ArrowLeft')  { m.idle = false; m.ry -= s; m.apply(); e.preventDefault(); }
+				if (e.key === 'ArrowUp')    { m.idle = false; m.rx = Math.max(-70, m.rx - s); m.apply(); e.preventDefault(); }
+				if (e.key === 'ArrowDown')  { m.idle = false; m.rx = Math.min(70, m.rx + s); m.apply(); e.preventDefault(); }
 			});
 
-			apply();
-			if (!calm) { raf = requestAnimationFrame(spin); }
+			m.apply();
+			models.push(m);
 		});
+
+		if ('IntersectionObserver' in window) {
+			var io = new IntersectionObserver(function (entries) {
+				entries.forEach(function (e) {
+					models.forEach(function (m) {
+						if (m.el === e.target) { m.visible = e.isIntersecting; }
+					});
+				});
+			}, { rootMargin: '120px' });
+			models.forEach(function (m) { io.observe(m.el); });
+		}
+
+		if (calm) return;
+
+		(function tick() {
+			for (var i = 0; i < models.length; i++) {
+				var m = models[i];
+				if (m.idle && m.visible && !m.dragging) { m.ry += 0.22; m.apply(); }
+			}
+			requestAnimationFrame(tick);
+		})();
 	})();
 
 	// 360 degree viewer. Drag, swipe or arrow-key through the frame sequence.

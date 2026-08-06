@@ -375,4 +375,6 @@ if ( $hurth_posts ) :
 	<?php
 endif;
 
+echo hurth_device_lineup( 'default' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
 get_footer();

@@ -98,4 +98,10 @@ $hurth_posts = new WP_Query( array(
 </div>
 
 <?php
+// All four handsets, each draggable. Rendered on every template so no
+// page shows a single model in isolation.
+echo hurth_device_lineup( 'new' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+?>
+
+<?php
 get_footer();
