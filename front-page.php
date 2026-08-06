@@ -161,6 +161,7 @@ $hurth_brands = array( 'Apple iPhone', 'Samsung Galaxy', 'Xiaomi', 'Google Pixel
 </section>
 
 <section class="section">
+	<span class="glow" aria-hidden="true"></span>
 	<div class="wrap">
 		<div class="statement reveal">
 			<p class="statement__lead">
@@ -234,7 +235,7 @@ foreach ( hurth_service_index() as $hurth_item ) {
 
 if ( $hurth_cards ) :
 	?>
-	<section class="section section--surface">
+	<section class="section section--surface"><span class="glow" aria-hidden="true"></span>
 		<div class="wrap">
 			<div class="band-head reveal-rise">
 				<span class="band-head__no">01 / <?php echo esc_html( 'de' === hurth_lang() ? 'Leistungen' : 'Services' ); ?></span>
