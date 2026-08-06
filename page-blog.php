@@ -23,23 +23,28 @@ $hurth_posts = new WP_Query( array(
 ) );
 ?>
 
-<div class="page-hero">
-	<div class="wrap">
-		<ul class="breadcrumb">
-			<li><a href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_home' ) ); ?></a></li>
-			<li aria-hidden="true">/</li>
-			<li><?php the_title(); ?></li>
-		</ul>
-		<h1><?php the_title(); ?></h1>
-		<p>
-			<?php
-			echo esc_html(
-				$hurth_de
-					? 'Tipps und ehrliche Einschätzungen rund um Reparatur, Ankauf und Tarife.'
-					: 'Practical advice on repairs, selling your device and choosing a tariff.'
-			);
-			?>
-		</p>
+<div class="page-hero page-hero--visual">
+	<div class="wrap page-hero__split">
+		<div>
+			<ul class="breadcrumb">
+				<li><a href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_home' ) ); ?></a></li>
+				<li aria-hidden="true">/</li>
+				<li><?php the_title(); ?></li>
+			</ul>
+			<h1><?php the_title(); ?></h1>
+			<p>
+				<?php
+				echo esc_html(
+					$hurth_de
+						? 'Tipps und ehrliche Einschätzungen rund um Reparatur, Ankauf und Tarife.'
+						: 'Practical advice on repairs, selling your device and choosing a tariff.'
+				);
+				?>
+			</p>
+		</div>
+		<div class="page-hero__media">
+			<?php echo hurth_device3d( 'new', '', 'pixel' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
 	</div>
 </div>
 

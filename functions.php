@@ -907,9 +907,58 @@ function hurth_page_visual( $slug ) {
 		'en-mobile-tariffs-huerth'              => array( 'new', 'samsung' ),
 		'handy-zubehoer-huerth'                 => array( 'new', 'xiaomi' ),
 		'en-phone-accessories-huerth'           => array( 'new', 'xiaomi' ),
+
+		// Company, contact and legal. These were left bare on the argument
+		// that they are read rather than looked at, which left fifteen pages
+		// visually inconsistent with the rest of the site.
+		'ueber-uns'                             => array( 'new', 'iphone' ),
+		'en-about-us'                           => array( 'new', 'iphone' ),
+		'faq-huerth'                            => array( 'default', 'samsung' ),
+		'en-faq'                                => array( 'default', 'samsung' ),
+		'contact'                               => array( 'default', 'pixel' ),
+		'book-an-appointment'                   => array( 'default', 'iphone' ),
+		'blog'                                  => array( 'new', 'pixel' ),
+		'impressum'                             => array( 'default', 'xiaomi' ),
+		'datenschutz'                           => array( 'default', 'xiaomi' ),
+		'en-imprint'                            => array( 'default', 'xiaomi' ),
+		'en-privacy-policy'                     => array( 'default', 'xiaomi' ),
+
+		// Blog posts.
+		'display-gesprungen-reparieren-oder-ersetzen' => array( 'crack', 'iphone' ),
+		'akku-wechseln-oder-neues-handy'              => array( 'battery', 'samsung' ),
+		'wasserschaden-handy-erste-30-minuten'        => array( 'water', 'pixel' ),
+		'handyvertrag-huerth-vodafone-o2-telekom'     => array( 'new', 'samsung' ),
 	);
 
-	return isset( $map[ $slug ] ) ? $map[ $slug ] : false;
+	if ( isset( $map[ $slug ] ) ) {
+		return $map[ $slug ];
+	}
+
+	/*
+	 * Imported posts carry long generated slugs, so match on keywords rather
+	 * than listing every one. Anything still unmatched falls back to a plain
+	 * model, so no page is left bare.
+	 */
+	$keywords = array(
+		'broken'  => array( 'crack', 'xiaomi' ),
+		'damaged' => array( 'crack', 'xiaomi' ),
+		'iphone'  => array( 'buy', 'iphone' ),
+		'sell'    => array( 'buy', 'pixel' ),
+		'worth'   => array( 'buy', 'iphone' ),
+		'water'   => array( 'water', 'pixel' ),
+		'battery' => array( 'battery', 'samsung' ),
+		'akku'    => array( 'battery', 'samsung' ),
+		'display' => array( 'crack', 'iphone' ),
+		'screen'  => array( 'crack', 'iphone' ),
+	);
+
+	foreach ( $keywords as $needle => $pair ) {
+		if ( false !== strpos( $slug, $needle ) ) {
+			return $pair;
+		}
+	}
+
+	return array( 'default', 'samsung' );
 }
 
 /**

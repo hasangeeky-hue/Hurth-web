@@ -76,15 +76,20 @@ $services = $hurth_de
 	: array( 'Repair', 'Sell a device', 'New phone', 'Tariff advice', 'Other' );
 ?>
 
-<div class="page-hero">
-	<div class="wrap">
-		<ul class="breadcrumb">
-			<li><a href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_home' ) ); ?></a></li>
-			<li aria-hidden="true">/</li>
-			<li><?php echo esc_html( $t['h1'] ); ?></li>
-		</ul>
-		<h1><?php echo esc_html( $t['h1'] ); ?></h1>
-		<p><?php echo esc_html( $t['lead'] ); ?></p>
+<div class="page-hero page-hero--visual">
+	<div class="wrap page-hero__split">
+		<div>
+			<ul class="breadcrumb">
+				<li><a href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_home' ) ); ?></a></li>
+				<li aria-hidden="true">/</li>
+				<li><?php echo esc_html( $t['h1'] ); ?></li>
+			</ul>
+			<h1><?php echo esc_html( $t['h1'] ); ?></h1>
+			<p><?php echo esc_html( $t['lead'] ); ?></p>
+		</div>
+		<div class="page-hero__media">
+			<?php echo hurth_device3d( 'default', '', 'iphone' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
 	</div>
 </div>
 
