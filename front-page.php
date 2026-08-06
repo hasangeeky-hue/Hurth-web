@@ -254,7 +254,13 @@ if ( $hurth_cards ) :
 			</div>
 			<div class="card-grid card-grid--three stagger">
 				<?php foreach ( $hurth_cards as $hurth_card ) : ?>
-					<article class="card"><span class="card__rule" aria-hidden="true"></span>
+					<article class="card card--visual"><span class="card__rule" aria-hidden="true"></span>
+						<?php
+						echo hurth_device_chip( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							isset( $hurth_card['brand'] ) ? $hurth_card['brand'] : 'iphone',
+							isset( $hurth_card['state'] ) ? $hurth_card['state'] : 'default'
+						);
+						?>
 						<h3>
 							<a class="card__link" href="<?php echo esc_url( get_permalink( $hurth_card['page'] ) . $hurth_q ); ?>">
 								<?php echo esc_html( $hurth_card['title'] ); ?>

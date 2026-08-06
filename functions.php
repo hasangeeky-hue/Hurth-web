@@ -470,6 +470,7 @@ function hurth_service_index() {
 	return array(
 		array(
 			'de'    => 'handy-reparatur-huerth',
+			'brand' => 'iphone', 'state' => 'default',
 			'en'    => 'en-phone-repair-huerth',
 			'title' => $de ? 'Reparatur' : 'Repair',
 			'blurb' => $de
@@ -478,6 +479,7 @@ function hurth_service_index() {
 		),
 		array(
 			'de'    => 'handy-ankauf-huerth',
+			'brand' => 'samsung', 'state' => 'buy',
 			'en'    => 'en-sell-your-phone-huerth',
 			'title' => $de ? 'Ankauf' : 'Buy-back',
 			'blurb' => $de
@@ -486,6 +488,7 @@ function hurth_service_index() {
 		),
 		array(
 			'de'    => 'explore-our-products',
+			'brand' => 'pixel', 'state' => 'new',
 			'en'    => 'explore-our-products',
 			'title' => $de ? 'Neue Handys' : 'New phones',
 			'blurb' => $de
@@ -494,6 +497,7 @@ function hurth_service_index() {
 		),
 		array(
 			'de'    => 'displaytausch-huerth',
+			'brand' => 'iphone', 'state' => 'crack',
 			'en'    => 'en-screen-replacement-huerth',
 			'title' => $de ? 'Displaytausch' : 'Screen replacement',
 			'blurb' => $de
@@ -502,6 +506,7 @@ function hurth_service_index() {
 		),
 		array(
 			'de'    => 'akku-wechseln-huerth',
+			'brand' => 'samsung', 'state' => 'battery',
 			'en'    => 'en-battery-replacement-huerth',
 			'title' => $de ? 'Akkuwechsel' : 'Battery replacement',
 			'blurb' => $de
@@ -510,6 +515,7 @@ function hurth_service_index() {
 		),
 		array(
 			'de'    => 'wasserschaden-handy-huerth',
+			'brand' => 'xiaomi', 'state' => 'water',
 			'en'    => 'en-water-damage-huerth',
 			'title' => $de ? 'Wasserschaden' : 'Water damage',
 			'blurb' => $de
@@ -854,6 +860,38 @@ function hurth_device3d( $variant = 'default', $label = '', $brand = 'iphone' ) 
 	</div>
 	<?php
 	return ob_get_clean();
+}
+
+/**
+ * Compact angled device for cards and listings.
+ *
+ * The service cards were pure text. A full hurth_device3d() in each would
+ * mean seven simultaneous rotation loops on the front page, so this is a
+ * lightweight 2.5D chip instead: same brand cues and screen state, one
+ * element, no JavaScript. It straightens and lifts on card hover.
+ *
+ * @param string $brand   iphone|samsung|pixel|xiaomi.
+ * @param string $variant Screen state.
+ * @return string
+ */
+function hurth_device_chip( $brand = 'iphone', $variant = 'default' ) {
+	$allowed_brand = array( 'iphone', 'samsung', 'pixel', 'xiaomi' );
+	$allowed_state = array( 'default', 'crack', 'battery', 'water', 'buy', 'new', 'camera' );
+
+	if ( ! in_array( $brand, $allowed_brand, true ) ) {
+		$brand = 'iphone';
+	}
+	if ( ! in_array( $variant, $allowed_state, true ) ) {
+		$variant = 'default';
+	}
+
+	return sprintf(
+		'<span class="chip chip--%1$s chip--v-%2$s" aria-hidden="true">
+			<span class="chip__body"><span class="chip__screen"></span><span class="chip__fx"></span></span>
+		</span>',
+		esc_attr( $brand ),
+		esc_attr( $variant )
+	);
 }
 
 /**

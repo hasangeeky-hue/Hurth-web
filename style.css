@@ -5,7 +5,7 @@
  *               Luxemburger Straße 96, Hürth. Phone sales, repair and
  *               used-device buy-back. No page builder, no plugin dependencies.
  * Author:       hasangeeky-hue
- * Version:      7.4.0
+ * Version:      7.5.0
  * Requires PHP: 7.4
  * License:      GNU General Public License v2 or later
  * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -726,6 +726,112 @@ a:hover { color: var(--signal-soft); }
 .device3d__face--top { top: 0; transform: rotateX(90deg) translateZ(calc(var(--d) / 2)); }
 .device3d__face--bottom { bottom: 0; transform: rotateX(-90deg) translateZ(calc(var(--h) - var(--d) / 2)); }
 .device3d__hint { position: absolute; left: 0; bottom: 0; padding: .4rem .9rem; background: var(--flag); color: var(--ink); font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
+
+/* --- Card device chip ---------------------------------------------------
+   The service cards were text only. A full 3D model in each would mean
+   seven rotation loops on the front page, so this is a lightweight 2.5D
+   chip: same brand cues and screen state, one element, no JavaScript.
+   ---------------------------------------------------------------------- */
+
+.card--visual { padding-top: clamp(1.2rem, .9rem + 1vw, 1.8rem); }
+
+.chip {
+	display: block; position: relative;
+	width: 100%; height: clamp(128px, 12vw, 168px);
+	margin-bottom: 1.3rem;
+	overflow: hidden;
+	border: 1px solid var(--rule);
+	background:
+		radial-gradient(120% 100% at 20% 0%, rgba(29,111,240,.34) 0%, transparent 62%),
+		radial-gradient(110% 90% at 88% 30%, rgba(0,194,199,.22) 0%, transparent 56%),
+		radial-gradient(120% 100% at 60% 108%, rgba(245,160,60,.26) 0%, transparent 52%),
+		linear-gradient(158deg, #0a1730 0%, #070d1a 100%);
+	perspective: 700px;
+}
+.chip::before {
+	content: ""; position: absolute; inset: 0;
+	background-image:
+		linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+	background-size: 26px 26px;
+}
+
+.chip__body {
+	position: absolute; left: 50%; top: 52%;
+	width: 78px; height: 158px;
+	border-radius: 13px;
+	background: linear-gradient(150deg, #39434f, #12171f);
+	box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 16px 32px rgba(0,0,0,.5);
+	padding: 3px;
+	transform: translate(-50%, -50%) rotateX(12deg) rotateY(-22deg) rotateZ(-4deg);
+	transition: transform var(--slow);
+}
+.card:hover .chip__body { transform: translate(-50%, -50%) rotateX(4deg) rotateY(-8deg) rotateZ(0deg) scale(1.06); }
+
+.chip__screen {
+	position: absolute; inset: 3px; border-radius: 11px; overflow: hidden;
+	background:
+		radial-gradient(90% 60% at 20% 8%, #35a0ff 0%, transparent 60%),
+		radial-gradient(80% 55% at 88% 30%, #00e0c6 0%, transparent 55%),
+		radial-gradient(95% 70% at 50% 105%, #ff8a3d 0%, transparent 55%),
+		linear-gradient(165deg, #0b3f8f, #061c3c);
+}
+.chip__fx { position: absolute; inset: 3px; border-radius: 11px; pointer-events: none; }
+
+/* Brand cue on the chip: pill for iPhone, punch-hole for the rest. */
+.chip--iphone .chip__body::before {
+	content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+	width: 30px; height: 8px; border-radius: 5px; background: #05080d; z-index: 2;
+}
+.chip--samsung .chip__body::before,
+.chip--pixel .chip__body::before,
+.chip--xiaomi .chip__body::before {
+	content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+	width: 7px; height: 7px; border-radius: 50%; background: #05080d; z-index: 2;
+}
+.chip--samsung .chip__body { background: linear-gradient(150deg, #1d4a3e, #0b1a22); }
+.chip--pixel .chip__body { background: linear-gradient(150deg, #d5dae2, #9aa2ae); }
+.chip--xiaomi .chip__body { background: linear-gradient(150deg, #3a2555, #150f28); }
+
+/* Screen state on the chip mirrors the full model. */
+.chip--v-crack .chip__fx {
+	background:
+		linear-gradient(103deg, transparent 47.4%, rgba(255,255,255,.85) 47.8%, transparent 48.3%),
+		linear-gradient(64deg,  transparent 39.5%, rgba(255,255,255,.65) 39.9%, transparent 40.4%),
+		linear-gradient(142deg, transparent 33.5%, rgba(255,255,255,.55) 33.9%, transparent 34.4%);
+	mix-blend-mode: screen;
+}
+.chip--v-battery .chip__fx {
+	display: grid; place-items: center;
+}
+.chip--v-battery .chip__fx::before {
+	content: ""; width: 40px; height: 19px;
+	border: 2px solid rgba(255,255,255,.85); border-radius: 4px;
+	background: linear-gradient(90deg, #ff6b5e 0 20%, transparent 20%);
+	background-clip: content-box; padding: 2px;
+}
+.chip--v-water .chip__fx {
+	background:
+		radial-gradient(circle at 30% 32%, rgba(255,255,255,.5) 0 4px, transparent 5px),
+		radial-gradient(circle at 62% 24%, rgba(255,255,255,.42) 0 6px, transparent 7px),
+		radial-gradient(circle at 45% 62%, rgba(255,255,255,.38) 0 5px, transparent 6px),
+		radial-gradient(circle at 70% 74%, rgba(255,255,255,.4) 0 4px, transparent 5px),
+		linear-gradient(180deg, rgba(0,180,220,.2), rgba(0,60,120,.36));
+	mix-blend-mode: screen;
+}
+.chip--v-buy .chip__screen {
+	background:
+		radial-gradient(90% 60% at 22% 10%, #3fd39e 0%, transparent 58%),
+		radial-gradient(80% 55% at 86% 32%, #35a0ff 0%, transparent 54%),
+		linear-gradient(165deg, #0a4f3d, #061c3c);
+}
+.chip--v-new .chip__screen {
+	background:
+		radial-gradient(90% 60% at 20% 8%, #6cc0ff 0%, transparent 60%),
+		radial-gradient(80% 55% at 88% 28%, #00e0c6 0%, transparent 55%),
+		radial-gradient(95% 70% at 50% 105%, #ffb457 0%, transparent 55%),
+		linear-gradient(165deg, #0d5ac2, #08284f);
+}
 
 /* --- Brand geometry -----------------------------------------------------
    Four genuinely different bodies, not one shape recoloured. Each models the
