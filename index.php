@@ -1,78 +1,72 @@
 <?php
 /**
- * Blog listing, archives, search, and template of last resort.
+ * Fallback template: blog listing, archives and search results.
  *
- * @package Hurth
+ * @package Aquariende
  */
 
 get_header();
 
-$hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
+if ( is_search() ) {
+	/* translators: %s: search query. */
+	$aq_title = sprintf( __( 'Search: %s', 'aquariende' ), get_search_query() );
+	$aq_lede  = '';
+} elseif ( is_archive() ) {
+	$aq_title = get_the_archive_title();
+	$aq_lede  = wp_strip_all_tags( get_the_archive_description() );
+} else {
+	$aq_page  = (int) get_option( 'page_for_posts' );
+	$aq_title = $aq_page ? get_the_title( $aq_page ) : __( 'Blog', 'aquariende' );
+	$aq_lede  = __( 'Guides to the German application and visa process, written by our team.', 'aquariende' );
+}
 ?>
+<main id="main" class="site-main">
+	<?php
+	get_template_part(
+		'template-parts/page-head',
+		null,
+		array(
+			'eyebrow' => is_search() ? '' : __( 'Blog', 'aquariende' ),
+			'title'   => $aq_title,
+			'lede'    => $aq_lede,
+		)
+	);
+	?>
+	<section class="section-pad">
+		<div class="wrap">
+			<?php if ( is_search() ) : ?>
+				<div class="search-again"><?php get_search_form(); ?></div>
+			<?php endif; ?>
 
-<div class="page-hero">
-	<div class="wrap">
-		<h1>
-			<?php
-			if ( is_home() && ! is_front_page() ) {
-				single_post_title();
-			} elseif ( is_archive() ) {
-				the_archive_title();
-			} elseif ( is_search() ) {
-				echo esc_html( hurth_t( 'search_for' ) ) . ' &ldquo;' . esc_html( get_search_query() ) . '&rdquo;';
-			} else {
-				echo esc_html( hurth_t( 'latest' ) );
-			}
-			?>
-		</h1>
-	</div>
-</div>
-
-<div class="section">
-	<div class="wrap">
-		<?php if ( have_posts() ) : ?>
-
-			<div class="card-grid">
-				<?php
-				while ( have_posts() ) :
-					the_post();
-					?>
-					<article <?php post_class( 'card' ); ?>>
-						<span class="card__meta"><?php echo esc_html( get_the_date() ); ?></span>
-						<h3>
-							<a class="card__link" href="<?php echo esc_url( get_permalink() . $hurth_q ); ?>">
-								<?php the_title(); ?>
-							</a>
-						</h3>
-						<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( get_the_content() ), 26 ) ); ?></p>
-					</article>
+			<?php if ( have_posts() ) : ?>
+				<div class="post-grid">
 					<?php
-				endwhile;
+					while ( have_posts() ) {
+						the_post();
+						get_template_part( 'template-parts/post-card', null, array( 'heading' => 'h2' ) );
+					}
+					?>
+				</div>
+				<?php
+				the_posts_pagination(
+					array(
+						'mid_size'  => 1,
+						'prev_text' => __( 'Previous', 'aquariende' ),
+						'next_text' => __( 'Next', 'aquariende' ),
+					)
+				);
 				?>
-			</div>
-
-			<?php
-			the_posts_pagination( array(
-				'class'     => 'pagination',
-				'mid_size'  => 2,
-				'prev_text' => '&larr;',
-				'next_text' => '&rarr;',
-			) );
-			?>
-
-		<?php else : ?>
-			<div class="content-area">
-				<p><?php echo esc_html( hurth_t( 'nothing' ) ); ?></p>
-			</div>
-		<?php endif; ?>
-	</div>
-</div>
-
-<?php
-// All four handsets, each draggable. Rendered on every template so no
-// page shows a single model in isolation.
-echo hurth_device_lineup( 'default' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-?>
-
+			<?php else : ?>
+				<div class="empty">
+					<h2><?php esc_html_e( 'Nothing here yet.', 'aquariende' ); ?></h2>
+					<p><?php esc_html_e( 'Try another search, or ask us directly on WhatsApp.', 'aquariende' ); ?></p>
+					<?php if ( ! is_search() ) : ?>
+						<?php get_search_form(); ?>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
+		</div>
+	</section>
+</main>
 <?php
 get_footer();

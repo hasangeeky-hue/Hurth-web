@@ -1,16 +1,13 @@
-# Normalise line endings so Windows checkouts don't dirty the whole tree.
+# Normalise line endings so Windows checkouts do not dirty the whole tree.
 * text=auto eol=lf
 
 *.png binary
 *.jpg binary
 *.jpeg binary
-*.gif binary
 *.webp binary
+*.gif binary
 *.ico binary
 *.woff binary
 *.woff2 binary
-*.ttf binary
-*.eot binary
-*.mmdb binary
 *.zip binary
 *.wpress binary

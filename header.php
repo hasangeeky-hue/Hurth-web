@@ -1,98 +1,79 @@
 <?php
 /**
- * Site header.
+ * Site header: transparent over the dark top band, paper after 80 px of scroll.
  *
- * @package Hurth
+ * @package Aquariende
  */
 
-$hurth_state = hurth_open_state();
-$hurth_lang  = hurth_lang();
-$hurth_q     = ( 'en' === $hurth_lang ) ? '?lang=en' : '';
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="theme-color" content="#0059a9">
-	<?php wp_head(); ?>
+<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<?php wp_head(); ?>
 </head>
-
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="skip-link" href="#main"><?php esc_html_e( 'Skip to content', 'aquariende' ); ?></a>
 
-<a class="skip-link" href="#main"><?php echo esc_html( hurth_t( 'skip' ) ); ?></a>
+<header class="site-header" id="site-header">
+	<div class="wrap header-bar">
+		<?php aquariende_logo(); ?>
 
-<div class="topbar">
-	<div class="wrap topbar__inner">
-
-		<a href="tel:<?php echo esc_attr( hurth_info( 'phone_href' ) ); ?>">
-			<?php echo esc_html( hurth_info( 'phone' ) ); ?>
-		</a>
-
-		<span class="status <?php echo $hurth_state['open'] ? '' : 'status--closed'; ?>">
+		<nav class="primary-nav" aria-label="<?php esc_attr_e( 'Main', 'aquariende' ); ?>">
 			<?php
-			if ( $hurth_state['open'] ) {
-				echo esc_html( hurth_t( 'open_now' ) . ' · ' . hurth_t( 'until' ) . ' ' . $hurth_state['until'] );
-			} else {
-				echo esc_html( hurth_t( 'closed_now' ) );
-			}
+			wp_nav_menu(
+				array(
+					'theme_location' => 'primary',
+					'container'      => false,
+					'menu_class'     => 'nav-list',
+					'depth'          => 1,
+					'fallback_cb'    => 'aquariende_menu_fallback',
+				)
+			);
 			?>
-		</span>
-
-		<span class="topbar__hide-sm">
-			<?php echo esc_html( hurth_info( 'street' ) . ', ' . hurth_info( 'zip' ) . ' ' . hurth_info( 'town' ) ); ?>
-		</span>
-
-		<span class="topbar__spacer"></span>
-
-		<nav class="lang-switch" aria-label="Sprache / Language">
-			<?php
-			/*
-			 * Points at the equivalent page in the other language, not at the
-			 * same URL with a query string. Where no translation exists the
-			 * visitor stays put instead of landing on a 404.
-			 */
-			?>
-			<a href="<?php echo esc_url( hurth_alt_url( 'de' ) ); ?>"
-				aria-current="<?php echo 'de' === $hurth_lang ? 'true' : 'false'; ?>" hreflang="de">DE</a>
-			<a href="<?php echo esc_url( hurth_alt_url( 'en' ) ); ?>"
-				aria-current="<?php echo 'en' === $hurth_lang ? 'true' : 'false'; ?>" hreflang="en">EN</a>
 		</nav>
 
+		<div class="header-actions">
+			<a class="login-link" href="<?php echo esc_url( aquariende_info( 'portal_url' ) ); ?>">
+				<?php echo aquariende_icon( 'lock' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span><?php esc_html_e( 'Student login', 'aquariende' ); ?></span>
+			</a>
+			<a class="btn btn-primary btn-sm header-wa" href="<?php echo esc_url( aquariende_whatsapp_url() ); ?>" target="_blank" rel="noopener">
+				<?php echo aquariende_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span><?php esc_html_e( 'WhatsApp', 'aquariende' ); ?></span>
+			</a>
+			<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-sheet">
+				<span class="menu-toggle-open"><?php echo aquariende_icon( 'menu' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+				<span class="menu-toggle-close"><?php echo aquariende_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'aquariende' ); ?></span>
+			</button>
+		</div>
 	</div>
-</div>
 
-<header class="site-header">
-	<div class="wrap site-header__bar">
-
-		<a class="site-brand" href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>">
-			<span class="site-brand__mark" aria-hidden="true">F</span>
-			<span class="site-brand__text">
-				<?php echo esc_html( hurth_info( 'name' ) ); ?>
-				<span class="site-brand__tag"><?php echo esc_html( hurth_info( 'city_tag' ) ); ?></span>
-			</span>
-		</a>
-
-		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-			<span class="screen-reader-text"><?php echo esc_html( hurth_t( 'menu' ) ); ?></span>
-			<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none"
-				stroke="currentColor" stroke-width="2" stroke-linecap="round">
-				<path d="M3 6h18M3 12h18M3 18h18" />
-			</svg>
-		</button>
-
-		<nav class="site-nav" id="site-nav" aria-label="<?php esc_attr_e( 'Primary', 'hurth' ); ?>">
+	<div class="mobile-sheet" id="mobile-sheet" hidden>
+		<nav class="sheet-nav" aria-label="<?php esc_attr_e( 'Main (mobile)', 'aquariende' ); ?>">
 			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'primary',
-				'container'      => false,
-				'depth'          => 2,
-				'fallback_cb'    => 'hurth_menu_fallback',
-			) );
+			wp_nav_menu(
+				array(
+					'theme_location' => 'primary',
+					'container'      => false,
+					'menu_class'     => 'sheet-list',
+					'depth'          => 1,
+					'fallback_cb'    => 'aquariende_menu_fallback',
+				)
+			);
 			?>
 		</nav>
-
+		<div class="sheet-foot">
+			<a class="btn btn-primary btn-lg btn-block" href="<?php echo esc_url( aquariende_whatsapp_url() ); ?>" target="_blank" rel="noopener">
+				<?php echo aquariende_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span><?php esc_html_e( 'Message us on WhatsApp', 'aquariende' ); ?></span>
+			</a>
+			<a class="sheet-login" href="<?php echo esc_url( aquariende_info( 'portal_url' ) ); ?>">
+				<?php echo aquariende_icon( 'lock' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span><?php esc_html_e( 'Student login', 'aquariende' ); ?></span>
+			</a>
+		</div>
 	</div>
 </header>
-
-<main id="main">

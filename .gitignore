@@ -1,21 +1,11 @@
-# ---------------------------------------------------------------
-# Site backups — NEVER commit. The .wpress archive is ~1 GB, far over
-# GitHub's 100 MB per-file hard limit. Kept in this folder locally only.
-# ---------------------------------------------------------------
+# Site backups and database dumps: never commit (personal data, size limits).
 *.wpress
 *.wpress.*
 _backup-extracted/
-
-# ---------------------------------------------------------------
-# Database dumps — contain wp_users (emails + password hashes) and
-# wp_options (API keys, licence keys). This repo is public.
-# ---------------------------------------------------------------
 *.sql
 *.sql.gz
 
-# ---------------------------------------------------------------
-# Secrets & site-local config
-# ---------------------------------------------------------------
+# Secrets and site-local config
 wp-config.php
 .env
 .env.*
@@ -24,30 +14,18 @@ wp-config.php
 *.key
 auth.json
 
-# ---------------------------------------------------------------
-# Extracted WordPress tree — this repo is now the theme itself, so a
-# wp-content/ folder here would be a local scratch copy, not source.
-# ---------------------------------------------------------------
+# Local WordPress copies and tooling
 wp-content/
-
-# ---------------------------------------------------------------
-# Build & tooling
-# ---------------------------------------------------------------
 node_modules/
-.sass-cache/
+.lighthouse/
 
-# ---------------------------------------------------------------
 # Logs
-# ---------------------------------------------------------------
 *.log
 error_log
 debug.log
 
-# ---------------------------------------------------------------
-# OS / editor cruft
-# ---------------------------------------------------------------
+# OS / editor
 Thumbs.db
-ehthumbs.db
 Desktop.ini
 .DS_Store
 .idea/

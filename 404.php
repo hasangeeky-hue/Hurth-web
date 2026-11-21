@@ -1,38 +1,35 @@
 <?php
 /**
- * 404 template.
+ * Not found.
  *
- * @package Hurth
+ * @package Aquariende
  */
 
 get_header();
-
-$hurth_q = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
 ?>
-
-<div class="page-hero">
-	<div class="wrap">
-		<h1><?php echo esc_html( hurth_t( 'notfound_h1' ) ); ?></h1>
-		<p><?php echo esc_html( hurth_t( 'notfound_p' ) ); ?></p>
-	</div>
-</div>
-
-<div class="section">
-	<div class="wrap content-area">
-		<p>
-			<a class="btn" href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>">
-				<?php echo esc_html( hurth_t( 'back_home' ) ); ?>
-			</a>
-		</p>
-		<?php hurth_menu_fallback(); ?>
-	</div>
-</div>
-
-<?php
-// All four handsets, each draggable. Rendered on every template so no
-// page shows a single model in isolation.
-echo hurth_device_lineup( 'default' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-?>
-
+<main id="main" class="site-main">
+	<?php
+	get_template_part(
+		'template-parts/page-head',
+		null,
+		array(
+			'eyebrow' => __( 'Error 404', 'aquariende' ),
+			'title'   => __( 'This page is not in the file.', 'aquariende' ),
+			'lede'    => __( 'The link may be old: the site was rebuilt and some pages were removed. Try a search or one of the pages below.', 'aquariende' ),
+		)
+	);
+	?>
+	<section class="section-pad">
+		<div class="wrap narrow">
+			<?php get_search_form(); ?>
+			<ul class="link-list">
+				<?php foreach ( aquariende_default_nav() as $aq_label => $aq_url ) : ?>
+					<li><a class="link-arrow" href="<?php echo esc_url( $aq_url ); ?>"><?php echo esc_html( $aq_label ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></li>
+				<?php endforeach; ?>
+				<li><a class="link-arrow" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'aquariende' ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></li>
+			</ul>
+		</div>
+	</section>
+</main>
 <?php
 get_footer();

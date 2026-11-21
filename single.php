@@ -1,102 +1,60 @@
 <?php
 /**
- * Single post.
+ * Single blog post.
  *
- * Posts carry an interactive 3D model matched to the subject, the same way
- * service pages do — a cracked panel on the screen article, a drained cell
- * on the battery one. Previously they had no visual at all.
- *
- * @package Hurth
+ * @package Aquariende
  */
 
 get_header();
-
-$hurth_q      = ( 'en' === hurth_lang() ) ? '?lang=en' : '';
-$hurth_slug   = get_post_field( 'post_name', get_queried_object_id() );
-$hurth_visual = hurth_page_visual( $hurth_slug );
 ?>
-
-<div class="page-hero page-hero--visual">
-	<div class="wrap page-hero__split">
-		<div>
-			<ul class="breadcrumb">
-				<li><a href="<?php echo esc_url( home_url( '/' ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_home' ) ); ?></a></li>
-				<li aria-hidden="true">/</li>
-				<?php
-				$hurth_blog = get_page_by_path( 'blog' );
-				if ( $hurth_blog && 'publish' === $hurth_blog->post_status ) :
-					?>
-					<li><a href="<?php echo esc_url( get_permalink( $hurth_blog ) . $hurth_q ); ?>"><?php echo esc_html( hurth_t( 'nav_blog' ) ); ?></a></li>
-					<li aria-hidden="true">/</li>
-				<?php endif; ?>
-				<li><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time></li>
-			</ul>
-			<h1><?php the_title(); ?></h1>
-			<?php if ( has_excerpt() ) : ?>
-				<p><?php echo esc_html( get_the_excerpt() ); ?></p>
-			<?php endif; ?>
-
-			<div class="page-hero__actions">
-				<a class="btn btn--accent" href="tel:<?php echo esc_attr( hurth_info( 'phone_href' ) ); ?>">
-					<?php echo esc_html( hurth_t( 'call' ) ); ?>
-				</a>
-				<?php
-				$hurth_book = get_page_by_path( 'book-an-appointment' );
-				if ( $hurth_book ) :
-					?>
-					<a class="btn btn--ghost" href="<?php echo esc_url( get_permalink( $hurth_book ) . $hurth_q ); ?>">
-						<?php echo esc_html( 'de' === hurth_lang() ? 'Termin anfragen' : 'Request appointment' ); ?>
-					</a>
-				<?php endif; ?>
-			</div>
-		</div>
-
-		<div class="page-hero__media">
-			<?php echo hurth_device3d( $hurth_visual[0], '', $hurth_visual[1] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</div>
-	</div>
-</div>
-
-<div class="section">
-	<div class="wrap">
-		<?php
-		while ( have_posts() ) :
-			the_post();
-			?>
-			<article <?php post_class( 'content-area' ); ?>>
-				<?php
-				if ( has_post_thumbnail() ) {
-					the_post_thumbnail( 'large' );
-				}
-
-				the_content();
-				?>
-			</article>
-
-			<nav class="pagination" aria-label="<?php esc_attr_e( 'Posts', 'hurth' ); ?>">
-				<?php
-				$hurth_prev = get_previous_post_link( '%link', '&larr; %title' );
-				$hurth_next = get_next_post_link( '%link', '%title &rarr;' );
-
-				if ( $hurth_prev ) {
-					echo '<span class="page-numbers">' . wp_kses_post( $hurth_prev ) . '</span>';
-				}
-				if ( $hurth_next ) {
-					echo '<span class="page-numbers">' . wp_kses_post( $hurth_next ) . '</span>';
-				}
-				?>
-			</nav>
-			<?php
-		endwhile;
+<main id="main" class="site-main">
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		$aq_cats = get_the_category();
+		$aq_meta = '<time datetime="' . esc_attr( get_the_date( 'c' ) ) . '">' . esc_html( get_the_date() ) . '</time>';
+		if ( $aq_cats && 'uncategorized' !== $aq_cats[0]->slug ) {
+			$aq_meta = '<a href="' . esc_url( get_category_link( $aq_cats[0] ) ) . '">' . esc_html( $aq_cats[0]->name ) . '</a> · ' . $aq_meta;
+		}
+		get_template_part(
+			'template-parts/page-head',
+			null,
+			array(
+				'eyebrow' => __( 'Blog', 'aquariende' ),
+				'meta'    => $aq_meta,
+			)
+		);
 		?>
-	</div>
-</div>
+		<article id="post-<?php the_ID(); ?>" <?php post_class( 'section-pad' ); ?>>
+			<div class="wrap">
+				<?php if ( has_post_thumbnail() ) : ?>
+					<div class="post-hero-media"><?php the_post_thumbnail( 'large', array( 'loading' => 'eager' ) ); ?></div>
+				<?php endif; ?>
+				<div class="prose">
+					<?php the_content(); ?>
+					<?php wp_link_pages(); ?>
+				</div>
 
-<?php
-// All four handsets, each draggable. Rendered on every template so no
-// page shows a single model in isolation.
-echo hurth_device_lineup( 'default' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-?>
+				<aside class="post-aside" aria-label="<?php esc_attr_e( 'Next step', 'aquariende' ); ?>">
+					<p class="post-aside-title"><?php esc_html_e( 'Questions about your own case?', 'aquariende' ); ?></p>
+					<p><?php esc_html_e( 'Message us on WhatsApp. We reply in English or Bengali.', 'aquariende' ); ?></p>
+					<a class="btn btn-primary" href="<?php echo esc_url( aquariende_whatsapp_url() ); ?>" target="_blank" rel="noopener">
+						<?php echo aquariende_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						<span><?php esc_html_e( 'Message us on WhatsApp', 'aquariende' ); ?></span>
+					</a>
+				</aside>
 
+				<nav class="post-nav" aria-label="<?php esc_attr_e( 'More posts', 'aquariende' ); ?>">
+					<?php
+					previous_post_link( '<div class="post-nav-prev">%link</div>', '<span class="post-nav-label">' . esc_html__( 'Previous', 'aquariende' ) . '</span> %title' );
+					next_post_link( '<div class="post-nav-next">%link</div>', '<span class="post-nav-label">' . esc_html__( 'Next', 'aquariende' ) . '</span> %title' );
+					?>
+				</nav>
+			</div>
+		</article>
+		<?php
+	endwhile;
+	?>
+</main>
 <?php
 get_footer();
