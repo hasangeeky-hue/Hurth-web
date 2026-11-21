@@ -10,7 +10,7 @@
 	<div class="wrap footer-grid">
 		<div class="footer-brand">
 			<?php aquariende_logo(); ?>
-			<p><?php esc_html_e( 'Study-in-Germany consultancy for students from Bangladesh. Profile check, university application and visa, online since 2020.', 'aquariende' ); ?></p>
+			<p><?php esc_html_e( 'We provide solutions for studying in German universities, including obtaining German visas.', 'aquariende' ); ?></p>
 		</div>
 
 		<nav class="footer-col" aria-label="<?php esc_attr_e( 'Footer', 'aquariende' ); ?>">
@@ -75,10 +75,10 @@
 		<p>
 			<?php
 			/* translators: %s: year. */
-			echo esc_html( sprintf( __( '© %s Aquariende. Fetch your dream.', 'aquariende' ), wp_date( 'Y' ) ) );
+			echo esc_html( sprintf( __( 'Copyright © %s Aquariende. All rights reserved.', 'aquariende' ), wp_date( 'Y' ) ) );
 			?>
 		</p>
-		<p><?php esc_html_e( 'No prices, payments or uploads on this website. Everything starts on WhatsApp.', 'aquariende' ); ?></p>
+		<p><?php echo esc_html( aquariende_info( 'slogan' ) ); ?></p>
 	</div>
 </footer>
 

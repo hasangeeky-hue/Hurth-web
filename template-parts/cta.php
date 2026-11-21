@@ -8,7 +8,7 @@
  */
 
 $aq_args  = isset( $args ) && is_array( $args ) ? $args : array();
-$aq_title = isset( $aq_args['title'] ) ? $aq_args['title'] : __( 'Start with one WhatsApp message.', 'aquariende' );
+$aq_title = isset( $aq_args['title'] ) ? $aq_args['title'] : __( "We're open for any suggestion or just to have a chat.", 'aquariende' );
 $aq_form  = ! isset( $aq_args['form'] ) || $aq_args['form'];
 ?>
 <section class="cta dark" id="start" aria-labelledby="cta-title">

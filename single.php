@@ -37,7 +37,7 @@ get_header();
 
 				<aside class="post-aside" aria-label="<?php esc_attr_e( 'Next step', 'aquariende' ); ?>">
 					<p class="post-aside-title"><?php esc_html_e( 'Questions about your own case?', 'aquariende' ); ?></p>
-					<p><?php esc_html_e( 'Message us on WhatsApp. We reply in English or Bengali.', 'aquariende' ); ?></p>
+					<p><?php esc_html_e( "We're open for any suggestion or just to have a chat.", 'aquariende' ); ?></p>
 					<a class="btn btn-primary" href="<?php echo esc_url( aquariende_whatsapp_url() ); ?>" target="_blank" rel="noopener">
 						<?php echo aquariende_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						<span><?php esc_html_e( 'Message us on WhatsApp', 'aquariende' ); ?></span>

@@ -18,8 +18,8 @@ get_header();
 			null,
 			array(
 				'eyebrow' => __( 'About', 'aquariende' ),
-				'title'   => __( 'Started as a free Facebook group. Run by students in Germany.', 'aquariende' ),
-				'lede'    => __( 'Aquariende is an online consultancy for students from Bangladesh who want to study at a German university.', 'aquariende' ),
+				'title'   => __( 'About us', 'aquariende' ),
+				'lede'    => __( 'Aquariende is an online-based higher studies consultancy firm in Bangladesh. We provide solutions for studying in German universities, including obtaining German visas.', 'aquariende' ),
 			)
 		);
 		?>
@@ -28,9 +28,9 @@ get_header();
 			<div class="wrap story-grid">
 				<div class="story-copy">
 					<h2 id="story-title" class="section-title"><?php esc_html_e( 'Our story', 'aquariende' ); ?></h2>
-					<p><?php esc_html_e( 'Aquariende began in 2020, when COVID-19 disrupted visas and travel for students heading abroad. We opened a Facebook group where anyone interested in higher education in Germany could get support for free.', 'aquariende' ); ?></p>
-					<p><?php esc_html_e( 'The group grew to 50,000 members. Out of the cases we worked through there, we built a consultancy that covers everything from the university application to the visa.', 'aquariende' ); ?></p>
-					<p><?php esc_html_e( 'We work entirely online. Our consultants are students at German universities, so the advice comes from people who have been through the same system.', 'aquariende' ); ?></p>
+					<p><?php esc_html_e( 'Our mission started in the year 2020, when the COVID-19 pandemic began. During that period, the normal process for obtaining a visa and entering the country was disrupted. We opened our Facebook group to anybody who is interested in pursuing higher education and wants to get support for free.', 'aquariende' ); ?></p>
+					<p><?php esc_html_e( 'After three years of progress along this path, we have reached the point where we have 50,000 members in our community, and we now provide consultation for students who want to enroll in German institutions. From the application procedure to obtaining the visa, we cover everything.', 'aquariende' ); ?></p>
+					<p><?php esc_html_e( 'We have a very experienced workforce, all of them students from highly regarded German institutions.', 'aquariende' ); ?></p>
 				</div>
 				<dl class="facts">
 					<div><dt><?php esc_html_e( 'Started', 'aquariende' ); ?></dt><dd>2020</dd></div>
@@ -44,19 +44,19 @@ get_header();
 		<section class="how-we-work section-pad service--tint" aria-labelledby="hww-title">
 			<div class="wrap hww-grid">
 				<div>
-					<h2 id="hww-title" class="section-title"><?php esc_html_e( 'Your file is never hidden from you.', 'aquariende' ); ?></h2>
+					<h2 id="hww-title" class="section-title"><?php esc_html_e( 'Why are we the best?', 'aquariende' ); ?></h2>
 					<ul class="feature-list">
 						<li>
 							<?php echo aquariende_icon( 'file' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-							<div><h3><?php esc_html_e( 'Your own portal', 'aquariende' ); ?></h3><p><?php esc_html_e( 'You track every admission step yourself, in the same step bar we work from.', 'aquariende' ); ?></p></div>
+							<div><h3><?php esc_html_e( 'Track your admission', 'aquariende' ); ?></h3><p><?php esc_html_e( 'We have established a platform via which a student can track and monitor his admission activities directly.', 'aquariende' ); ?></p></div>
 						</li>
 						<li>
 							<?php echo aquariende_icon( 'video' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-							<div><h3><?php esc_html_e( 'Video consultations', 'aquariende' ); ?></h3><p><?php esc_html_e( 'We process your application steps in front of you, not behind a closed door.', 'aquariende' ); ?></p></div>
+							<div><h3><?php esc_html_e( 'Video consultations', 'aquariende' ); ?></h3><p><?php esc_html_e( 'We provide video consultation based on the services you take. There are no iron curtains between you and us, so you can complete your admission file from anywhere in the world.', 'aquariende' ); ?></p></div>
 						</li>
 						<li>
 							<?php echo aquariende_icon( 'users' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-							<div><h3><?php esc_html_e( 'Help beyond the application', 'aquariende' ); ?></h3><p><?php esc_html_e( 'We also help with paying tuition fees and with health and travel insurance.', 'aquariende' ); ?></p></div>
+							<div><h3><?php esc_html_e( 'Help beyond the application', 'aquariende' ); ?></h3><p><?php esc_html_e( 'We assist students in processing their files for Germany, paying their tuition fees, and opening health and travel insurance policies.', 'aquariende' ); ?></p></div>
 						</li>
 					</ul>
 				</div>
@@ -77,13 +77,13 @@ get_header();
 		<section class="mission section-pad" aria-labelledby="mission-title">
 			<div class="wrap mission-grid">
 				<div>
-					<h2 id="mission-title" class="section-title"><?php esc_html_e( 'What we are working towards', 'aquariende' ); ?></h2>
-					<p class="section-lede"><?php esc_html_e( 'A hassle-free way for students to reach higher study in Europe, starting with Germany.', 'aquariende' ); ?></p>
+					<h2 id="mission-title" class="section-title"><?php esc_html_e( 'Our mission and vision', 'aquariende' ); ?></h2>
+					<p class="section-lede"><?php esc_html_e( 'We want to develop a hassle-free platform where a student can fulfill the dream of higher studies in Europe. We are here for your help.', 'aquariende' ); ?></p>
 				</div>
 				<ul class="mission-list">
-					<li><?php esc_html_e( 'A platform where every student can follow their admission transparently.', 'aquariende' ); ?></li>
-					<li><?php esc_html_e( 'Consultation that students can afford, paid stage by stage.', 'aquariende' ); ?></li>
-					<li><?php esc_html_e( 'A process simple enough that no one has to face it alone.', 'aquariende' ); ?></li>
+					<li><?php esc_html_e( 'We want to create a suitable platform where a student can track his admission process transparently.', 'aquariende' ); ?></li>
+					<li><?php esc_html_e( 'We provide better and more affordable consultation than any other agency.', 'aquariende' ); ?></li>
+					<li><?php esc_html_e( 'We established an easy platform where a student does not need to face any hassle.', 'aquariende' ); ?></li>
 				</ul>
 			</div>
 		</section>
@@ -91,7 +91,7 @@ get_header();
 		<section class="team section-pad" id="team" aria-labelledby="team-title">
 			<div class="wrap">
 				<header class="section-head">
-					<h2 id="team-title" class="section-title"><?php esc_html_e( 'The people behind your file', 'aquariende' ); ?></h2>
+					<h2 id="team-title" class="section-title"><?php esc_html_e( 'Our talented team', 'aquariende' ); ?></h2>
 				</header>
 				<ul class="team-grid team-grid--open">
 					<?php

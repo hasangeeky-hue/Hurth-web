@@ -17,7 +17,7 @@ if ( is_search() ) {
 } else {
 	$aq_page  = (int) get_option( 'page_for_posts' );
 	$aq_title = $aq_page ? get_the_title( $aq_page ) : __( 'Blog', 'aquariende' );
-	$aq_lede  = __( 'Guides to the German application and visa process, written by our team.', 'aquariende' );
+	$aq_lede  = '';
 }
 ?>
 <main id="main" class="site-main">

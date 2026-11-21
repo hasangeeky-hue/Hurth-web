@@ -8,7 +8,7 @@
 
 $aq_state = isset( $_GET['callback'] ) ? sanitize_key( wp_unslash( $_GET['callback'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification -- display-only flag.
 $aq_msgs  = array(
-	'sent'    => __( 'Sent. We reply on WhatsApp within one working day.', 'aquariende' ),
+	'sent'    => __( 'Sent. Within 24 hours our team will call you.', 'aquariende' ),
 	'invalid' => __( 'Please check your name and WhatsApp number and try again.', 'aquariende' ),
 	'failed'  => __( 'That did not go through. Please message us on WhatsApp instead.', 'aquariende' ),
 );
@@ -16,7 +16,7 @@ $aq_uid   = wp_unique_id( 'cb-' );
 ?>
 <div class="callback" id="callback">
 	<h3 class="callback-title"><?php esc_html_e( 'Prefer that we message you?', 'aquariende' ); ?></h3>
-	<p class="callback-intro"><?php esc_html_e( 'Leave your name and WhatsApp number. We reply on WhatsApp within one working day.', 'aquariende' ); ?></p>
+	<p class="callback-intro"><?php esc_html_e( 'Leave your name and WhatsApp number. Within 24 hours our team will call you directly from Germany and answer your questions.', 'aquariende' ); ?></p>
 
 	<form class="callback-form<?php echo 'sent' === $aq_state ? ' is-sent' : ''; ?>" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" novalidate>
 		<input type="hidden" name="action" value="aquariende_callback">
@@ -48,6 +48,6 @@ $aq_uid   = wp_unique_id( 'cb-' );
 		</button>
 
 		<p class="form-status<?php echo ( $aq_state && isset( $aq_msgs[ $aq_state ] ) ) ? ' is-' . esc_attr( $aq_state ) : ''; ?>" role="status" aria-live="polite"><?php echo isset( $aq_msgs[ $aq_state ] ) ? esc_html( $aq_msgs[ $aq_state ] ) : ''; ?></p>
-		<p class="form-note"><?php esc_html_e( 'We use your number only to reply to you. Nothing is uploaded or paid on this website.', 'aquariende' ); ?></p>
+		<p class="form-note"><?php esc_html_e( 'Nothing is uploaded or paid on this website.', 'aquariende' ); ?></p>
 	</form>
 </div>

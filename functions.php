@@ -48,7 +48,7 @@ function aquariende_info( $key ) {
 	$info = array(
 		'name'           => 'Aquariende',
 		'slogan'         => __( 'Fetch your dream', 'aquariende' ),
-		'description'    => __( 'Online study-in-Germany consultancy for students from Bangladesh: profile check, university application and visa, with every step visible in your own portal.', 'aquariende' ),
+		'description'    => __( 'Aquariende is an online-based higher studies consultancy firm in Bangladesh. We provide solutions for studying in German universities, including obtaining German visas.', 'aquariende' ),
 		'whatsapp'       => '+49 1575 0129620',
 		'whatsapp_e164'  => '4915750129620',
 		'whatsapp_hello' => __( 'Hello Aquariende! I would like to study in Germany. How do I start?', 'aquariende' ),
@@ -147,6 +147,15 @@ add_action( 'after_setup_theme', 'aquariende_content_width', 0 );
  * @return string
  */
 function aquariende_page_url( $slug ) {
+	// Pages made by the content installer are found by their key (= slug),
+	// even while an older page of the previous site still holds the slug.
+	if ( function_exists( 'aquariende_content_id' ) ) {
+		$installed = aquariende_content_id( $slug );
+		if ( $installed ) {
+			return get_permalink( $installed );
+		}
+	}
+
 	if ( 'blog' === $slug ) {
 		$posts_page = (int) get_option( 'page_for_posts' );
 		if ( $posts_page ) {
@@ -204,15 +213,16 @@ function aquariende_menu_fallback( $args ) {
  */
 function aquariende_legal_fallback( $args ) {
 	$legal = array(
-		'privacy-policy'      => __( 'Privacy policy', 'aquariende' ),
-		'terms-and-condition' => __( 'Terms and conditions', 'aquariende' ),
-		'refund_returns'      => __( 'Refunds', 'aquariende' ),
+		'terms-and-condition' => __( 'Terms and Condition', 'aquariende' ),
+		'privacy-policy'      => __( 'Privacy Policy', 'aquariende' ),
+		'refund_returns'      => __( 'Refund and Returns', 'aquariende' ),
 		'cancellation'        => __( 'Cancellation', 'aquariende' ),
 	);
 
 	$items = '';
 	foreach ( $legal as $slug => $label ) {
-		$page = get_page_by_path( $slug );
+		$installed = function_exists( 'aquariende_content_id' ) ? aquariende_content_id( $slug ) : 0;
+		$page      = $installed ? get_post( $installed ) : get_page_by_path( $slug );
 		if ( $page && 'publish' === $page->post_status ) {
 			$items .= sprintf( '<li><a href="%s">%s</a></li>', esc_url( get_permalink( $page ) ), esc_html( $label ) );
 		}
@@ -353,7 +363,7 @@ function aquariende_team() {
 			'name'       => 'Khaled Bin Musa',
 			'role'       => __( 'Senior consultant', 'aquariende' ),
 			'university' => __( 'University of Bremen', 'aquariende' ),
-			'study'      => __( "Master's, English-Speaking Cultures", 'aquariende' ),
+			'study'      => __( "Master's, English-Speaking Cultures: Language, Text, Media", 'aquariende' ),
 		),
 		array(
 			'slug'       => 'team-al-mahmud',
@@ -374,68 +384,61 @@ function aquariende_stages() {
 	return array(
 		array(
 			'key'       => 'profile',
-			'name'      => __( 'Profile check', 'aquariende' ),
+			'name'      => __( 'Mandatory profile check', 'aquariende' ),
 			'short'     => __( 'Profile check', 'aquariende' ),
-			'tagline'   => __( 'Find out if Germany is realistic before you spend money on applications.', 'aquariende' ),
-			'summary'   => __( 'We review your certificates, grades and CV and tell you, in a 30-minute video consultation, which subjects and universities fit your profile.', 'aquariende' ),
+			'tagline'   => __( 'Before you apply, evaluate your qualifications against the requirements of the German education system.', 'aquariende' ),
+			'summary'   => __( 'Before submitting an application to the university, you should evaluate whether you have a chance of being accepted. Our expert team will help you evaluate your profile and answer all your questions.', 'aquariende' ),
 			'included'  => array(
 				__( '30-minute video consultation', 'aquariende' ),
-				__( 'CV check', 'aquariende' ),
-				__( 'Evaluation of your documents', 'aquariende' ),
-				__( 'Advice on subjects and universities that match your previous study', 'aquariende' ),
+				__( 'CV checking', 'aquariende' ),
+				__( 'Document evaluation', 'aquariende' ),
+				__( 'Good universities related to your previous study', 'aquariende' ),
 			),
-			'excluded'  => array(
-				__( 'Writing your CV or motivation letter', 'aquariende' ),
-				__( 'Submitting university applications', 'aquariende' ),
-			),
-			'file_note' => __( 'Documents reviewed in a video call', 'aquariende' ),
-			'wa'        => __( 'Hello Aquariende! I am interested in the Profile check. How do I start?', 'aquariende' ),
+			'excluded'  => array(),
+			'file_note' => __( 'CV checking · document evaluation', 'aquariende' ),
+			'wa'        => __( 'Hello Aquariende! I am interested in the Mandatory profile check. How do I start?', 'aquariende' ),
 		),
 		array(
 			'key'       => 'application',
-			'name'      => __( 'University application', 'aquariende' ),
+			'name'      => __( 'Application to the University', 'aquariende' ),
 			'short'     => __( 'Application', 'aquariende' ),
-			'tagline'   => __( 'The right subject at the right university, applied for properly.', 'aquariende' ),
-			'summary'   => __( 'We choose the subject and university with you, write your CV and motivation letter, calculate your grade for the VPD and handle uni-assist, notary and DHL. You watch every step in four video consultations.', 'aquariende' ),
+			'tagline'   => __( 'We help you find a suitable university and provide all documentation support.', 'aquariende' ),
+			'summary'   => __( 'We find the right subject and the right university for your profile, make your CV, write your motivation letter and calculate your grade for the VPD. We arrange your notary and send your documents to Germany by DHL. In four video consultations we process every application step in front of you.', 'aquariende' ),
 			'included'  => array(
-				__( 'Choosing your subject and university', 'aquariende' ),
-				__( 'A standard German-style CV', 'aquariende' ),
-				__( 'Your motivation letter', 'aquariende' ),
-				__( 'Grade calculation for the VPD', 'aquariende' ),
+				__( "Finding the candidate's subject and university", 'aquariende' ),
+				__( 'Preparing a standard CV', 'aquariende' ),
+				__( 'Writing the motivation letter', 'aquariende' ),
+				__( 'VPD support', 'aquariende' ),
 				__( 'uni-assist application support', 'aquariende' ),
-				__( 'Notary and DHL support', 'aquariende' ),
+				__( 'Notary support and DHL support', 'aquariende' ),
 				__( 'Four video consultations', 'aquariende' ),
-				__( 'Live tracking in your portal', 'aquariende' ),
+				__( 'Tracking your application in real time', 'aquariende' ),
 			),
-			'excluded'  => array(
-				__( 'Fees charged by uni-assist or the universities', 'aquariende' ),
-				__( 'Visa preparation (that is the Visa package)', 'aquariende' ),
-			),
-			'file_note' => __( 'Motivation letter: second draft', 'aquariende' ),
-			'wa'        => __( 'Hello Aquariende! I am interested in the University application package. How do I start?', 'aquariende' ),
+			'excluded'  => array(),
+			'file_note' => __( 'CV · motivation letter · VPD', 'aquariende' ),
+			'wa'        => __( 'Hello Aquariende! I am interested in the Application to the University. How do I start?', 'aquariende' ),
 		),
 		array(
 			'key'       => 'visa',
-			'name'      => __( 'Visa', 'aquariende' ),
+			'name'      => __( 'Visa application process', 'aquariende' ),
 			'short'     => __( 'Visa', 'aquariende' ),
-			'tagline'   => __( 'No one can guarantee a visa. You can prepare it properly.', 'aquariende' ),
-			'summary'   => __( 'We help you get the embassy appointment, open the blocked account, fill in the visa form and write the letter of intention, then sort out insurance and travel. Three video consultations.', 'aquariende' ),
+			'tagline'   => __( 'No one can guarantee a visa. We will help you prepare your visa documentation properly.', 'aquariende' ),
+			'summary'   => __( 'We assist you to take the embassy visa appointment in time, fill out the visa form properly and open a blocked account. We find better health and travel insurance, air tickets at a reasonable price, and train and bus tickets for after you arrive in Germany. You get three live consultations.', 'aquariende' ),
 			'included'  => array(
-				__( 'Embassy appointment', 'aquariende' ),
+				__( 'Embassy visa appointment', 'aquariende' ),
 				__( 'Opening the blocked account', 'aquariende' ),
-				__( 'Filling in the visa form', 'aquariende' ),
-				__( 'Letter of intention', 'aquariende' ),
-				__( 'Deferring your semester if the visa timeline needs it', 'aquariende' ),
+				__( 'Filling out the visa form properly', 'aquariende' ),
+				__( 'Letter of intention for the visa application', 'aquariende' ),
+				__( 'Deferring the semester according to the visa timeline', 'aquariende' ),
 				__( 'Health and travel insurance', 'aquariende' ),
-				__( 'Flight and local transport in Germany', 'aquariende' ),
+				__( 'Air ticket and local transport tickets in Germany', 'aquariende' ),
 				__( 'Three video consultations', 'aquariende' ),
 			),
 			'excluded'  => array(
-				__( 'A visa guarantee: no one can give one', 'aquariende' ),
-				__( 'Embassy and blocked-account fees', 'aquariende' ),
+				__( 'A visa guarantee: no one can guarantee a visa', 'aquariende' ),
 			),
-			'file_note' => __( 'Opens after your offer letter', 'aquariende' ),
-			'wa'        => __( 'Hello Aquariende! I am interested in the Visa package. How do I start?', 'aquariende' ),
+			'file_note' => __( 'Visa form · blocked account', 'aquariende' ),
+			'wa'        => __( 'Hello Aquariende! I am interested in the Visa application process. How do I start?', 'aquariende' ),
 		),
 	);
 }
@@ -449,19 +452,19 @@ function aquariende_flow() {
 	return array(
 		array(
 			'title' => __( 'Message us on WhatsApp', 'aquariende' ),
-			'text'  => __( 'Tell us what you studied and what you want to study in Germany.', 'aquariende' ),
+			'text'  => __( 'Within 24 hours our team will call you directly from Germany and answer your questions.', 'aquariende' ),
 		),
 		array(
 			'title' => __( 'Pay the consultation fee', 'aquariende' ),
-			'text'  => __( 'We send the payment details in the chat. Nothing is paid on this website.', 'aquariende' ),
+			'text'  => __( 'Nothing is paid on this website.', 'aquariende' ),
 		),
 		array(
 			'title' => __( 'Get your portal link by email', 'aquariende' ),
-			'text'  => __( 'A private link to your own file, sent to your email address.', 'aquariende' ),
+			'text'  => __( 'After payment, a link to your own file is sent to your email address.', 'aquariende' ),
 		),
 		array(
 			'title' => __( 'Upload documents and book', 'aquariende' ),
-			'text'  => __( 'Upload your documents and book your video consultation inside the portal.', 'aquariende' ),
+			'text'  => __( 'Inside the portal, upload your documents and book an appointment to talk with our experts.', 'aquariende' ),
 		),
 	);
 }
@@ -536,7 +539,7 @@ function aquariende_assets() {
 		'aquariendeL10n',
 		array(
 			'sending'  => __( 'Sending…', 'aquariende' ),
-			'sent'     => __( 'Sent. We reply on WhatsApp within one working day.', 'aquariende' ),
+			'sent'     => __( 'Sent. Within 24 hours our team will call you.', 'aquariende' ),
 			'failed'   => __( 'That did not go through. Please message us on WhatsApp instead.', 'aquariende' ),
 			'name'     => __( 'Please enter your name.', 'aquariende' ),
 			'phone'    => __( 'Please enter a WhatsApp number with country code, for example +880 1712 345678.', 'aquariende' ),
@@ -895,3 +898,9 @@ function aquariende_handle_callback() {
 }
 add_action( 'admin_post_nopriv_aquariende_callback', 'aquariende_handle_callback' );
 add_action( 'admin_post_aquariende_callback', 'aquariende_handle_callback' );
+
+/* -------------------------------------------------------------------------
+ * Content installer: pages, posts, menus and settings from the old site
+ * ---------------------------------------------------------------------- */
+
+require_once get_template_directory() . '/inc/content-installer.php';

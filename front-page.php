@@ -20,7 +20,7 @@ $aq_stages = aquariende_stages();
 		<ul class="wrap trust-list">
 			<li class="trust-item">
 				<p class="trust-big"><?php esc_html_e( 'Since 2020', 'aquariende' ); ?></p>
-				<p class="trust-small"><?php esc_html_e( 'Started as a free Facebook support group when COVID-19 disrupted visas.', 'aquariende' ); ?></p>
+				<p class="trust-small"><?php esc_html_e( 'Our mission started in 2020, when COVID-19 disrupted the normal process for obtaining a visa.', 'aquariende' ); ?></p>
 			</li>
 			<li class="trust-item">
 				<p class="trust-big">
@@ -29,11 +29,11 @@ $aq_stages = aquariende_stages();
 					echo esc_html( sprintf( __( '%s members', 'aquariende' ), aquariende_info( 'community' ) ) );
 					?>
 				</p>
-				<p class="trust-small"><?php esc_html_e( 'in our study-in-Germany community on Facebook.', 'aquariende' ); ?></p>
+				<p class="trust-small"><?php esc_html_e( 'in our community, which started as a free Facebook group.', 'aquariende' ); ?></p>
 			</li>
 			<li class="trust-item">
 				<p class="trust-big"><?php esc_html_e( 'Team in Germany', 'aquariende' ); ?></p>
-				<p class="trust-small"><?php esc_html_e( 'Our consultants study at TUM, Bremen, Potsdam, HAW Hamburg and Schmalkalden.', 'aquariende' ); ?></p>
+				<p class="trust-small"><?php esc_html_e( 'Our team members study at TUM, Bremen, Potsdam, HAW Hamburg and Schmalkalden.', 'aquariende' ); ?></p>
 			</li>
 		</ul>
 	</section>
@@ -41,8 +41,8 @@ $aq_stages = aquariende_stages();
 	<section class="hiw" id="how" aria-labelledby="how-title">
 		<div class="wrap">
 			<header class="section-head">
-				<h2 id="how-title" class="section-title"><?php esc_html_e( 'Three stages. Take only the one you need.', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'Each stage is its own package, and your file shows exactly where you are in it.', 'aquariende' ); ?></p>
+				<h2 id="how-title" class="section-title"><?php esc_html_e( 'Our service starts with a profile check and ends with the visa application.', 'aquariende' ); ?></h2>
+				<p class="section-lede"><?php esc_html_e( 'You will find services according to your needs: take only the one you need.', 'aquariende' ); ?></p>
 			</header>
 
 			<div class="hiw-stage-area">
@@ -87,8 +87,8 @@ $aq_stages = aquariende_stages();
 	<section class="packages" id="packages" aria-labelledby="packages-title">
 		<div class="wrap">
 			<header class="section-head">
-				<h2 id="packages-title" class="section-title"><?php esc_html_e( 'What each stage includes, and what it does not.', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'Ask us on WhatsApp for current prices. You pay per stage, so you never pay for a stage you do not need.', 'aquariende' ); ?></p>
+				<h2 id="packages-title" class="section-title"><?php esc_html_e( 'Our exclusive services', 'aquariende' ); ?></h2>
+				<p class="section-lede"><?php esc_html_e( 'We provide a variety of services for getting admission in higher education institutions in Germany, ranging from university entrance to visa processing.', 'aquariende' ); ?></p>
 			</header>
 			<div class="package-grid">
 				<?php
@@ -112,43 +112,33 @@ $aq_stages = aquariende_stages();
 	<section class="why" id="why" aria-labelledby="why-title">
 		<div class="wrap why-grid">
 			<header class="section-head">
-				<h2 id="why-title" class="section-title"><?php esc_html_e( 'Built for students who were tired of agency games.', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'Many students in Bangladesh have paid an agency a lot and seen little of their own file. This is how we work instead.', 'aquariende' ); ?></p>
+				<h2 id="why-title" class="section-title"><?php esc_html_e( 'Why are we the best?', 'aquariende' ); ?></h2>
+				<p class="section-lede"><?php esc_html_e( 'There are a number of agencies in Bangladesh that provide counselling services to students who wish to pursue their higher education in Europe, particularly in Germany. In reality, they ask for a significant amount of money, and several students have been tricked into losing their money.', 'aquariende' ); ?></p>
 			</header>
 			<div class="table-scroll" tabindex="0" role="region" aria-label="<?php esc_attr_e( 'Comparison, scrolls sideways', 'aquariende' ); ?>">
 				<table class="compare">
 					<thead>
 						<tr>
 							<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Topic', 'aquariende' ); ?></span></th>
-							<th scope="col"><?php esc_html_e( 'A typical agency', 'aquariende' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Agencies', 'aquariende' ); ?></th>
 							<th scope="col" class="compare-us"><?php esc_html_e( 'Aquariende', 'aquariende' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Your file', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'Kept in their office. You hear news when you ask.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'In your own portal, with a step tracker you can open any time.', 'aquariende' ); ?></td>
+							<th scope="row"><?php esc_html_e( 'What you pay', 'aquariende' ); ?></th>
+							<td><?php esc_html_e( 'Students who go to agencies usually waste 3–4 lakhs, and most of the time they get cheated.', 'aquariende' ); ?></td>
+							<td class="compare-us"><?php esc_html_e( 'A convenient amount that students can afford easily.', 'aquariende' ); ?></td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'What you pay for', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'One large bundle, paid up front.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'Three separate stages. Take only the one you need.', 'aquariende' ); ?></td>
+							<th scope="row"><?php esc_html_e( 'Individual service', 'aquariende' ); ?></th>
+							<td><?php esc_html_e( 'They do not offer any individual service.', 'aquariende' ); ?></td>
+							<td class="compare-us"><?php esc_html_e( 'Specific services: help until you get your offer letter, or help with the visa application.', 'aquariende' ); ?></td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Who advises you', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'Counsellors in Bangladesh.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'Students at German universities, going through the same system.', 'aquariende' ); ?></td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'Where it happens', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'At their office, in person.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'Online, in video consultations, from wherever you are.', 'aquariende' ); ?></td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'The visa', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'Sometimes "guaranteed".', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'No one can guarantee a visa. We prepare it properly.', 'aquariende' ); ?></td>
+							<th scope="row"><?php esc_html_e( 'Transparency', 'aquariende' ); ?></th>
+							<td><?php esc_html_e( 'Several students were tricked and lost their money.', 'aquariende' ); ?></td>
+							<td class="compare-us"><?php esc_html_e( 'You track and monitor your admission activities directly. There are no iron curtains between you and us.', 'aquariende' ); ?></td>
 						</tr>
 					</tbody>
 				</table>
@@ -159,8 +149,8 @@ $aq_stages = aquariende_stages();
 	<section class="team" id="team" aria-labelledby="team-title">
 		<div class="wrap">
 			<header class="section-head">
-				<h2 id="team-title" class="section-title"><?php esc_html_e( 'Advice from people studying in Germany.', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'Our consultants are students at German universities, so the advice comes from people who went through the same applications.', 'aquariende' ); ?></p>
+				<h2 id="team-title" class="section-title"><?php esc_html_e( 'Our talented team', 'aquariende' ); ?></h2>
+				<p class="section-lede"><?php esc_html_e( 'All of our team members are students at highly regarded German institutions.', 'aquariende' ); ?></p>
 			</header>
 			<ul class="team-grid">
 				<?php
@@ -192,7 +182,7 @@ $aq_stages = aquariende_stages();
 		<section class="latest" aria-labelledby="latest-title">
 			<div class="wrap">
 				<header class="section-head section-head--row">
-					<h2 id="latest-title" class="section-title"><?php esc_html_e( 'From the blog', 'aquariende' ); ?></h2>
+					<h2 id="latest-title" class="section-title"><?php esc_html_e( 'Our blogs', 'aquariende' ); ?></h2>
 					<a class="link-arrow" href="<?php echo esc_url( aquariende_page_url( 'blog' ) ); ?>"><?php esc_html_e( 'All posts', 'aquariende' ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
 				</header>
 				<div class="post-grid">

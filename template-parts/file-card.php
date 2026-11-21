@@ -51,11 +51,10 @@ foreach ( $aq_stages as $aq_i => $aq_s ) {
 		<g class="fc-body">
 			<path class="fc-folder" d="M16 26V10A10 10 0 0 1 26 0h148a10 10 0 0 1 8.7 5L194 26Z"/>
 			<rect class="fc-folder" x="0" y="18" width="440" height="326" rx="18"/>
-			<text class="fc-tab" x="32" y="16"><?php esc_html_e( 'FILE · SADIA R.', 'aquariende' ); ?></text>
+			<text class="fc-tab" x="32" y="16"><?php esc_html_e( 'YOUR FILE', 'aquariende' ); ?></text>
 			<rect class="fc-sheet" x="12" y="34" width="416" height="298" rx="12"/>
 
 			<text class="fc-meta" x="38" y="60"><?php esc_html_e( 'Aquariende portal', 'aquariende' ); ?></text>
-			<text class="fc-meta" x="402" y="60" text-anchor="end"><?php esc_html_e( 'Ref. AQ-0142', 'aquariende' ); ?></text>
 
 			<?php
 			foreach ( array( 38, 164, 290 ) as $aq_i => $aq_x ) :
@@ -95,11 +94,10 @@ foreach ( $aq_stages as $aq_i => $aq_s ) {
 		<g class="fc-foot">
 			<line class="fc-rule" x1="38" y1="282" x2="402" y2="282"/>
 			<circle class="fc-due-dot" cx="43" cy="304" r="4"/>
-			<text class="fc-due" x="54" y="308"><?php esc_html_e( 'Next deadline · 15 Jan', 'aquariende' ); ?></text>
-			<text class="fc-meta" x="402" y="308" text-anchor="end"><?php esc_html_e( 'Updated today', 'aquariende' ); ?></text>
+			<text class="fc-due" x="54" y="308"><?php esc_html_e( 'Track your application in real time', 'aquariende' ); ?></text>
 		</g>
 	</svg>
 	<?php if ( $aq_cap ) : ?>
-		<figcaption class="file-caption"><?php esc_html_e( 'Illustration of the student portal. Paying clients see their own file like this.', 'aquariende' ); ?></figcaption>
+		<figcaption class="file-caption"><?php esc_html_e( 'Illustration of the student portal, where you can track your admission process.', 'aquariende' ); ?></figcaption>
 	<?php endif; ?>
 </figure>

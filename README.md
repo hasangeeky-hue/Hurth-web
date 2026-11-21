@@ -40,7 +40,9 @@ What the site does, and deliberately does not do:
 | `assets/js/main.js` | Vanilla JS: header state, menu, GSAP hero and pinned scene, scroll reveals, sticky bar, form |
 | `assets/img/` | Logo mark (transparent PNG + WebP), full logo for schema, five team portraits cropped 4:5 (WebP + JPEG) |
 | `assets/img/source/` | Original images from the 2023 backup, see `MANIFEST.md` |
-| `content/posts/` | The three blog posts from the old site, edited, ready to paste into WordPress |
+| `inc/content-installer.php` | Installs pages, posts, menus and reading settings from the theme itself; admin screen Appearance → Aquariende content |
+| `inc/content/` | `pages.php`, `posts.php`, `menus.php`: the content the installer puts in, all from the 2022-23 site |
+| `content/posts/` | The three original 2022 posts (lightly cleaned); the installer reads them from here |
 | `SITE-STRUCTURE.md`, `BRAND-FACTS.md` | Research notes on the old site and the facts the copy is allowed to use |
 | `tools/` | The backup extractor used for that research |
 
@@ -114,43 +116,31 @@ on the server. Edit here, push, deploy. The theme purges known page caches
 (LiteSpeed, WP Rocket, W3TC, WP Super Cache, object cache) when its version
 number changes, so bump `Version` in `style.css` with each release.
 
-## WP Admin setup checklist (owner)
+## Content installer (no manual setup)
 
-1. **Settings → General:** Site title `Aquariende`; set **Administration
-   email** to the inbox that should receive call-back requests (for example
-   `info@aquariende.com`). Make sure the site can send email (an SMTP plugin
-   or the host's mail).
-2. **Pages → Add new** (titles and slugs matter for the default menu):
+The theme installs the site content itself. Nothing has to be typed into WordPress.
 
-   | Title | Slug | Template (Page → Template) |
-   |---|---|---|
-   | Home | `home` | Default |
-   | Services | `services` | Services |
-   | About | `about` | About |
-   | Blog | `blog` | Default (leave empty) |
-   | Contact | `contact` | Contact |
+- **When:** on theme activation; on the next admin page load by an administrator after a deploy that raised
+  `AQUARIENDE_CONTENT_VERSION` (in `inc/content-installer.php`); after a Deployer for Git install; or via
+  **Appearance → Aquariende content → Run installer again**.
+- **What:** pages Home, Services, About, Contact, Blog, Privacy Policy, Terms and Condition, Refund and Returns,
+  Cancellation; the three 2022 posts with their original dates (categories Process, Documents); menus
+  "Primary" and "Legal" in their locations; static front page = Home, posts page = Blog, privacy page;
+  site title "Aquariende", tagline "Consulting"; permalinks `/%postname%/`. The admin email is never changed.
+- **Safe to repeat:** every item carries the meta `_aquariende_content_key` and is found by it, so nothing is
+  duplicated. Existing items are only rewritten when the version rises, and never if they were edited in
+  WordPress since they were installed. Items in the trash are left alone. A log (last 50 lines) is on the
+  admin screen.
+- **Old content:** "Move Friends Mobile content to trash" (with a confirm step) moves every page and post
+  without the key to the trash (restorable) and removes old menus from the theme locations (menus have no
+  trash in WordPress, so they are kept). Then the installer pages get their clean slugs (for example
+  `/services/` instead of `/services-2/`).
+- **Changing content:** edit `inc/content/*.php` or `content/posts/*.html`, raise `AQUARIENDE_CONTENT_VERSION`,
+  push and deploy.
 
-   Legal pages, default template: `privacy-policy`, `terms-and-condition`,
-   `refund_returns`, `cancellation`.
-3. **Settings → Reading:** "Your homepage displays" → A static page;
-   Homepage = **Home**, Posts page = **Blog**.
-4. **Settings → Permalinks:** Post name.
-5. **Appearance → Menus:**
-   - Menu "Primary" with Services, About, Blog, Contact → location **Primary
-     menu**.
-   - Menu "Legal" with the four legal pages → location **Footer menu (legal
-     pages)**.
-   (Without menus the theme falls back to the same links.)
-6. **Posts:** create categories Process, Documents, Visa, and paste the three
-   posts from `content/posts/` (each file starts with its title, slug and
-   category).
-7. **wp-config.php:** add the constants above if you need them (Facebook group
-   URL, address, webhook, portal URL).
-8. **Rank Math** works as is: the theme keeps `wp_head`/`wp_footer` intact,
-   prints its own meta description only when no SEO plugin is active, and
-   skips its Organization schema when Rank Math is active.
-9. Remove or deactivate old plugins that are no longer needed: WooCommerce and
-   its add-ons, Elementor, Ultimate Member, ACF Frontend Forms, Click to Chat.
+Still to do by hand: set **Settings → General → Administration email** to the inbox for call-back requests,
+make sure the site can send email, add the `wp-config.php` constants you need, and remove old plugins
+(WooCommerce and add-ons, Elementor, Ultimate Member, ACF Frontend Forms, Click to Chat).
 
 ## Legal pages: the owner must fix the text
 
@@ -169,11 +159,9 @@ number changes, so bump `Version` in `style.css` with each release.
 - **Facts to confirm before launch:** the 50,000-member figure dates from
   2022–23; the five team members, roles and universities are from the 2023
   site (they were students then); each person should agree to be shown.
-- **Not included lists** say third-party fees (uni-assist, universities,
-  embassy, blocked account) are not part of the packages. That is the usual
-  arrangement; confirm it matches how Aquariende charges.
-- **The file illustration** uses an invented example ("Sadia R.", ref
-  AQ-0142, a deadline of 15 Jan) and is captioned as an illustration.
+- **Not from the old site:** the WhatsApp/portal flow (pay the consultation fee, portal link by email,
+  upload and book in the portal, nothing paid on this website) follows the owner's 2026 instructions,
+  not the 2022 text. The file illustration shows generic labels only.
 - **Email delivery** depends on the server. If `wp_mail` fails and no webhook
   is set, the visitor is told to use WhatsApp instead.
 - **Bengali:** all strings go through the `aquariende` text domain, and IBM

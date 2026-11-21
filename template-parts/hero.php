@@ -11,12 +11,12 @@
 		<div class="hero-copy">
 			<h1 id="hero-title" class="hero-title">
 				<?php
-				/* translators: %s: highlighted phrase "always visible." */
-				$aq_h1 = sprintf( esc_html__( 'Your study-in-Germany file, %s', 'aquariende' ), '<span class="hl-mark">' . esc_html__( 'always visible.', 'aquariende' ) . '</span>' );
+				/* translators: %s: highlighted phrase "to fulfill your dream!" */
+				$aq_h1 = sprintf( esc_html__( 'We\'re always here %s', 'aquariende' ), '<span class="hl-mark">' . esc_html__( 'to fulfill your dream!', 'aquariende' ) . '</span>' );
 				echo $aq_h1; // phpcs:ignore WordPress.Security.EscapeOutput -- both parts escaped above.
 				?>
 			</h1>
-			<p class="hero-lede"><?php esc_html_e( 'Since 2020 we have taken students from Bangladesh through the profile check, the university application and the visa, one clear stage at a time, entirely online. Every step of your file sits in a portal you can open whenever you like.', 'aquariende' ); ?></p>
+			<p class="hero-lede"><?php esc_html_e( 'Aquariende is an online based higher education consulting platform that enables you to process your university admission and visa in a manner that is simple and transparent.', 'aquariende' ); ?></p>
 			<div class="hero-actions">
 				<a class="btn btn-primary btn-lg" href="<?php echo esc_url( aquariende_whatsapp_url() ); ?>" target="_blank" rel="noopener">
 					<?php echo aquariende_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>

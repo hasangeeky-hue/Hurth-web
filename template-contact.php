@@ -18,8 +18,8 @@ get_header();
 			null,
 			array(
 				'eyebrow' => __( 'Contact', 'aquariende' ),
-				'title'   => __( 'Talk to a person on WhatsApp.', 'aquariende' ),
-				'lede'    => __( 'Every conversation starts on WhatsApp. Write in English or Bengali; a consultant replies.', 'aquariende' ),
+				'title'   => __( 'Contact us', 'aquariende' ),
+				'lede'    => __( "We're open for any suggestion or just to have a chat.", 'aquariende' ),
 			)
 		);
 		?>
@@ -34,7 +34,7 @@ get_header();
 							<?php echo aquariende_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 							<span><?php esc_html_e( 'Message us on WhatsApp', 'aquariende' ); ?></span>
 						</a>
-						<p class="contact-small"><?php esc_html_e( 'This is a German number. WhatsApp messages to it cost the same as any other WhatsApp message.', 'aquariende' ); ?></p>
+						<p class="contact-small"><?php esc_html_e( 'This is a German WhatsApp number. Within 24 hours our team will call you directly from Germany.', 'aquariende' ); ?></p>
 					</div>
 
 					<ul class="contact-list">

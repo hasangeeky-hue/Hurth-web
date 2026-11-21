@@ -2,7 +2,8 @@
 /**
  * Template Name: Services
  *
- * The three packages in detail, the start flow and the FAQ. No prices.
+ * The three packages in detail and the FAQ. No prices. Copy from the 2022
+ * "Service" and "Home" pages and the three 2022 posts.
  *
  * @package Aquariende
  */
@@ -13,45 +14,46 @@ $aq_stages = aquariende_stages();
 
 $aq_details = array(
 	'profile'     => array(
-		__( 'Are you eligible for a German university? When is the best time to apply? Most students start with questions like these and no clear answers. The profile check answers them before you spend money on applications.', 'aquariende' ),
-		__( 'Once you have your portal link, you upload your documents there and book a 30-minute video consultation. We go through each document, check your CV, and tell you which next steps make sense and which subjects and universities fit what you studied before.', 'aquariende' ),
+		__( 'Do you have many questions in your mind about whether you are eligible for a German university application or not? When is the best time to apply to a German university? There are lots of questions in your mind and you don\'t know the exact answers. We are here to solve your problems.', 'aquariende' ),
+		__( 'Under our mandatory profile check service, you upload all your documents and book an appointment to talk with our experts. We will analyze each of your documents and advise you which steps would be better for your applications.', 'aquariende' ),
+		__( 'We have an expert team with versatile experience in German university admission and visa processing. You don\'t need to be confused about your higher studies journey: we are here to help with the right information and the right procedure.', 'aquariende' ),
 	),
 	'application' => array(
-		__( 'Applying to a German university looks easy. Applying at random rarely leads anywhere sustainable, even when an offer letter arrives. Look before you leap: plan the subject and the university first.', 'aquariende' ),
-		__( 'We find the right subject and university for your profile, write a CV and a motivation letter that fit your interests and experience, and calculate your grade precisely for the VPD. We also arrange notary support and send your documents to Germany by DHL.', 'aquariende' ),
-		__( 'You get four video consultations. We work through each application step in front of you, and you can follow your whole application in your portal in real time.', 'aquariende' ),
+		__( 'Application to a German university seems easy, but it is not so easy if you do not have a structured plan. By applying randomly you may get an offer letter, but it is not going to be sustainable in the long term. Our advice is “look before you leap”: it is better to think first than to go ahead without a sustainable plan.', 'aquariende' ),
+		__( 'We have a team of experts. We are going to find the right subject and the right university for you according to your profile. Our expert team will make your CV and write your motivation letter aligned with your interests and experience. We also calculate your grade very precisely for the VPD. In addition, we will arrange your notary and send your documents to Germany (DHL).', 'aquariende' ),
+		__( 'Under this service, you will have 4 video consultations with our expert. We process every application step in front of you, so you can monitor your application process directly. There is no hide-and-seek: we do all the application procedures in a very transparent way, and you can track your whole application process in real time.', 'aquariende' ),
 	),
 	'visa'        => array(
-		__( 'No one can guarantee a visa. The German embassy follows a strict procedure, and the hard part is having every document ready on time, because the window to submit them can be short.', 'aquariende' ),
-		__( 'We help you book the visa appointment in time, fill in the visa form correctly, open a blocked account and find suitable health and travel insurance. We also help with a reasonably priced flight and with train and bus tickets once you arrive in Germany.', 'aquariende' ),
-		__( 'You get three live video consultations with a consultant who works through it with you.', 'aquariende' ),
+		__( 'Processing a visa is not so easy. No one can guarantee a visa: the visa application for the German embassy strictly follows some procedures. The main challenge is to submit every document in a timely manner.', 'aquariende' ),
+		__( 'Under the visa application process service, we will assist you to take the visa appointment in a timely manner, fill out the visa form properly, open a blocked account, find better health and travel insurance, get air tickets at a reasonable price, and manage train and bus tickets after you arrive in Germany.', 'aquariende' ),
+		__( 'In addition, you will get 3 live consultations with our expert, who will assist you directly to make it easy for you.', 'aquariende' ),
 	),
 );
 
 $aq_faq = array(
 	array(
-		__( 'How much does each package cost?', 'aquariende' ),
-		__( 'We share current prices on WhatsApp before you commit to anything. You pay per stage, and nothing is paid on this website.', 'aquariende' ),
+		__( 'Can I take only one service?', 'aquariende' ),
+		__( 'Yes. Aquariende offers you specific services. For example, if you need service until you get an offer letter, go for it; or if you need service only for a visa application, take that one.', 'aquariende' ),
 	),
 	array(
-		__( 'Can I take only one stage?', 'aquariende' ),
-		__( 'Yes. If you only need help until your offer letter, take the application stage. If you already have an offer, start with the visa stage.', 'aquariende' ),
-	),
-	array(
-		__( 'Do you guarantee admission or a visa?', 'aquariende' ),
-		__( 'No. No one can honestly guarantee either. We make sure your profile is checked, your applications are planned and your visa documents are prepared properly.', 'aquariende' ),
+		__( 'Do you guarantee a visa?', 'aquariende' ),
+		__( 'No one can guarantee a visa. The visa application for the German embassy strictly follows some procedures. We will help you prepare your visa documentation properly.', 'aquariende' ),
 	),
 	array(
 		__( 'Why start with a profile check?', 'aquariende' ),
-		__( 'Applying without knowing whether your profile fits costs money and months on applications that cannot succeed. The check tells you where you stand first.', 'aquariende' ),
+		__( 'Before submitting an application to the university, you should evaluate your qualifications to determine whether or not you have a chance of being accepted given the requirements of the German education system. Without it, you can spend money on applications and still get no offer letter.', 'aquariende' ),
 	),
 	array(
 		__( 'Is everything online?', 'aquariende' ),
-		__( 'Yes. Consultations happen by video, and your documents and progress live in your portal, so you can work with us from anywhere.', 'aquariende' ),
+		__( 'Yes. There are no iron curtains between the student and the service providers, so you can complete your admission file from anywhere in the world.', 'aquariende' ),
+	),
+	array(
+		__( 'What else do you help with?', 'aquariende' ),
+		__( 'We also assist students in processing their files for Germany, paying their tuition fees, and opening health and travel insurance policies.', 'aquariende' ),
 	),
 	array(
 		__( 'How do I get into the portal?', 'aquariende' ),
-		__( 'After you pay the consultation fee, we email you a private link. That is where you upload documents and book your consultation. There is no sign-up on this website.', 'aquariende' ),
+		__( 'After you pay the consultation fee, we send a link to your portal to your email address. That is where you upload your documents and book your consultation. There is no sign-up on this website.', 'aquariende' ),
 	),
 );
 ?>
@@ -64,8 +66,8 @@ $aq_faq = array(
 			null,
 			array(
 				'eyebrow' => __( 'Services', 'aquariende' ),
-				'title'   => __( 'Three stages, from profile check to visa.', 'aquariende' ),
-				'lede'    => __( 'Each stage is its own package. Start with the one you need. Your file shows every step, and prices are shared on WhatsApp.', 'aquariende' ),
+				'title'   => __( 'Our services', 'aquariende' ),
+				'lede'    => __( 'Our service starts with a profile check and ends with the visa application. You will find services according to your needs.', 'aquariende' ),
 			)
 		);
 		?>
@@ -108,7 +110,7 @@ $aq_faq = array(
 		<section class="faq section-pad" aria-labelledby="faq-title">
 			<div class="wrap faq-grid">
 				<header class="section-head">
-					<h2 id="faq-title" class="section-title"><?php esc_html_e( 'Before you message us', 'aquariende' ); ?></h2>
+					<h2 id="faq-title" class="section-title"><?php esc_html_e( 'Questions', 'aquariende' ); ?></h2>
 				</header>
 				<div class="faq-list">
 					<?php foreach ( $aq_faq as $aq_q ) : ?>

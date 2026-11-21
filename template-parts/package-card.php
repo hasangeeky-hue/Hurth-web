@@ -36,12 +36,14 @@ $aq_bare     = ! empty( $aq_args['bare'] );
 		<?php endforeach; ?>
 	</ul>
 
-	<p class="list-label"><?php esc_html_e( 'Not included', 'aquariende' ); ?></p>
-	<ul class="checklist checklist--no">
-		<?php foreach ( $aq_stage['excluded'] as $aq_item ) : ?>
-			<li><?php echo aquariende_icon( 'cross' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( $aq_item ); ?></span></li>
-		<?php endforeach; ?>
-	</ul>
+	<?php if ( ! empty( $aq_stage['excluded'] ) ) : ?>
+		<p class="list-label"><?php esc_html_e( 'Not included', 'aquariende' ); ?></p>
+		<ul class="checklist checklist--no">
+			<?php foreach ( $aq_stage['excluded'] as $aq_item ) : ?>
+				<li><?php echo aquariende_icon( 'cross' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( $aq_item ); ?></span></li>
+			<?php endforeach; ?>
+		</ul>
+	<?php endif; ?>
 
 	<div class="package-foot">
 		<a class="btn <?php echo $aq_featured ? 'btn-primary' : 'btn-outline'; ?> btn-block" href="<?php echo esc_url( aquariende_whatsapp_url( $aq_stage['wa'] ) ); ?>" target="_blank" rel="noopener">
