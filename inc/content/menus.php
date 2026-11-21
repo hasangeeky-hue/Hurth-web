@@ -1,10 +1,7 @@
 <?php
 /**
- * Menus and categories installed by the content installer.
- *
- * Menu items point at installer pages by their content key (see pages.php).
- * Labels follow the theme's navigation and the old footer links
- * ("Terms & Condition", "Privacy & Policy", "Refund & Returns", "Cancellation").
+ * Menus installed by the content installer (04 §2). Items point at content
+ * keys; 'guides' is the guide archive. Children are nested under 'children'.
  *
  * @package Aquariende
  */
@@ -19,9 +16,29 @@ return array(
 			'name'     => 'Primary',
 			'location' => 'primary',
 			'items'    => array(
-				array( 'page' => 'services', 'label' => 'Services' ),
+				array(
+					'page'     => 'study-in-germany-from-bangladesh',
+					'label'    => 'Study in Germany',
+					'children' => array(
+						array( 'page' => 'study-in-germany-from-bangladesh', 'label' => 'The steps, in order' ),
+						array( 'page' => 'guides', 'label' => 'All guides' ),
+						array( 'page' => 'glossary', 'label' => 'Glossary' ),
+						array( 'page' => 'faq', 'label' => 'FAQ' ),
+						array( 'page' => 'for-parents', 'label' => 'For parents' ),
+					),
+				),
+				array(
+					'page'     => 'services',
+					'label'    => 'Services',
+					'children' => array(
+						array( 'page' => 'services', 'label' => 'Compare the three' ),
+						array( 'page' => 'profile-check', 'label' => 'Profile check' ),
+						array( 'page' => 'university-application', 'label' => 'University application' ),
+						array( 'page' => 'visa-application', 'label' => 'Visa application' ),
+					),
+				),
+				array( 'page' => 'how-it-works', 'label' => 'How it works' ),
 				array( 'page' => 'about', 'label' => 'About' ),
-				array( 'page' => 'blog', 'label' => 'Blog' ),
 				array( 'page' => 'contact', 'label' => 'Contact' ),
 			),
 		),
@@ -36,7 +53,6 @@ return array(
 			),
 		),
 	),
-	// Only the categories the three posts use.
 	'categories' => array(
 		'process'   => 'Process',
 		'documents' => 'Documents',

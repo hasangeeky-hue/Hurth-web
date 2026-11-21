@@ -1,204 +1,121 @@
 <?php
 /**
- * Front page: hero, trust strip, how it works, packages, why, team, posts, CTA.
- *
- * The copy lives here (translatable) rather than in the editor so the layout
- * cannot drift. The static front page's own editor content is not shown.
+ * Home (04 #1): hero with the answer → VerifyStrip → JourneyMap → three
+ * services → how it works → team (consented members only) → latest guides →
+ * FAQ → the one WhatsApp action. The page's editor content is not shown.
  *
  * @package Aquariende
  */
 
 get_header();
 
-$aq_stages = aquariende_stages();
+$aq_people = aquariende_people();
+$aq_guides = aquariende_guides_in_order();
 ?>
 <main id="main" class="site-main">
 
 	<?php get_template_part( 'template-parts/hero' ); ?>
 
-	<section class="trust" aria-label="<?php esc_attr_e( 'About Aquariende in brief', 'aquariende' ); ?>">
-		<ul class="wrap trust-list">
-			<li class="trust-item">
-				<p class="trust-big"><?php esc_html_e( 'Since 2020', 'aquariende' ); ?></p>
-				<p class="trust-small"><?php esc_html_e( 'Our mission started in 2020, when COVID-19 disrupted the normal process for obtaining a visa.', 'aquariende' ); ?></p>
-			</li>
-			<li class="trust-item">
-				<p class="trust-big">
+	<?php get_template_part( 'template-parts/verify-strip' ); ?>
+
+	<section class="section-pad" aria-labelledby="journey-title">
+		<div class="wrap">
+			<header class="section-head">
+				<h2 id="journey-title" class="section-title">Six stages, in order</h2>
+				<p class="section-lede">Every student from Bangladesh goes through the same stages. Each one has official rules; our guides link them. <a href="<?php echo esc_url( aquariende_page_url( 'study-in-germany-from-bangladesh' ) ); ?>">Read the full guide to studying in Germany from Bangladesh</a>.</p>
+			</header>
+			<?php get_template_part( 'template-parts/journey-map' ); ?>
+		</div>
+	</section>
+
+	<section class="section-pad tint" aria-labelledby="services-title">
+		<div class="wrap">
+			<header class="section-head">
+				<h2 id="services-title" class="section-title">Three services. Take only the stage you need.</h2>
+				<p class="section-lede">What is included is listed below. Fees are explained on WhatsApp before you pay; nothing is paid on this website.</p>
+			</header>
+			<div class="service-cards">
+				<?php foreach ( aquariende_stages() as $aq_i => $aq_s ) : ?>
+					<article class="service-card">
+						<p class="service-num">Service <?php echo esc_html( (string) ( $aq_i + 1 ) ); ?></p>
+						<h3 class="service-card-title"><a href="<?php echo esc_url( aquariende_page_url( $aq_s['page'] ) ); ?>"><?php echo esc_html( $aq_s['name'] ); ?></a></h3>
+						<p><?php echo esc_html( $aq_s['summary'] ); ?></p>
+						<ul class="checklist">
+							<?php foreach ( $aq_s['we_do'] as $aq_item ) : ?>
+								<li><?php echo aquariende_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( $aq_item ); ?></span></li>
+							<?php endforeach; ?>
+						</ul>
+					</article>
+				<?php endforeach; ?>
+			</div>
+			<p class="section-more"><a class="link-arrow" href="<?php echo esc_url( aquariende_page_url( 'services' ) ); ?>">Compare the three services<?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></p>
+		</div>
+	</section>
+
+	<section class="section-pad" aria-labelledby="how-title">
+		<div class="wrap split">
+			<div>
+				<h2 id="how-title" class="section-title">What happens after you message us</h2>
+				<p class="section-lede">Five steps, and you decide before you pay anything. <a href="<?php echo esc_url( aquariende_page_url( 'how-it-works' ) ); ?>">How it works, in detail</a>.</p>
+				<?php get_template_part( 'template-parts/never-promised' ); ?>
+			</div>
+			<?php get_template_part( 'template-parts/what-happens-next', null, array( 'title' => 'The five steps' ) ); ?>
+		</div>
+	</section>
+
+	<?php if ( $aq_people ) : ?>
+		<section class="section-pad tint" id="team" aria-labelledby="team-title">
+			<div class="wrap">
+				<header class="section-head">
+					<h2 id="team-title" class="section-title">The team</h2>
+				</header>
+				<ul class="team-grid">
 					<?php
-					/* translators: %s: number of members. */
-					echo esc_html( sprintf( __( '%s members', 'aquariende' ), aquariende_info( 'community' ) ) );
+					foreach ( $aq_people as $aq_p ) {
+						get_template_part( 'template-parts/team-card', null, array( 'person' => $aq_p ) );
+					}
 					?>
-				</p>
-				<p class="trust-small"><?php esc_html_e( 'in our community, which started as a free Facebook group.', 'aquariende' ); ?></p>
-			</li>
-			<li class="trust-item">
-				<p class="trust-big"><?php esc_html_e( 'Team in Germany', 'aquariende' ); ?></p>
-				<p class="trust-small"><?php esc_html_e( 'Our team members study at TUM, Bremen, Potsdam, HAW Hamburg and Schmalkalden.', 'aquariende' ); ?></p>
-			</li>
-		</ul>
-	</section>
-
-	<section class="hiw" id="how" aria-labelledby="how-title">
-		<div class="wrap">
-			<header class="section-head">
-				<h2 id="how-title" class="section-title"><?php esc_html_e( 'Our service starts with a profile check and ends with the visa application.', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'You will find services according to your needs: take only the one you need.', 'aquariende' ); ?></p>
-			</header>
-
-			<div class="hiw-stage-area">
-				<div class="hiw-rail">
-					<ol class="hiw-nav" aria-label="<?php esc_attr_e( 'Stages', 'aquariende' ); ?>">
-						<?php foreach ( $aq_stages as $aq_i => $aq_s ) : ?>
-							<li><a class="hiw-nav-link<?php echo 0 === $aq_i ? ' is-active' : ''; ?>" href="#stage-<?php echo esc_attr( $aq_i + 1 ); ?>" data-go="<?php echo esc_attr( $aq_i + 1 ); ?>"><span class="hiw-nav-num"><?php echo esc_html( sprintf( '%02d', $aq_i + 1 ) ); ?></span> <span class="hiw-nav-name"><?php echo esc_html( $aq_s['name'] ); ?></span></a></li>
-						<?php endforeach; ?>
-					</ol>
-					<div class="hiw-stages">
-						<?php
-						foreach ( $aq_stages as $aq_i => $aq_s ) {
-							get_template_part(
-								'template-parts/stage',
-								null,
-								array(
-									'index' => $aq_i,
-									'stage' => $aq_s,
-								)
-							);
-						}
-						?>
-					</div>
-				</div>
-				<div class="hiw-file" aria-hidden="true">
-					<?php
-					get_template_part(
-						'template-parts/file-card',
-						null,
-						array(
-							'stage' => 1,
-							'id'    => 'hiw-file',
-							'class' => 'file-card--pinned',
-						)
-					);
-					?>
-				</div>
+				</ul>
 			</div>
-		</div>
-	</section>
+		</section>
+	<?php endif; ?>
 
-	<section class="packages" id="packages" aria-labelledby="packages-title">
-		<div class="wrap">
-			<header class="section-head">
-				<h2 id="packages-title" class="section-title"><?php esc_html_e( 'Our exclusive services', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'We provide a variety of services for getting admission in higher education institutions in Germany, ranging from university entrance to visa processing.', 'aquariende' ); ?></p>
-			</header>
-			<div class="package-grid">
-				<?php
-				foreach ( $aq_stages as $aq_i => $aq_s ) {
-					get_template_part(
-						'template-parts/package-card',
-						null,
-						array(
-							'index'    => $aq_i,
-							'stage'    => $aq_s,
-							'featured' => ( 1 === $aq_i ),
-						)
-					);
-				}
-				?>
-			</div>
-			<p class="section-more"><a class="link-arrow" href="<?php echo esc_url( aquariende_page_url( 'services' ) ); ?>"><?php esc_html_e( 'Read the full service details', 'aquariende' ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></p>
-		</div>
-	</section>
-
-	<section class="why" id="why" aria-labelledby="why-title">
-		<div class="wrap why-grid">
-			<header class="section-head">
-				<h2 id="why-title" class="section-title"><?php esc_html_e( 'Why are we the best?', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'There are a number of agencies in Bangladesh that provide counselling services to students who wish to pursue their higher education in Europe, particularly in Germany. In reality, they ask for a significant amount of money, and several students have been tricked into losing their money.', 'aquariende' ); ?></p>
-			</header>
-			<div class="table-scroll" tabindex="0" role="region" aria-label="<?php esc_attr_e( 'Comparison, scrolls sideways', 'aquariende' ); ?>">
-				<table class="compare">
-					<thead>
-						<tr>
-							<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Topic', 'aquariende' ); ?></span></th>
-							<th scope="col"><?php esc_html_e( 'Agencies', 'aquariende' ); ?></th>
-							<th scope="col" class="compare-us"><?php esc_html_e( 'Aquariende', 'aquariende' ); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'What you pay', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'Students who go to agencies usually waste 3–4 lakhs, and most of the time they get cheated.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'A convenient amount that students can afford easily.', 'aquariende' ); ?></td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'Individual service', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'They do not offer any individual service.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'Specific services: help until you get your offer letter, or help with the visa application.', 'aquariende' ); ?></td>
-						</tr>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'Transparency', 'aquariende' ); ?></th>
-							<td><?php esc_html_e( 'Several students were tricked and lost their money.', 'aquariende' ); ?></td>
-							<td class="compare-us"><?php esc_html_e( 'You track and monitor your admission activities directly. There are no iron curtains between you and us.', 'aquariende' ); ?></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</section>
-
-	<section class="team" id="team" aria-labelledby="team-title">
-		<div class="wrap">
-			<header class="section-head">
-				<h2 id="team-title" class="section-title"><?php esc_html_e( 'Our talented team', 'aquariende' ); ?></h2>
-				<p class="section-lede"><?php esc_html_e( 'All of our team members are students at highly regarded German institutions.', 'aquariende' ); ?></p>
-			</header>
-			<ul class="team-grid">
-				<?php
-				foreach ( aquariende_team() as $aq_i => $aq_m ) {
-					get_template_part(
-						'template-parts/team-card',
-						null,
-						array(
-							'member' => $aq_m,
-							'index'  => $aq_i,
-						)
-					);
-				}
-				?>
-			</ul>
-		</div>
-	</section>
-
-	<?php
-	$aq_posts = new WP_Query(
-		array(
-			'posts_per_page'      => 3,
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		)
-	);
-	if ( $aq_posts->have_posts() ) :
-		?>
-		<section class="latest" aria-labelledby="latest-title">
+	<?php if ( $aq_guides ) : ?>
+		<section class="section-pad" aria-labelledby="guides-title">
 			<div class="wrap">
 				<header class="section-head section-head--row">
-					<h2 id="latest-title" class="section-title"><?php esc_html_e( 'Our blogs', 'aquariende' ); ?></h2>
-					<a class="link-arrow" href="<?php echo esc_url( aquariende_page_url( 'blog' ) ); ?>"><?php esc_html_e( 'All posts', 'aquariende' ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
+					<h2 id="guides-title" class="section-title">Guides with official sources</h2>
+					<a class="link-arrow" href="<?php echo esc_url( aquariende_page_url( 'guides' ) ); ?>">All guides<?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
 				</header>
-				<div class="post-grid">
+				<div class="guide-grid">
 					<?php
-					while ( $aq_posts->have_posts() ) {
-						$aq_posts->the_post();
-						get_template_part( 'template-parts/post-card' );
+					// The three questions asked most often in both languages (02 A1): visa, money, costs.
+					$aq_shown = 0;
+					foreach ( array( 'guide-visa', 'guide-blocked', 'guide-cost' ) as $aq_key ) {
+						$aq_id = aquariende_content_id( $aq_key );
+						if ( $aq_id ) {
+							get_template_part( 'template-parts/guide-card', null, array( 'post' => get_post( $aq_id ) ) );
+							++$aq_shown;
+						}
 					}
-					wp_reset_postdata();
+					if ( ! $aq_shown ) {
+						foreach ( array_slice( $aq_guides, 0, 3 ) as $aq_g ) {
+							get_template_part( 'template-parts/guide-card', null, array( 'post' => $aq_g ) );
+						}
+					}
 					?>
 				</div>
 			</div>
 		</section>
 	<?php endif; ?>
 
-	<?php get_template_part( 'template-parts/cta' ); ?>
+	<section class="section-pad tint">
+		<div class="wrap narrow">
+			<?php get_template_part( 'template-parts/faq', null, array( 'key' => 'home' ) ); ?>
+		</div>
+	</section>
+
+	<?php get_template_part( 'template-parts/wa-cta', null, array( 'title' => 'Start with one message', 'steps' => false ) ); ?>
 
 </main>
 <?php

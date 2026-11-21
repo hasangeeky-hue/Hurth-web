@@ -1,19 +1,19 @@
 <?php
 /**
- * Pages installed by the content installer.
+ * Pages installed by the content installer (version 2).
  *
- * Every text below comes from the 2022-23 aquariende.com site
- * (aquariende-site-content.md), cleaned only as the owner allowed: spelling
- * and grammar, duplicated lines, prices, "Buy Now", Lorem Ipsum, the
- * Bangladeshi phone number and personal email addresses removed.
+ * Keys are stable: they are stored in _aquariende_content_key and must never
+ * change. The key is also the page slug. Bodies live in content/pages/*.html
+ * (the four legal pages in content/legal/*.html, unchanged since version 1:
+ * their rewrite waits for the owner and a lawyer).
  *
- * Home, Services, About and Contact are rendered by their theme templates,
- * whose copy is taken from the same old pages, so their editor content stays
- * empty. Anything the owner types there later is shown below the designed
- * sections (except on Home).
+ * 'meta' holds the answer block, the WhatsApp page code and message, the
+ * review date and an optional SEO title. 'sources' are keys of
+ * inc/content/sources.php. Every claim traces to [OLD], [BF], [PIPE],
+ * [SALES], an owner rule or an official source.
  *
- * Keys are stable: they are stored in the _aquariende_content_key meta and
- * must never change. The key is also the page slug.
+ * Pages that the briefs mark "too thin to write honestly" are not here; see
+ * strategy/NOT-BUILT.md.
  *
  * @package Aquariende
  */
@@ -22,152 +22,222 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$aq_reviewed = '2026-11-21';
+
 return array(
-	'home'                => array(
+	'home'                             => array(
 		'title'    => 'Home',
 		'template' => 'default',
 		'order'    => 0,
-		'source'   => 'Page #903 "Home" (rendered by front-page.php)',
-		'excerpt'  => 'Aquariende is an online based higher education consulting platform that enables you to process your university admission and visa in a manner that is simple and transparent.',
+		'excerpt'  => 'Study in Germany from Bangladesh, in your own name.',
 		'content'  => '',
+		'meta'     => array(
+			'_aq_answer'     => 'Aquariende is a team of Bangladeshis who study in Germany. Online, we help students from Bangladesh check their profile, apply to German universities and prepare a complete visa file, in the student\'s own name and with every step visible to them. No one can guarantee a visa, and we never take payment on this website.',
+			'_aq_wa_code'    => 'HOME',
+			'_aq_wa_message' => 'Hello Aquariende! I want to study in Germany. Where do I start?',
+		),
 	),
-	'services'            => array(
-		'title'    => 'Services',
-		'template' => 'template-services.php',
+	'study-in-germany-from-bangladesh' => array(
+		'title'    => 'Study in Germany from Bangladesh: the steps, in order',
+		'template' => 'page-pillar.php',
 		'order'    => 1,
-		'source'   => 'Page #12 "Service" (rendered by template-services.php)',
-		'old_slug' => 'service',
-		'excerpt'  => 'We provide a variety of services for getting admission in higher education institutions in Germany, ranging from university entrance to visa processing.',
-		'content'  => '',
+		'excerpt'  => 'The six stages of studying in Germany from Bangladesh, each with its official rules and links.',
+		'file'     => 'content/pages/study-in-germany-from-bangladesh.html',
+		'sources'  => array( 'E1', 'E2', 'E3', 'E4', 'E5', 'U1', 'D1', 'D2', 'D3', 'D4', 'K2', 'K3', 'X1' ),
+		'meta'     => array(
+			'_aq_answer'     => 'To study in Germany from Bangladesh you go through six stages: check your eligibility (degree recognition and grade), apply to programmes (sometimes through uni-assist), accept an offer, prove your finances, apply for the national student visa at the German Embassy Dhaka, and register after arrival. Each stage has official rules; this guide links them.',
+			'_aq_seo_title'  => 'Study in Germany from Bangladesh: the steps',
+			'_aq_wa_code'    => 'PILLAR',
+			'_aq_wa_message' => 'Hello Aquariende! I read your guide on studying in Germany. Can you check my profile?',
+			'_aq_reviewed'   => $aq_reviewed,
+		),
 	),
-	'about'               => array(
-		'title'    => 'About',
-		'template' => 'template-about.php',
+	'services'                         => array(
+		'title'    => 'Our three services, in the order you need them',
+		'template' => 'template-services.php',
 		'order'    => 2,
-		'source'   => 'Page #10 "About Us" (rendered by template-about.php)',
-		'old_slug' => 'about-us',
-		'excerpt'  => 'Aquariende is an online-based higher studies consultancy firm in Bangladesh. We provide solutions for studying in German universities, including obtaining German visas.',
-		'content'  => '',
+		'excerpt'  => 'Profile check, university application and visa application: what each includes and what is never promised.',
+		'file'     => 'content/pages/services.html',
+		'meta'     => array(
+			'_aq_answer'     => 'We offer three services, in the order students need them: a profile check (a video consultation and written assessment), university application support, and visa application support. You can take only the stage you need. Fees are explained on WhatsApp before you pay; nothing is paid on this website.',
+			'_aq_seo_title'  => 'Services: profile check, applications, visa',
+			'_aq_wa_code'    => 'SERVICES',
+			'_aq_wa_message' => 'Hello Aquariende! Which of your services do I need?',
+		),
 	),
-	'contact'             => array(
-		'title'    => 'Contact',
-		'template' => 'template-contact.php',
+	'profile-check'                    => array(
+		'title'    => 'Profile check: a written answer on your chances before you spend on applications',
+		'parent'   => 'services',
+		'template' => 'template-service.php',
 		'order'    => 3,
-		'source'   => 'Page #11 "Contact" (rendered by template-contact.php)',
-		'excerpt'  => "We're open for any suggestion or just to have a chat.",
-		'content'  => '',
+		'excerpt'  => 'A video consultation and a written report rating six areas of your profile.',
+		'file'     => 'content/pages/profile-check.html',
+		'meta'     => array(
+			'_aq_answer'     => 'The profile check is the first step: you upload your documents in your portal, a consultant who studies in Germany reviews them, and in a video consultation you get an honest view of your chances. Afterwards you receive a written report rating six areas (grades, English, subject fit, study gap, finances and documents) with what to fix.',
+			'_aq_seo_title'  => 'Profile check before applying to Germany',
+			'_aq_wa_code'    => 'S-PROFILE',
+			'_aq_wa_message' => 'Hello Aquariende! I want a profile check.',
+		),
 	),
-	'blog'                => array(
-		'title'    => 'Blog',
-		'template' => 'default',
+	'university-application'           => array(
+		'title'    => 'University application: we prepare it with you, you approve every step',
+		'parent'   => 'services',
+		'template' => 'template-service.php',
 		'order'    => 4,
-		'source'   => 'Posts page (page #26, slug blog, on the old site)',
-		'excerpt'  => '',
-		'content'  => '',
+		'excerpt'  => 'Shortlist, CV, motivation letters, uni-assist and VPD: prepared with you, submitted after your approval.',
+		'file'     => 'content/pages/university-application.html',
+		'sources'  => array( 'U1' ),
+		'meta'     => array(
+			'_aq_answer'     => 'In the university application service we build your shortlist with you, create your uni-assist and university accounts in your own email, start your VPD early, write your CV and motivation letters from your own story, and submit each application only after you approve it. You follow every step in your portal.',
+			'_aq_seo_title'  => 'University application support for Germany',
+			'_aq_wa_code'    => 'S-APPLY',
+			'_aq_wa_message' => 'Hello Aquariende! I want help with my university applications.',
+		),
 	),
-	'privacy-policy'      => array(
+	'visa-application'                 => array(
+		'title'    => 'Visa application: a complete file against the embassy checklist',
+		'parent'   => 'services',
+		'template' => 'template-service.php',
+		'order'    => 5,
+		'excerpt'  => 'Your national student visa file, prepared with you against the German Embassy Dhaka\'s checklist. No one can guarantee a visa.',
+		'file'     => 'content/pages/visa-application.html',
+		'sources'  => array( 'E1', 'E2', 'E3', 'E4', 'E5' ),
+		'meta'     => array(
+			'_aq_answer'     => 'In the visa service we prepare your national student visa file with you against the German Embassy Dhaka\'s official checklist: blocked account or other financial proof, insurance, application form, letter of intent and supporting documents, plus a mock appointment. You register and attend yourself. No one, including us, can guarantee a visa.',
+			'_aq_seo_title'  => 'German student visa file preparation',
+			'_aq_wa_code'    => 'S-VISA',
+			'_aq_wa_message' => 'Hello Aquariende! I have an admission and need help with my visa file.',
+		),
+	),
+	'how-it-works'                     => array(
+		'title'    => 'What happens after you message us',
+		'template' => 'template-how.php',
+		'order'    => 6,
+		'excerpt'  => 'Five steps from your first WhatsApp message to your portal.',
+		'file'     => 'content/pages/how-it-works.html',
+		'meta'     => array(
+			'_aq_answer'     => 'After you message Aquariende on WhatsApp, a team member calls you from Germany within 24 hours. You decide which service you need, and only then pay the consultation fee, which is never paid on this website. Your portal link arrives by email, and in the portal you upload your documents and book your consultation.',
+			'_aq_seo_title'  => 'How it works',
+			'_aq_wa_code'    => 'HOW',
+			'_aq_wa_message' => 'Hello Aquariende! I read how it works. I would like to start.',
+		),
+	),
+	'for-parents'                      => array(
+		'title'    => 'For parents: what your child\'s study plan involves',
+		'template' => 'template-parents.php',
+		'order'    => 7,
+		'excerpt'  => 'The stages, the costs and what no one can promise, in plain words for families.',
+		'file'     => 'content/pages/for-parents.html',
+		'sources'  => array( 'E1', 'E3', 'D1', 'D2' ),
+		'meta'     => array(
+			'_aq_answer'     => 'If your child wants to study in Germany, the plan has clear official stages: checking eligibility, applying to universities, proving finances and applying for a student visa at the German Embassy Dhaka. No one, including any consultant, can guarantee a visa, and no fee to us is ever paid on a website.',
+			'_aq_seo_title'  => 'For parents',
+			'_aq_wa_code'    => 'PARENTS',
+			'_aq_wa_message' => 'Hello Aquariende! I am a parent and have questions about my child\'s plan to study in Germany.',
+		),
+	),
+	'glossary'                         => array(
+		'title'    => 'Glossary: German study and visa terms',
+		'template' => 'template-glossary.php',
+		'order'    => 8,
+		'excerpt'  => 'VPD, uni-assist, anabin, blocked account, CSP and other terms, each with an official link.',
+		'content'  => '',
+		'meta'     => array(
+			'_aq_answer'     => 'This glossary explains the German study and visa terms that students from Bangladesh meet on the way, such as VPD, uni-assist, anabin, blocked account and the Consular Services Portal. Each term has a one-sentence definition, a sentence on why it matters for your application, and a link to the official source.',
+			'_aq_wa_code'    => 'GLOSSARY',
+			'_aq_wa_message' => 'Hello Aquariende! I have a question about a term in your glossary.',
+			'_aq_reviewed'   => $aq_reviewed,
+		),
+	),
+	'faq'                              => array(
+		'title'    => 'Questions students and parents ask us',
+		'template' => 'template-faq.php',
+		'order'    => 9,
+		'excerpt'  => 'Answers about Aquariende, the profile check, applications, the visa and the portal.',
+		'content'  => '',
+		'meta'     => array(
+			'_aq_answer'     => 'These are the questions students and parents ask us about Aquariende, the profile check, university applications, the German student visa and the student portal. Each answer is short and, where a rule comes from an official body such as the German Embassy Dhaka or uni-assist, it links to that source.',
+			'_aq_seo_title'  => 'FAQ',
+			'_aq_wa_code'    => 'FAQ',
+			'_aq_wa_message' => 'Hello Aquariende! My question is not in your FAQ.',
+		),
+	),
+	'about'                            => array(
+		'title'    => 'About Aquariende',
+		'template' => 'template-about.php',
+		'order'    => 10,
+		'old_slug' => 'about-us',
+		'excerpt'  => 'A team of Bangladeshis who study in Germany, helping students online since 2020.',
+		'file'     => 'content/pages/about.html',
+		'meta'     => array(
+			'_aq_answer'     => 'Aquariende is a team of Bangladeshis who study in Germany. We help students from Bangladesh prepare their German university applications and visa file, online, in the student\'s own name, with every step visible to them. No one can guarantee a visa.',
+			'_aq_seo_title'  => 'About Aquariende',
+			'_aq_wa_code'    => 'ABOUT',
+			'_aq_wa_message' => 'Hello Aquariende! I read about you and want to know more.',
+		),
+	),
+	'contact'                          => array(
+		'title'    => 'Talk to us on WhatsApp',
+		'template' => 'template-contact.php',
+		'order'    => 11,
+		'excerpt'  => 'WhatsApp +49 1575 0129620 or info@aquariende.com. No forms, no payment on this website.',
+		'content'  => '',
+		'meta'     => array(
+			'_aq_answer'     => 'Talk to Aquariende on WhatsApp at +49 1575 0129620, a German number, in English or Bengali, or write to info@aquariende.com. A team member calls you from Germany within 24 hours. There is no form on this site, and we never ask for payment here: fees are explained on WhatsApp first.',
+			'_aq_seo_title'  => 'Contact',
+			'_aq_wa_code'    => 'CONTACT',
+			'_aq_wa_message' => 'Hello Aquariende! I want to study in Germany and would like to talk.',
+		),
+	),
+	'student-login'                    => array(
+		'title'    => 'Student login',
+		'template' => 'template-login.php',
+		'order'    => 12,
+		'excerpt'  => 'The student portal link, and how to recognise a real one.',
+		'file'     => 'content/pages/student-login.html',
+		'sources'  => array( 'E3' ),
+		'meta'     => array(
+			'_aq_answer'     => 'The Aquariende student portal is where clients upload documents, book consultations and follow their file. You receive your personal portal link by email after you pay the consultation fee; nothing is paid on this website. If you are not sure a login link is really from us, ask us on WhatsApp before you use it.',
+			'_aq_wa_code'    => 'LOGIN',
+			'_aq_wa_message' => 'Hello Aquariende! I have a question about my portal login.',
+		),
+	),
+	'blog'                             => array(
+		'title'    => 'Updates',
+		'template' => 'default',
+		'order'    => 13,
+		'excerpt'  => 'Dated notes on what changed in the rules, each with its official source.',
+		'content'  => '',
+		'meta'     => array(
+			'_aq_wa_code' => 'BLOG',
+		),
+	),
+	'privacy-policy'                   => array(
 		'title'    => 'Privacy Policy',
 		'template' => 'default',
 		'order'    => 10,
-		'source'   => 'Page #3 "Privacy Policy" (the unedited WordPress default text) plus the required notice',
 		'excerpt'  => '',
-		'content'  => '
-<p><strong>This page must be completed by Aquariende before launch.</strong></p>
-<h2>Who we are</h2>
-<p>Suggested text: Our website address is: https://aquariende.com.</p>
-<h2>Comments</h2>
-<p>Suggested text: When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor’s IP address and browser user agent string to help spam detection.</p>
-<p>An anonymized string created from your email address (also called a hash) may be provided to the Gravatar service to see if you are using it. The Gravatar service privacy policy is available here: https://automattic.com/privacy/. After approval of your comment, your profile picture is visible to the public in the context of your comment.</p>
-<h2>Media</h2>
-<p>Suggested text: If you upload images to the website, you should avoid uploading images with embedded location data (EXIF GPS) included. Visitors to the website can download and extract any location data from images on the website.</p>
-<h2>Cookies</h2>
-<p>Suggested text: If you leave a comment on our site you may opt-in to saving your name, email address and website in cookies. These are for your convenience so that you do not have to fill in your details again when you leave another comment. These cookies will last for one year.</p>
-<p>If you visit our login page, we will set a temporary cookie to determine if your browser accepts cookies. This cookie contains no personal data and is discarded when you close your browser.</p>
-<p>When you log in, we will also set up several cookies to save your login information and your screen display choices. Login cookies last for two days, and screen options cookies last for a year. If you select “Remember Me”, your login will persist for two weeks. If you log out of your account, the login cookies will be removed.</p>
-<p>If you edit or publish an article, an additional cookie will be saved in your browser. This cookie includes no personal data and simply indicates the post ID of the article you just edited. It expires after 1 day.</p>
-<h2>Embedded content from other websites</h2>
-<p>Suggested text: Articles on this site may include embedded content (e.g. videos, images, articles, etc.). Embedded content from other websites behaves in the exact same way as if the visitor has visited the other website.</p>
-<p>These websites may collect data about you, use cookies, embed additional third-party tracking, and monitor your interaction with that embedded content, including tracking your interaction with the embedded content if you have an account and are logged in to that website.</p>
-<h2>Who we share your data with</h2>
-<p>Suggested text: If you request a password reset, your IP address will be included in the reset email.</p>
-<h2>How long we retain your data</h2>
-<p>Suggested text: If you leave a comment, the comment and its metadata are retained indefinitely. This is so we can recognize and approve any follow-up comments automatically instead of holding them in a moderation queue.</p>
-<p>For users that register on our website (if any), we also store the personal information they provide in their user profile. All users can see, edit, or delete their personal information at any time (except they cannot change their username). Website administrators can also see and edit that information.</p>
-<h2>What rights you have over your data</h2>
-<p>Suggested text: If you have an account on this site, or have left comments, you can request to receive an exported file of the personal data we hold about you, including any data you have provided to us. You can also request that we erase any personal data we hold about you. This does not include any data we are obliged to keep for administrative, legal, or security purposes.</p>
-<h2>Where your data is sent</h2>
-<p>Suggested text: Visitor comments may be checked through an automated spam detection service.</p>
-',
+		'file'     => 'content/legal/privacy-policy.html',
 	),
-	'terms-and-condition' => array(
+	'terms-and-condition'              => array(
 		'title'    => 'Terms and Condition',
 		'template' => 'default',
 		'order'    => 11,
-		'source'   => 'Page #1484 "Terms And Condition" (duplicated lines removed)',
 		'excerpt'  => '',
-		'content'  => '
-<h2>Our terms and conditions</h2>
-<p>Our terms and conditions should be followed as we have stated them below.</p>
-<ul>
-<li>For processing purposes, we will keep your information for a full year. After that, it will be removed in accordance with data privacy regulations.</li>
-<li>You have agreed to give your data to us.</li>
-<li>You have an obligation to us to submit only authentic required documents to the institution.</li>
-<li>If you submit any forged or altered papers during the application process, we will not reimburse your service charge.</li>
-<li>This service requires a signed agreement for full disclosure.</li>
-<li>If we make an error processing your application, we will reimburse 75% of your money (less our service fee of 25%) within 15 days.</li>
-<li>That money will be refunded through the aamarPay payment gateway.</li>
-<li>Before refunding money, our team will scrutinize the facts and other issues.</li>
-<li>During the consultancy period, you have to give us access to your “Email, uni-assist, and university login account”.</li>
-<li>During the consultancy, the customer cannot take advice from other consultants or third parties. If the customer is involved in this kind of activity, we will not reimburse the service charge.</li>
-<li>This is a consultancy service. For the mandatory profile check, there is no refund policy; it is a one-time payment.</li>
-<li>For the application to the university service: once you get your offer letter from the university, it is non-refundable.</li>
-<li>The customer needs to sign an acknowledgment paper of receiving the services.</li>
-<li>The same applies to the visa procedure services.</li>
-<li>The customer cannot ask for a refund in the middle of the consultation, and cannot cancel the services in the middle of the consultation.</li>
-<li>Customers can only cancel from 7 days before the service start time to 7 days after.</li>
-</ul>
-',
+		'file'     => 'content/legal/terms-and-condition.html',
 	),
-	'refund_returns'      => array(
+	'refund_returns'                   => array(
 		'title'    => 'Refund and Returns',
 		'template' => 'default',
 		'order'    => 12,
-		'source'   => 'Page #485 "Refund and Returns Policy" (duplicated lines removed)',
 		'excerpt'  => '',
-		'content'  => '
-<h2>Overview</h2>
-<p>Our refund policy follows the terms and conditions we have stated.</p>
-<ul>
-<li>For processing purposes, we will keep your information for a full year. After that, it will be removed in accordance with data privacy regulations.</li>
-<li>You have agreed to give your data to us.</li>
-<li>You have an obligation to us to submit only authentic required documents to the institution.</li>
-<li>If you submit any forged or altered papers during the application process, we will not reimburse your service charge.</li>
-<li>This service requires a signed agreement for full disclosure.</li>
-<li>If we make an error processing your application, we will reimburse 75% of your money (less our service fee of 25%) within 15 days.</li>
-<li>That money will be refunded through the aamarPay payment gateway.</li>
-<li>Before refunding money, our team will scrutinize the facts and other issues.</li>
-<li>During the consultancy period, you have to give us access to your “Email, uni-assist, and university login account”.</li>
-<li>During the consultancy, the customer cannot take advice from other consultants or third parties. If the customer is involved in this kind of activity, we will not reimburse the service charge.</li>
-<li>This is a consultancy service. For the mandatory profile check, there is no refund policy; it is a one-time payment.</li>
-<li>For the application to the university service: once you get your offer letter from the university, it is non-refundable.</li>
-<li>The customer needs to sign an acknowledgment paper of receiving the services.</li>
-<li>The same applies to the visa procedure services.</li>
-<li>The customer cannot ask for a refund in the middle of the consultation, and cannot cancel the services in the middle of the consultation.</li>
-<li>Customers can only cancel from 7 days before the service start time to 7 days after.</li>
-</ul>
-',
+		'file'     => 'content/legal/refund_returns.html',
 	),
-	'cancellation'        => array(
+	'cancellation'                     => array(
 		'title'    => 'Cancellation',
 		'template' => 'default',
 		'order'    => 13,
-		'source'   => 'Page #1534 "Cancellation"',
 		'excerpt'  => '',
-		'content'  => '
-<h2>Our cancellation process</h2>
-<p>This is a consultancy service, so we have conditions regarding this issue.</p>
-<p>Please let us know 48 hours before if you do not want to take our service.</p>
-<p>You are not allowed to cancel in the middle of the consultation.</p>
-',
+		'file'     => 'content/legal/cancellation.html',
 	),
 );

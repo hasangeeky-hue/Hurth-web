@@ -1,6 +1,6 @@
 <?php
 /**
- * Not found.
+ * Not found: the JourneyMap and the guides list (06 §2).
  *
  * @package Aquariende
  */
@@ -13,20 +13,25 @@ get_header();
 		'template-parts/page-head',
 		null,
 		array(
-			'eyebrow' => __( 'Error 404', 'aquariende' ),
-			'title'   => __( 'This page is not in the file.', 'aquariende' ),
-			'lede'    => __( 'The link may be old: the site was rebuilt and some pages were removed. Try a search or one of the pages below.', 'aquariende' ),
+			'title'  => 'This page is not in the file',
+			'answer' => '',
+			'lede'   => 'The link may be old: the site was rebuilt and some pages were removed. Start from your stage below, or search.',
 		)
 	);
 	?>
 	<section class="section-pad">
+		<div class="wrap">
+			<?php get_template_part( 'template-parts/journey-map' ); ?>
+		</div>
+	</section>
+	<section class="section-pad section-pad--top0">
 		<div class="wrap narrow">
 			<?php get_search_form(); ?>
-			<ul class="link-list">
-				<?php foreach ( aquariende_default_nav() as $aq_label => $aq_url ) : ?>
-					<li><a class="link-arrow" href="<?php echo esc_url( $aq_url ); ?>"><?php echo esc_html( $aq_label ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></li>
+			<h2 class="block-title">Guides</h2>
+			<ul class="guide-links">
+				<?php foreach ( aquariende_guides_in_order() as $aq_g ) : ?>
+					<li><a href="<?php echo esc_url( get_permalink( $aq_g ) ); ?>"><?php echo esc_html( get_the_title( $aq_g ) ); ?></a></li>
 				<?php endforeach; ?>
-				<li><a class="link-arrow" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'aquariende' ); ?><?php echo aquariende_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></li>
 			</ul>
 		</div>
 	</section>

@@ -1,14 +1,13 @@
 <?php
 /**
- * Blog posts installed by the content installer.
+ * Blog posts known to the installer.
  *
- * The three posts of the 2022 site, with their original publication dates.
- * The body text lives in content/posts/*.html (one source for the installer
- * and for anyone who wants to read it); the header comment of each file is
- * stripped before installing.
+ * Version 2 retires the three 2022 posts (04 §1, 06 §1): their claims are
+ * stale or superlative [BF]. 'status' => 'draft' moves each one to draft,
+ * unless the owner edited it; their old addresses redirect (redirects.php).
+ * Their bodies are no longer shipped: the posts are only moved to draft, never created.
  *
- * Keys are stable: they are stored in the _aquariende_content_key meta and
- * must never change.
+ * Keys are stable and must never change.
  *
  * @package Aquariende
  */
@@ -24,8 +23,7 @@ return array(
 		'old_slug' => 'personal-branding-for-consultants-be-authentic-to-get-more-clients-2',
 		'date'     => '2022-09-13 18:31:49',
 		'category' => 'process',
-		'source'   => 'Post #158 "Process till getting the offer letter"',
-		'file'     => 'content/posts/01-process-till-getting-the-offer-letter.html',
+		'status'   => 'draft',
 	),
 	'post-mandatory-documents-check' => array(
 		'title'    => 'Why a mandatory documents check?',
@@ -33,8 +31,7 @@ return array(
 		'old_slug' => 'the-7-best-crms-for-consultants',
 		'date'     => '2022-09-13 18:33:44',
 		'category' => 'documents',
-		'source'   => 'Post #159 "Why mandatory documents check?"',
-		'file'     => 'content/posts/02-why-mandatory-documents-check.html',
+		'status'   => 'draft',
 	),
 	'post-why-are-we-the-best'       => array(
 		'title'    => 'Why are we the best?',
@@ -42,7 +39,6 @@ return array(
 		'old_slug' => '6-ways-consultants-can-handle-capacity-issues-increased-demand',
 		'date'     => '2022-09-13 18:35:59',
 		'category' => 'process',
-		'source'   => 'Post #160 "Why are we the best?"',
-		'file'     => 'content/posts/03-why-are-we-the-best.html',
+		'status'   => 'draft',
 	),
 );

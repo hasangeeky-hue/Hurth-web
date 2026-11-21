@@ -1,179 +1,150 @@
-# Aquariende WordPress theme
+# Aquariende WordPress theme (v2.0.0)
 
-Standalone classic WordPress theme for **Aquariende**, the online
-study-in-Germany consultancy for students from Bangladesh. It implements the
-approved design, Concept A "The open file": the student's file laid open, with
-every step visible.
+A standalone classic WordPress theme for **Aquariende**. It holds guides and
+services for students from Bangladesh who want to study in Germany. It keeps
+Concept A, "The open file":
 
-**No page builder. No parent theme. No plugin dependencies. No shop.**
+- colours: sea ink, paper, aqua as the one action colour, the highlighter, and stamp red;
+- fonts: Bricolage Grotesque and IBM Plex Sans.
 
-What the site does, and deliberately does not do:
+Everything else was rebuilt from the strategy in `strategy/` (00–06).
 
-- The only call to action is **WhatsApp on +49 1575 0129620**, with a
-  prefilled English greeting. No other phone number appears anywhere.
-- **No prices, no WooCommerce, no cart, no "Buy now".** Prices are shared on
-  WhatsApp.
-- **No uploads, no booking and no sign-up on the public site.** The flow, as
-  the site states it: message on WhatsApp, pay the consultation fee, receive
-  your portal link by email, then upload documents and book inside the portal.
-- A small **Student login** link in the header goes to the client portal.
-- An optional **call-back form** (name and WhatsApp number only) emails the
-  site admin and can POST the lead to the ops system.
+**There is:**
 
-## Files
+- no page builder, no parent theme and no plugin dependency;
+- no shop, no prices and no forms;
+- no third-party request on page load.
 
-| File | Purpose |
+## Hard rules built into the code
+
+- **Contact.** The only contacts are WhatsApp on +49 1575 0129620 and info@aquariende.com.
+- **One action per page.** Every page has a single WhatsApp action. Its prefilled message ends in a page code, for example `… [G-BLOCKED]`, so the ERP inbox can see which page brought the lead. The header button, the inline button, the sticky phone bar and the footer link all carry the same code; their `data-wa="CODE:position"` tells them apart.
+- **No money in the text.** No price and no money amount appears anywhere. The installer **refuses** any item whose title, text, excerpt or fields contain a currency symbol or an amount, and logs a `REFUSED` line. Figures that change (blocked-account amount, fees, waiting and processing times, deadlines) are never written as text. A *VolatileFact* card links to the official page instead: `[aq_volatile topic="…"]`.
+- **No claims without a source.**
+  - No testimonials, success rates or "first/best/only" claims.
+  - "No one can guarantee a visa" is said on Home, Services, the visa pages, the footer and `llms.txt`.
+  - Every claim traces to the old site, the owner's process documents, BRAND-FACTS.md, or an official source. Official sources are listed with their URL and an "accessed" date (`inc/content/sources.php`).
+- **Removed from version 1:** the call-back form, GSAP/ScrollTrigger, the pinned scroll scene, Google Fonts, and the "Why are we the best?" table.
+
+## Structure
+
+| Path | What it is |
 |---|---|
-| `style.css` | Theme header, design tokens (CSS custom properties), every component, responsive rules (360 to 1440 px), focus rings, reduced-motion rules |
-| `functions.php` | Setup, settings constants, `aquariende_info()` (all business details in one place), stages/team/flow data, assets, fonts, meta description fallback, Organization schema, emoji removal, cache purge after deploy, call-back form handler |
-| `header.php` | Fixed header: transparent over the dark top band, paper after 80 px of scroll; nav, Student login, WhatsApp button, mobile sheet menu |
-| `footer.php` | Footer (pages, contact, legal menu) and the sticky mobile WhatsApp bar |
-| `front-page.php` | Home: hero, trust strip, pinned "How it works", packages, why Aquariende, team, latest posts, WhatsApp call to action |
-| `template-services.php` | Page template "Services": the three packages in detail, FAQ |
-| `template-about.php` | Page template "About": story, how we work, mission, team |
-| `template-contact.php` | Page template "Contact": WhatsApp, email, portal note, call-back form |
-| `page.php` | Default pages (legal pages) |
-| `single.php` | Blog post |
-| `index.php` | Blog listing, archives, search results |
-| `404.php`, `searchform.php` | Not found page, search form |
-| `template-parts/` | `hero`, `file-card` (the SVG "open file"), `stage`, `package-card`, `team-card`, `post-card`, `cta`, `callback-form`, `page-head` |
-| `assets/js/main.js` | Vanilla JS: header state, menu, GSAP hero and pinned scene, scroll reveals, sticky bar, form |
-| `assets/img/` | Logo mark (transparent PNG + WebP), full logo for schema, five team portraits cropped 4:5 (WebP + JPEG) |
-| `assets/img/source/` | Original images from the 2023 backup, see `MANIFEST.md` |
-| `inc/content-installer.php` | Installs pages, posts, menus and reading settings from the theme itself; admin screen Appearance → Aquariende content |
-| `inc/content/` | `pages.php`, `posts.php`, `menus.php`: the content the installer puts in, all from the 2022-23 site |
-| `content/posts/` | The three original 2022 posts (lightly cleaned); the installer reads them from here |
-| `SITE-STRUCTURE.md`, `BRAND-FACTS.md` | Research notes on the old site and the facts the copy is allowed to use |
-| `tools/` | The backup extractor used for that research |
+| `style.css` | Theme header (Version 2.0.0), `@font-face` (self-hosted), tokens, every component, responsive rules, reduced motion, print. About 9 KB gzipped. |
+| `functions.php` | Settings constants only; loads `inc/`. |
+| `inc/data.php` | `aquariende_info()` (all business facts), the three services, the 6-stage journey, the 5-step flow, the "we never" list, "have these ready", how we work, team seed data, and the source and volatile-fact loaders. |
+| `inc/helpers.php` | URLs by content key, WhatsApp links with page codes, icons, images, logo, breadcrumbs, the navigation walker (disclosure buttons for submenus). |
+| `inc/setup.php` | Theme supports and menus. Assets: one stylesheet, one deferred script, 2 preloaded fonts, no block CSS. Emoji and third-party hints removed. Cache purge and rewrite flush after a deploy. |
+| `inc/post-types.php` | Custom post types `aq_guide` (`/guides/…`, archive `/guides/`), `aq_term` (glossary, not public), `aq_faq` (not public) and `aq_person` (`/about/team/…`, shown only with consent). Taxonomies `aq_stage` and `aq_faq_group`. All meta fields are registered with `show_in_rest`. |
+| `inc/components.php` | Shortcodes for editable content: `[aq_volatile]`, `[aq_deadline]`, `[aq_stage_guides]`, `[aq_never]`, `[aq_next_steps]`, `[aq_have_ready]`, `[aq_service_link]`, `[aq_link key="…"]`. Content filters: glossary links on first use, "(external site)" labels, heading anchors. FAQ, related-guides and table-of-contents queries. |
+| `inc/seo.php` | Title (`… · Aquariende`), meta description (answer block), canonical without query strings, Open Graph, robots (staging noindex), robots.txt with the AI crawler allow list, core XML sitemaps, `/llms.txt` and `/llms-full.txt`, optional IndexNow. |
+| `inc/schema.php` | One JSON-LD `@graph` per page: ProfessionalService, WebSite, WebPage types, BreadcrumbList, Service (no offers), Article with citations, HowTo (How it works), DefinedTermSet (glossary), FAQPage (only on /faq/), Person (only with consent). |
+| `inc/i18n-bn.php` | The Bengali structure (`/bn/…`, hreflang pairs, `<html lang>`, language switch). Off unless `AQUARIENDE_ENABLE_BN` is true. |
+| `inc/redirects.php` + `inc/content/redirects.php` | Old URLs: 301 to their new homes, or 410 for the shop and test pages. Applied only to requests that would otherwise be a 404. |
+| `inc/content-installer.php` | The content installer (version 2). |
+| `inc/admin.php` | The "Aquariende fields" box, the guides "Next review" column, and Appearance → Aquariende content. |
+| `inc/cli.php` | `wp aquariende schema-check <url>` and `wp aquariende install`. |
+| `inc/content/*.php` | Installer data: `pages`, `guides`, `terms`, `faqs`, `menus`, `posts`, `retired`, `redirects`, `sources`, `volatile`. |
+| `content/pages/*.html`, `content/guides/*.html`, `content/legal/*.html` | Page and guide bodies. The first line is a comment naming the sources; it is stripped on install. |
+| Templates | `front-page.php`, `page-pillar.php`, `template-services.php`, `template-service.php`, `template-how.php`, `archive-aq_guide.php`, `single-aq_guide.php`, `template-glossary.php`, `template-faq.php`, `template-about.php`, `single-aq_person.php`, `template-parents.php`, `template-contact.php`, `template-login.php`, `page.php`, `single.php`, `index.php`, `404.php` (with `template-parts/gone.php` for 410). |
+| `template-parts/` | answer, page-head, breadcrumbs, journey-map, verify-strip, never-promised, what-happens-next, have-these-ready, volatile-fact, deadline-fact, source-list, review-stamp, author-box, related, toc, faq, wa-cta, guide-card, post-card, team-card, share-family, lang-switch, hero, file-card. |
+| `assets/fonts/` | WOFF2 files, with their OFL licences. Bricolage Grotesque and IBM Plex Sans (latin, variable) are preloaded. Noto Sans Bengali loads only when Bengali text appears. IBM Plex Sans Bengali is not published as a web font, so Noto Sans Bengali replaces it. |
+| `assets/img/og/` | Open Graph cards, 1200×630: default, guides, services. |
+| `strategy/` | The strategy (00–06) and `NOT-BUILT.md`. |
 
-### Where to change things
-
-- **Business details** (WhatsApp number, greeting, email, founding year,
-  community size, address): `aquariende_info()` in `functions.php`.
-- **Packages** (names, included / not included, WhatsApp messages):
-  `aquariende_stages()`.
-- **Team**: `aquariende_team()`. Replace photos in `assets/img/` with the same
-  file names (480 x 600, WebP and JPEG).
-- **The four-step flow**: `aquariende_flow()`.
-- Page copy for Home, Services, About and Contact lives in the templates as
-  translatable strings (text domain `aquariende`). Anything typed into those
-  pages in the editor is shown below the designed sections, except on Home.
-
-### Settings constants
-
-Set any of these in `wp-config.php` (above "That's all, stop editing") to
-override the defaults:
+## Settings (wp-config.php, above "That's all, stop editing")
 
 ```php
-define( 'AQUARIENDE_PORTAL_URL', 'https://ops.72-62-90-174.sslip.io/login' ); // Student login target (default shown)
-define( 'AQUARIENDE_FACEBOOK_GROUP_URL', 'https://www.facebook.com/groups/...' ); // empty (default) hides every Facebook link
-define( 'AQUARIENDE_SHOW_ADDRESS', true );   // default false: the Pabna address stays hidden
-define( 'AQUARIENDE_LEAD_WEBHOOK', 'https://ops.example/api/leads' ); // default empty: call-back requests are only emailed
+define( 'AQUARIENDE_PORTAL_URL', 'https://portal.example' ); // Student login target (default: the current ops portal)
+define( 'AQUARIENDE_NOINDEX', true );         // force noindex + disallow-all robots.txt (hosts *.hostingersite.com are always noindex)
+define( 'AQUARIENDE_ENABLE_BN', false );      // Bengali pages, hreflang and language switch
+define( 'AQUARIENDE_SAMEAS', 'https://www.facebook.com/…' ); // confirmed profiles for schema sameAs, comma separated
+define( 'AQUARIENDE_FACEBOOK_GROUP_URL', '' ); // shows the community link when set
+define( 'AQUARIENDE_SHOW_ADDRESS', false );   // Pabna address on Contact, footer and schema
+define( 'AQUARIENDE_INDEXNOW_KEY', '' );      // optional IndexNow (production only)
 ```
 
-The webhook receives a JSON POST:
-`{"source":"website","stage":"S1","name":"…","whatsapp":"+880…","page":"…","submitted_at":"…"}`.
+The header "Student login" link goes straight to `AQUARIENDE_PORTAL_URL`. The
+`/student-login/` page explains how to recognise the real portal link. Old
+`/login/`, `/my-account/` and similar URLs redirect to it.
 
-## Motion
+## How content is stored and edited
 
-Exactly the storyboard from the plan:
+- **Where it lives.** Pages, guides, glossary terms and FAQ items are ordinary WordPress content, created by the installer.
+- **Editing.** Edit them in WordPress like any other post. Each item has an **"Aquariende fields"** box for its answer block (with a live 40–60 word count), sources (one per line: `Publisher | Title | URL | accessed YYYY-MM-DD`), review dates, WhatsApp page code and message, and related guides.
+- **Owner edits are safe.** Every installed item carries `_aquariende_content_key`, a text hash and a field hash. Once you edit an item, later theme versions **never** overwrite it. The log says "Kept … as it is".
+- **FAQ items** are stored once. "Show on" lists the content keys (for example `home, guide-visa, faq`) where the question appears. Only `/faq/` prints FAQPage schema.
+- **Glossary terms** link automatically: the first time a term or one of its aliases appears in a guide, it links to `/glossary/#slug`.
+- **Team members** (Team in the admin menu) appear nowhere — no card, no page, no author line, no schema — until **consent** is ticked and the entry is published.
+- **Appearance → Aquariende content** shows:
+  - installer status and indexing mode;
+  - **guides due for review** (red when the next-review date has passed);
+  - quality warnings per guide (answer length, sources, FAQ items, at least 3 inbound links, review date);
+  - missing consent;
+  - a button to move the previous site's content to the trash (with a confirmation step);
+  - the log.
 
-- **Hero:** the file card fades up (400 ms), the stamp scales 1.3 to 1
-  (300 ms), the three rows slide in with a 90 ms stagger. About 1.2 s,
-  `power3.out`.
-- **How it works:** on screens at least 1024 x 600, the section pins for three
-  viewport heights (scrub 0.6). Stage text crossfades (300 ms), the file ticks
-  the matching row (200 ms), the highlighter sweeps under the stage name.
-  Clicking a stage name jumps to its scroll position. Below that size it is
-  three stacked blocks, each with its own small file, fading in at 20 % in
-  view.
-- **Packages:** checklist ticks fade in once, 60 ms stagger. **Team:** photos
-  fade in at 30 % in view, 60 ms stagger. Everything else is CSS hover only.
-- **Sticky WhatsApp bar** (phones only): slides up after the top band leaves
-  the screen, hides while the call to action, form or footer is on screen.
+### How to add a guide
 
-GSAP 3.12.5 loads from cdnjs **on the front page only**, deferred.
-ScrollTrigger is fetched by `main.js` only when the screen is at least
-1024 x 600 (the pin), so phones never download it. All motion is off under `prefers-reduced-motion`, with `?motion=off`
-in the URL (useful for checking), or if GSAP fails to load. The CSS always
-holds the final state, so nothing stays hidden without JavaScript.
+1. **Write the guide.** Create `content/guides/<slug>.html`. The first line is a comment naming the source keys. Use the shortcodes `[aq_volatile topic="…"]` and `[aq_deadline topic="…"]`, and never write a figure that changes.
+2. **Register any new source.** Add it to `inc/content/sources.php` (publisher, title, URL, the date you opened it). Add a new changing figure to `inc/content/volatile.php`.
+3. **Add the guide's entry** to `inc/content/guides.php`:
+   - title and slug;
+   - `stage` (eligibility, applications, offer, money, visa or arrival);
+   - `priority`, `service` and `sources`;
+   - `related` (other guide keys);
+   - `meta`: question, a 40–60 word answer, SEO title, WhatsApp code `G-…` and message, `_aq_reviewed`, `_aq_next_review`.
+4. **Add 3–6 FAQ items** to `inc/content/faqs.php` with `pages` including the new key.
+5. **Link the guide from at least two other pages,** for example with `[aq_link key="guide-…"]…[/aq_link]`.
+6. **Raise the version and deploy.** Raise `AQUARIENDE_CONTENT_VERSION` in `inc/content-installer.php`, bump `Version` in `style.css`, then commit, push and deploy. The next admin page load installs the guide.
+
+You can also add a guide directly in WordPress (Guides → Add new). Fill in
+"Aquariende fields" and choose a journey stage.
+
+## Upgrading staging from version 1 (what happens on deploy)
+
+1. Deployer for Git replaces the theme files. The new theme version purges known page caches and flushes rewrite rules.
+2. The next admin page load by an administrator runs installer version 2 (or Appearance → Aquariende content → Run installer again). It:
+   - creates the new pages (pillar, 3 service pages, How it works, For parents, Glossary, FAQ, Student login), 9 guides, 14 glossary terms, 45 FAQ items, and 5 draft team records without consent;
+   - updates the version 1 pages nobody edited (Home, Services, About, Blog → "Updates"). Edited ones are kept;
+   - leaves the four legal pages as they are;
+   - sets the three 2022 posts to draft (unless edited); their old URLs redirect;
+   - rebuilds the Primary menu with the two dropdowns (unless it was edited), sets the tagline, and flushes permalinks.
+3. Pages listed in `inc/content/retired.php` are moved to the trash, but only if they carry the installer key and were not edited. Version 2 lists none.
 
 ## Deploying
 
-**WP Admin → Deployer for Git → Deploy Theme**
+**WP Admin → Deployer for Git → Deploy Theme**, provider GitHub, repository
+`https://github.com/hasangeeky-hue/Hurth-web` (no `.git` suffix), branch
+`main`. It installs to `wp-content/themes/Hurth-web/`.
 
-| Field | Value |
-|---|---|
-| Provider | GitHub |
-| Repository URL | `https://github.com/hasangeeky-hue/Hurth-web` (no `.git` suffix; the plugin rejects it) |
-| Branch | `main` |
+Never edit theme files on the server. Edit here, push, deploy. Bump `Version`
+in `style.css` with each release, and `AQUARIENDE_CONTENT_VERSION` whenever
+anything in `inc/content/` or `content/` changes.
 
-It installs to `wp-content/themes/Hurth-web/`. Then activate **Aquariende**
-under Appearance → Themes.
+**Staging** (any `*.hostingersite.com` host, or `AQUARIENDE_NOINDEX`) sends:
 
-The installer replaces that folder on every deploy, so never edit theme files
-on the server. Edit here, push, deploy. The theme purges known page caches
-(LiteSpeed, WP Rocket, W3TC, WP Super Cache, object cache) when its version
-number changes, so bump `Version` in `style.css` with each release.
+- `noindex,nofollow` as a meta tag and an `X-Robots-Tag` header;
+- a disallow-all `robots.txt`.
 
-## Content installer (no manual setup)
+**Production** allows crawling, with explicit allow lines for Googlebot,
+Bingbot, Google-Extended, OAI-SearchBot, ChatGPT-User, GPTBot, PerplexityBot,
+ClaudeBot, Claude-User and others. It serves `/llms.txt`, `/llms-full.txt` and
+`/wp-sitemap.xml`, the sitemap listing pages, posts, guides and consented team
+members.
 
-The theme installs the site content itself. Nothing has to be typed into WordPress.
+**Launch checklist.** Use 06 §10, plus these steps:
 
-- **When:** on theme activation; on the next admin page load by an administrator after a deploy that raised
-  `AQUARIENDE_CONTENT_VERSION` (in `inc/content-installer.php`); after a Deployer for Git install; or via
-  **Appearance → Aquariende content → Run installer again**.
-- **What:** pages Home, Services, About, Contact, Blog, Privacy Policy, Terms and Condition, Refund and Returns,
-  Cancellation; the three 2022 posts with their original dates (categories Process, Documents); menus
-  "Primary" and "Legal" in their locations; static front page = Home, posts page = Blog, privacy page;
-  site title "Aquariende", tagline "Consulting"; permalinks `/%postname%/`. The admin email is never changed.
-- **Safe to repeat:** every item carries the meta `_aquariende_content_key` and is found by it, so nothing is
-  duplicated. Existing items are only rewritten when the version rises, and never if they were edited in
-  WordPress since they were installed. Items in the trash are left alone. A log (last 50 lines) is on the
-  admin screen.
-- **Old content:** "Move Friends Mobile content to trash" (with a confirm step) moves every page and post
-  without the key to the trash (restorable) and removes old menus from the theme locations (menus have no
-  trash in WordPress, so they are kept). Then the installer pages get their clean slugs (for example
-  `/services/` instead of `/services-2/`).
-- **Changing content:** edit `inc/content/*.php` or `content/posts/*.html`, raise `AQUARIENDE_CONTENT_VERSION`,
-  push and deploy.
+- remove the leftover plugins (WooCommerce and add-ons, Elementor, Ultimate Member, ACF Frontend Forms, Click to Chat);
+- run "Move the old content to the trash" once the owner agrees;
+- choose a cookieless analytics tool. `main.js` already sends `wa_click`, `email_click`, `portal_click`, `lang_switch`, `source_click` and `share_family` to `window.plausible` or `window.umami` if one is present.
 
-Still to do by hand: set **Settings → General → Administration email** to the inbox for call-back requests,
-make sure the site can send email, add the `wp-config.php` constants you need, and remove old plugins
-(WooCommerce and add-ons, Elementor, Ultimate Member, ACF Frontend Forms, Click to Chat).
-
-## Legal pages: the owner must fix the text
-
-- The **Privacy Policy** on the old site is still the WordPress default
-  "Suggested text". It needs a real policy before launch (it should mention the
-  call-back form, WhatsApp, the portal and the one-year data retention stated
-  in the terms).
-- The **Cancellation** page says 48 hours' notice; the **Terms** and **Refund**
-  pages say "7 days before the service start time to 7 days after". They
-  contradict each other. Decide which is right and make all three agree.
-- The Terms also name aamarPay as the refund gateway; check that this is still
-  true.
+If Rank Math, Yoast, AIOSEO or SEOPress is active, the theme does not print its
+own description, canonical, Open Graph or JSON-LD. Robots and staging noindex
+stay with the theme.
 
 ## Honest limits
 
-- **Facts to confirm before launch:** the 50,000-member figure dates from
-  2022–23; the five team members, roles and universities are from the 2023
-  site (they were students then); each person should agree to be shown.
-- **Not from the old site:** the WhatsApp/portal flow (pay the consultation fee, portal link by email,
-  upload and book in the portal, nothing paid on this website) follows the owner's 2026 instructions,
-  not the 2022 text. The file illustration shows generic labels only.
-- **Email delivery** depends on the server. If `wp_mail` fails and no webhook
-  is set, the visitor is told to use WhatsApp instead.
-- **Bengali:** all strings go through the `aquariende` text domain, and IBM
-  Plex Sans Bengali is loaded, but no Bengali translation ships yet. Add a
-  `languages/aquariende-bn_BD.po/.mo` (or use Loco Translate) to translate.
-- **Fonts and GSAP** load from Google Fonts and cdnjs. On Lighthouse's
-  simulated slow-4G phone, the home page's largest paint (~3 s) is the
-  headline waiting for the web font. Mobile performance on the test bench
-  ranged from about 70 to 100 between runs (the test machine itself was
-  noisy). Self-hosting the two font families (WOFF2, preloaded)
-  is the next step if a higher mobile score matters; it would also remove a
-  third-party connection.
-- The **logo** is the 2022 raster logo; only the mark is used in the header,
-  with the name set in type. A vector logo would be sharper.
-- No comments UI: posts are articles, not discussions.
+- The team section, team pages and guide author lines stay empty until consent is recorded. That is intended.
+- All official sources were opened on 21 November 2026. The visa, blocked-account, documents, costs and APS guides are due for review on 21 February 2027; the others on 21 May 2027.
+- The bench measurements (Lighthouse, schema validation) were taken on a disposable test WordPress, not on Hostinger, where TTFB depends on the page cache.
