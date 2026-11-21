@@ -336,6 +336,18 @@ function aquariende_content_admin_page() {
 				<tr><th scope="row">State</th><td><?php echo ( $installed >= AQUARIENDE_CONTENT_VERSION ) ? 'Up to date' : 'An update is waiting; it runs on the next admin page load.'; ?></td></tr>
 				<tr><th scope="row">Last run</th><td><?php echo $last_run ? esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_run ) ) : 'never'; ?></td></tr>
 				<tr><th scope="row">Indexing</th><td><?php echo aquariende_is_noindex_site() ? 'Not indexed (staging: noindex, nofollow; robots.txt disallows all)' : 'Open to search and AI crawlers'; ?></td></tr>
+				<tr><th scope="row">robots.txt file on the server</th><td>
+					<?php if ( file_exists( ABSPATH . 'robots.txt' ) ) : ?>
+						A leftover <code>robots.txt</code> file in the site folder is served instead of the rules from this theme.
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-top:8px">
+							<input type="hidden" name="action" value="aquariende_robots_file">
+							<?php wp_nonce_field( 'aquariende_robots_file' ); ?>
+							<?php submit_button( 'Rename it so the theme rules apply', 'secondary', 'submit', false ); ?>
+						</form>
+					<?php else : ?>
+						None in the site folder. WordPress serves the rules from this theme. If <code>/robots.txt</code> still shows something else, the host adds it in front of WordPress.
+					<?php endif; ?>
+				</td></tr>
 			</tbody>
 		</table>
 
@@ -468,6 +480,27 @@ function aquariende_content_handle_trash() {
 	exit;
 }
 add_action( 'admin_post_aquariende_content_trash', 'aquariende_content_handle_trash' );
+
+/**
+ * Renames a leftover robots.txt in the site folder (kept as a dated copy),
+ * so WordPress serves the rules from inc/seo.php.
+ */
+function aquariende_content_handle_robots_file() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( 'You do not have permission to do this.', 403 );
+	}
+	check_admin_referer( 'aquariende_robots_file' );
+	$file = ABSPATH . 'robots.txt';
+	$ok   = false;
+	if ( file_exists( $file ) ) {
+		$to = ABSPATH . 'robots.txt.replaced-' . gmdate( 'Ymd-His' );
+		$ok = @rename( $file, $to ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.rename_rename
+		aquariende_content_log( $ok ? 'Renamed the leftover robots.txt to ' . basename( $to ) . '.' : 'Could not rename the leftover robots.txt (file permissions).' );
+	}
+	wp_safe_redirect( aquariende_content_admin_url( array( 'aq_done' => $ok ? 'robots' : 'robots-failed' ) ) );
+	exit;
+}
+add_action( 'admin_post_aquariende_robots_file', 'aquariende_content_handle_robots_file' );
 
 function aquariende_content_admin_notice() {
 	if ( ! current_user_can( 'manage_options' ) || ! get_option( 'aquariende_content_notice' ) ) {
