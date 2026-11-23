@@ -23,8 +23,9 @@ $aq_lic    = aquariende_info( 'trade_licence' );
 		get_template_part( 'template-parts/verify-strip' );
 		?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'section-pad' ); ?>>
-			<div class="wrap narrow">
-				<div class="prose"><?php the_content(); ?></div>
+			<div class="wrap rt-two rt-two--aside">
+				<div class="rt-main prose"><?php the_content(); ?></div>
+				<?php get_template_part( 'template-parts/aside-help', null, array( 'never' => false ) ); ?>
 			</div>
 		</article>
 

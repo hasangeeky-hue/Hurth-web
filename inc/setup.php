@@ -72,8 +72,30 @@ function aquariende_head_early() {
 }
 add_action( 'wp_head', 'aquariende_head_early', 1 );
 
+/**
+ * Marks the page as scripted before it paints, so script-only states (closed picker panels,
+ * unlit stops) never flash. Without scripts the page shows everything.
+ */
+function aquariende_js_flag() {
+	echo "<script>document.documentElement.classList.add('js');</script>
+";
+}
+add_action( 'wp_head', 'aquariende_js_flag', 0 );
+
 function aquariende_assets() {
 	wp_enqueue_style( 'aquariende', get_stylesheet_uri(), array(), AQUARIENDE_VERSION );
+	// "The route": the shared colour, button and focus layer, and the home page.
+	wp_enqueue_style( 'aquariende-route', get_template_directory_uri() . '/assets/css/route.css', array( 'aquariende' ), AQUARIENDE_VERSION );
+	wp_enqueue_script(
+		'aquariende-route',
+		get_template_directory_uri() . '/assets/js/route.js',
+		array(),
+		AQUARIENDE_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 
 	wp_enqueue_script(
 		'aquariende',

@@ -31,7 +31,8 @@ usort(
 		get_template_part( 'template-parts/page-head' );
 		?>
 		<section class="section-pad">
-			<div class="wrap narrow">
+			<div class="wrap rt-two rt-two--aside">
+				<div class="rt-main">
 				<?php if ( $aq_groups ) : ?>
 					<nav class="az" aria-label="Question groups">
 						<ul>
@@ -76,6 +77,8 @@ usort(
 						?>
 					</div>
 				<?php endforeach; ?>
+				</div>
+				<?php get_template_part( 'template-parts/aside-help', null, array( 'title' => 'Your question is not here?' ) ); ?>
 			</div>
 		</section>
 	<?php endwhile; ?>

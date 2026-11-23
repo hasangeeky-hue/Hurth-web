@@ -17,7 +17,8 @@ get_header();
 		get_template_part( 'template-parts/page-head' );
 		?>
 		<section class="section-pad" aria-labelledby="steps-title">
-			<div class="wrap narrow">
+			<div class="wrap rt-two rt-two--aside">
+				<div class="rt-main">
 				<h2 id="steps-title" class="section-title">The five steps</h2>
 				<ol class="steps">
 					<?php foreach ( aquariende_flow() as $aq_i => $aq_step ) : ?>
@@ -27,7 +28,8 @@ get_header();
 						</li>
 					<?php endforeach; ?>
 				</ol>
-				<?php get_template_part( 'template-parts/never-promised' ); ?>
+				</div>
+				<?php get_template_part( 'template-parts/aside-help' ); ?>
 			</div>
 		</section>
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'section-pad tint' ); ?>>
