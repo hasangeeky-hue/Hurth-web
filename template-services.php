@@ -22,8 +22,17 @@ get_header();
 				<?php if ( '' !== trim( get_the_content() ) ) : ?>
 					<div class="prose prose--lede"><?php the_content(); ?></div>
 				<?php endif; ?>
+				<div class="compare-pick" data-compare-pick hidden>
+					<span class="compare-pick-label" id="compare-pick-label">Show</span>
+					<div class="compare-pick-set" role="group" aria-labelledby="compare-pick-label">
+						<button type="button" class="chip" data-col="" aria-pressed="true">Everything</button>
+						<button type="button" class="chip" data-col="2" aria-pressed="false">We do</button>
+						<button type="button" class="chip" data-col="3" aria-pressed="false">You do</button>
+						<button type="button" class="chip" data-col="4" aria-pressed="false">Never promised</button>
+					</div>
+				</div>
 				<div class="table-wrap">
-					<table class="compare">
+					<table class="compare" data-compare data-reveal>
 						<caption>What each service includes, what stays with you, and what is never promised</caption>
 						<thead>
 							<tr>
@@ -54,6 +63,7 @@ get_header();
 				<div class="service-cards">
 					<?php foreach ( aquariende_stages() as $aq_i => $aq_s ) : ?>
 						<article class="service-card">
+							<?php echo aquariende_art( aquariende_art_for_service( $aq_i ), 'service-card-art' ); // phpcs:ignore WordPress.Security.EscapeOutput -- fixed SVG. ?>
 							<p class="service-num">Service <?php echo esc_html( (string) ( $aq_i + 1 ) ); ?></p>
 							<h3 class="service-card-title"><a href="<?php echo esc_url( aquariende_page_url( $aq_s['page'] ) ); ?>"><?php echo esc_html( $aq_s['name'] ); ?></a></h3>
 							<p><?php echo esc_html( $aq_s['summary'] ); ?></p>

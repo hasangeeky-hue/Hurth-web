@@ -16,6 +16,10 @@ $aq_q   = (string) get_post_meta( $aq_post->ID, '_aq_question', true );
 $aq_rev = (string) get_post_meta( $aq_post->ID, '_aq_reviewed', true );
 ?>
 <article class="guide-card">
+	<?php
+	$aq_art = aquariende_art( aquariende_guide_stage( $aq_post->ID ), 'guide-card-art' );
+	echo $aq_art ? $aq_art : aquariende_art( 'route', 'guide-card-art' ); // phpcs:ignore WordPress.Security.EscapeOutput -- fixed SVG.
+	?>
 	<<?php echo $aq_tag; // phpcs:ignore WordPress.Security.EscapeOutput -- h2 or h3. ?> class="guide-card-title"><a href="<?php echo esc_url( get_permalink( $aq_post ) ); ?>"><?php echo esc_html( get_the_title( $aq_post ) ); ?></a></<?php echo $aq_tag; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<?php if ( $aq_q ) : ?>
 		<p class="guide-card-q"><?php echo esc_html( $aq_q ); ?></p>

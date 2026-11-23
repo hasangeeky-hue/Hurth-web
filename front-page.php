@@ -272,6 +272,7 @@ foreach ( (array) aquariende_faqs_for( 'home' ) as $aq_f ) {
 					<li class="rt-station" data-station>
 						<span class="rt-dot" aria-hidden="true"><?php echo esc_html( (string) $aq_n ); ?></span>
 						<div class="rt-station-main">
+							<?php echo aquariende_art( $aq_slug, 'rt-station-art' ); // phpcs:ignore WordPress.Security.EscapeOutput -- fixed SVG. ?>
 							<h3 class="rt-station-title"><a href="<?php echo esc_url( $aq_pillar . '#' . $aq_slug ); ?>"><?php echo esc_html( $aq_stage['label'] ); ?></a></h3>
 							<p><?php echo esc_html( $aq_stage['summary'] ); ?></p>
 						</div>
@@ -303,6 +304,7 @@ foreach ( (array) aquariende_faqs_for( 'home' ) as $aq_f ) {
 			<div class="rt-svc-list">
 				<?php foreach ( $aq_services as $aq_i => $aq_s ) : ?>
 					<article class="rt-svc rt-svc--<?php echo esc_attr( (string) ( $aq_i + 1 ) ); ?>">
+						<?php echo aquariende_art( aquariende_art_for_service( $aq_i ), 'rt-svc-art' ); // phpcs:ignore WordPress.Security.EscapeOutput -- fixed SVG. ?>
 						<h3 class="rt-svc-title"><a href="<?php echo esc_url( aquariende_page_url( $aq_s['page'] ) ); ?>"><?php echo esc_html( $aq_s['name'] ); ?></a></h3>
 						<?php
 						$aq_from = $aq_spans[ $aq_i ][0];

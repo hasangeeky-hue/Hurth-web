@@ -143,3 +143,48 @@
 		io.observe(document.getElementById(id));
 	});
 }());
+
+/* 5. Buttons: a press leaves a ripple where it landed. */
+(function () {
+	'use strict';
+	document.addEventListener('pointerdown', function (e) {
+		var btn = e.target.closest ? e.target.closest('.btn') : null;
+		if (!btn) {
+			return;
+		}
+		var box = btn.getBoundingClientRect();
+		var dot = document.createElement('span');
+		dot.className = 'btn-ripple';
+		dot.style.left = (e.clientX - box.left) + 'px';
+		dot.style.top = (e.clientY - box.top) + 'px';
+		btn.appendChild(dot);
+		window.setTimeout(function () {
+			dot.remove();
+		}, 600);
+	});
+}());
+
+/* 6. The comparison table: show one column at a time. */
+(function () {
+	'use strict';
+	var pick = document.querySelector('[data-compare-pick]');
+	var table = document.querySelector('[data-compare]');
+	if (!pick || !table) {
+		return;
+	}
+	pick.hidden = false;
+	var chips = Array.prototype.slice.call(pick.querySelectorAll('.chip'));
+	chips.forEach(function (chip) {
+		chip.addEventListener('click', function () {
+			var col = chip.getAttribute('data-col');
+			chips.forEach(function (c) {
+				c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+			});
+			if (col) {
+				table.setAttribute('data-focus', col);
+			} else {
+				table.removeAttribute('data-focus');
+			}
+		});
+	});
+}());

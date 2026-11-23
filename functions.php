@@ -42,6 +42,7 @@ define( 'AQUARIENDE_DIR', get_template_directory() );
 
 require_once AQUARIENDE_DIR . '/inc/data.php';
 require_once AQUARIENDE_DIR . '/inc/helpers.php';
+require_once AQUARIENDE_DIR . '/inc/art.php';
 require_once AQUARIENDE_DIR . '/inc/setup.php';
 require_once AQUARIENDE_DIR . '/inc/post-types.php';
 require_once AQUARIENDE_DIR . '/inc/components.php';
