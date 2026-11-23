@@ -99,6 +99,23 @@ function aquariende_art_shapes() {
 			. '<g class="art-float"><path d="m104 22 38 8-28 10-5 14-7-12-12-5z" fill="#fff" ' . $ink . '/></g>'
 			. '<path d="M30 164h44M170 98h44" fill="none" ' . $dim . '/>',
 
+		// Health insurance: an insurance card under a shield.
+		'health'       => '<rect x="36" y="66" width="126" height="84" rx="12" fill="#fff" ' . $ink . '/>'
+			. '<path d="M52 90h44M52 108h66M52 126h38" fill="none" ' . $dim . '/>'
+			. '<path d="M52 90h22" fill="none" stroke="#0A5FD0" stroke-width="4" stroke-linecap="round"/>'
+			. '<g class="art-float"><path d="M164 28 204 42v36c0 26-16 44-40 54-24-10-40-28-40-54V42z" fill="#0A5FD0" ' . $ink . '/>'
+			. '<path d="M164 58v40M144 78h40" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/></g>',
+
+		// Travel insurance: a suitcase with a boarding pass and a small shield.
+		'travel'       => '<rect x="40" y="62" width="104" height="88" rx="12" fill="#F59300" ' . $ink . '/>'
+			. '<path d="M72 62V46a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v16" fill="none" ' . $ink . '/>'
+			. '<path d="M64 62v88M120 62v88" fill="none" ' . $ink . '/>'
+			. '<g class="art-float"><rect x="118" y="30" width="88" height="46" rx="8" fill="#fff" ' . $ink . '/>'
+			. '<path d="M176 30v46" fill="none" stroke="#071B3A" stroke-width="3" stroke-dasharray="3 6"/>'
+			. '<path d="m132 58 26-8-10 12-2 8-4-8z" fill="#0A5FD0"/><path d="M186 46h10M186 60h10" fill="none" ' . $dim . '/></g>'
+			. '<path d="M178 96 204 106v20c0 16-10 26-26 32-16-6-26-16-26-32v-20z" fill="#0A5FD0" ' . $ink . '/>'
+			. '<path class="art-tick" d="m166 126 9 9 16-18" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>',
+
 		// The glossary: an open book.
 		'book'         => '<path d="M120 52c-22-14-52-16-80-8v94c28-8 58-6 80 8 22-14 52-16 80-8V44c-28-8-58-6-80 8z" fill="#fff" ' . $ink . '/>'
 			. '<path d="M120 52v94" fill="none" ' . $ink . '/>'

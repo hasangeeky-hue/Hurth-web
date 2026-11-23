@@ -41,6 +41,19 @@ get_header();
 				<div class="prose">
 					<?php the_content(); ?>
 					<?php get_template_part( 'template-parts/author-box', null, array( 'post_id' => $aq_id ) ); ?>
+					<?php
+					$aq_help = aquariende_help_for_guide( (string) get_post_field( 'post_name', $aq_id ) );
+					if ( $aq_help ) {
+						get_template_part(
+							'template-parts/help-topics',
+							null,
+							array(
+								'mode' => 'links',
+								'keys' => $aq_help,
+							)
+						);
+					}
+					?>
 					<?php get_template_part( 'template-parts/related', null, array( 'post_id' => $aq_id ) ); ?>
 					<?php get_template_part( 'template-parts/faq', null, array( 'key' => aquariende_key_of( $aq_id ) ) ); ?>
 					<?php get_template_part( 'template-parts/source-list', null, array( 'post_id' => $aq_id ) ); ?>

@@ -21,6 +21,8 @@ defined( 'AQUARIENDE_PORTAL_URL' ) || define( 'AQUARIENDE_PORTAL_URL', 'https://
 
 // URL of the community Facebook group. Empty hides every Facebook link.
 defined( 'AQUARIENDE_FACEBOOK_GROUP_URL' ) || define( 'AQUARIENDE_FACEBOOK_GROUP_URL', '' );
+// The company's Facebook page (the address the old site's header linked to).
+defined( 'AQUARIENDE_FACEBOOK_PAGE_URL' ) || define( 'AQUARIENDE_FACEBOOK_PAGE_URL', 'https://www.facebook.com/profile.php?id=100087787381630' );
 
 // Profiles the owner controls and has confirmed, comma separated (schema sameAs). Empty by default.
 defined( 'AQUARIENDE_SAMEAS' ) || define( 'AQUARIENDE_SAMEAS', '' );
@@ -43,6 +45,7 @@ define( 'AQUARIENDE_DIR', get_template_directory() );
 require_once AQUARIENDE_DIR . '/inc/data.php';
 require_once AQUARIENDE_DIR . '/inc/helpers.php';
 require_once AQUARIENDE_DIR . '/inc/art.php';
+require_once AQUARIENDE_DIR . '/inc/help.php';
 require_once AQUARIENDE_DIR . '/inc/setup.php';
 require_once AQUARIENDE_DIR . '/inc/post-types.php';
 require_once AQUARIENDE_DIR . '/inc/components.php';

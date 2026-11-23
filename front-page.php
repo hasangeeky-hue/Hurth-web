@@ -159,6 +159,9 @@ foreach ( (array) aquariende_faqs_for( 'home' ) as $aq_f ) {
 				<ul class="rt-facts">
 					<li>Our team members went to Germany to study at TUM, HAW Hamburg and the universities of Bremen, Potsdam and Schmalkalden.</li>
 					<li>We started in 2020 as a free Facebook group for anyone who wanted to study abroad. <a href="<?php echo esc_url( aquariende_page_url( 'about' ) ); ?>">Read our story</a></li>
+					<?php if ( aquariende_info( 'facebook_page' ) ) : ?>
+						<li><a class="rt-fb" href="<?php echo esc_url( aquariende_info( 'facebook_page' ) ); ?>" target="_blank" rel="noopener" data-ext="facebook.com"><?php echo aquariende_icon( 'facebook' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span>Follow our Facebook page<span class="screen-reader-text"> (opens Facebook)</span></span></a></li>
+					<?php endif; ?>
 				</ul>
 			</div>
 			<div class="rt-never-box">
@@ -330,6 +333,16 @@ foreach ( (array) aquariende_faqs_for( 'home' ) as $aq_f ) {
 			</div>
 		</div>
 	</section>
+
+	<section class="rt-help-band" aria-labelledby="help-title">
+		<div class="wrap">
+			<h2 id="help-title" class="rt-h2">Blocked account, insurance, visa appointment</h2>
+			<p class="rt-lede">Four things students ask us for by name. Each one shows the official rule, what we do and what stays with you.</p>
+			<?php get_template_part( 'template-parts/help-topics', null, array( 'mode' => 'cards' ) ); ?>
+		</div>
+	</section>
+
+	<?php get_template_part( 'template-parts/portal-track' ); ?>
 
 	<section class="rt-flow dark" aria-labelledby="how-title">
 		<div class="wrap">

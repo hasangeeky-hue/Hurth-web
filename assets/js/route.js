@@ -188,3 +188,64 @@
 		});
 	});
 }());
+
+/* 7. Cards answer the pointer (a small tilt and a light that follows), and groups arrive in order. */
+(function () {
+	'use strict';
+	var doc = document;
+	var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	var fine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+	// Cards that already exist on the pages join in without a change to their templates.
+	doc.querySelectorAll('.rt-svc, .guide-card, .service-card').forEach(function (el) {
+		el.setAttribute('data-tilt', '');
+	});
+	doc.querySelectorAll('.rt-svc-list, .service-cards, .guide-grid, .guide-cards').forEach(function (el) {
+		el.setAttribute('data-stagger', '');
+	});
+
+	if (fine && !reduce) {
+		doc.querySelectorAll('[data-tilt]').forEach(function (el) {
+			var max = el.tagName === 'FIGURE' ? 4 : 5;
+			el.addEventListener('pointermove', function (e) {
+				var box = el.getBoundingClientRect();
+				var x = (e.clientX - box.left) / box.width;
+				var y = (e.clientY - box.top) / box.height;
+				el.classList.add('is-tilting');
+				el.style.setProperty('--ry', ((x - 0.5) * 2 * max).toFixed(2) + 'deg');
+				el.style.setProperty('--rx', ((0.5 - y) * 2 * max).toFixed(2) + 'deg');
+				el.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+				el.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+			});
+			el.addEventListener('pointerleave', function () {
+				el.classList.remove('is-tilting');
+				el.style.setProperty('--rx', '0deg');
+				el.style.setProperty('--ry', '0deg');
+			});
+		});
+	}
+
+	var groups = doc.querySelectorAll('[data-stagger]');
+	groups.forEach(function (group) {
+		Array.prototype.forEach.call(group.children, function (child, i) {
+			child.style.setProperty('--i', i);
+		});
+	});
+	if (groups.length && 'IntersectionObserver' in window && !reduce) {
+		var io = new IntersectionObserver(function (entries) {
+			entries.forEach(function (entry) {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-seen');
+					io.unobserve(entry.target);
+				}
+			});
+		}, { threshold: 0.12 });
+		groups.forEach(function (group) {
+			io.observe(group);
+		});
+	} else {
+		groups.forEach(function (group) {
+			group.classList.add('is-seen');
+		});
+	}
+}());

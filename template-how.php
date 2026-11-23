@@ -43,6 +43,7 @@ get_header();
 			</div>
 		</section>
 	<?php endwhile; ?>
+	<?php get_template_part( 'template-parts/portal-track' ); ?>
 	<?php get_template_part( 'template-parts/wa-cta', null, array( 'title' => 'Ready for step one?', 'steps' => false ) ); ?>
 </main>
 <?php

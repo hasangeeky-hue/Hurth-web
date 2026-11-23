@@ -75,6 +75,16 @@ foreach ( aquariende_stages() as $aq_s ) {
 			</div>
 		</article>
 
+		<?php if ( $aq_stage && 'visa' === $aq_stage['key'] ) : ?>
+			<section class="section-pad" aria-labelledby="help-title">
+				<div class="wrap">
+					<h2 id="help-title" class="section-title">How we help with the blocked account, insurance and the appointment</h2>
+					<p class="prose prose--lede">Each part below shows the official rule with its source, what we do, and what stays with you.</p>
+					<?php get_template_part( 'template-parts/help-topics', null, array( 'mode' => 'full' ) ); ?>
+				</div>
+			</section>
+		<?php endif; ?>
+
 		<section class="section-pad tint">
 			<div class="wrap split">
 				<?php get_template_part( 'template-parts/what-happens-next', null, array( 'heading' => 'h2' ) ); ?>

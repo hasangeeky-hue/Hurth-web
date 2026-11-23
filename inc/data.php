@@ -40,6 +40,7 @@ function aquariende_info_all() {
 		'mission_started'      => '2020',
 		'portal_url'           => AQUARIENDE_PORTAL_URL,
 		'facebook_group'       => AQUARIENDE_FACEBOOK_GROUP_URL,
+		'facebook_page'        => AQUARIENDE_FACEBOOK_PAGE_URL,
 		// Owner must supply (00 Q8). Empty values are never shown or put in schema.
 		'legal_name'           => '',
 		'trade_licence'        => '',

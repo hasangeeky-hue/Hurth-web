@@ -199,6 +199,7 @@ function aquariende_icon( $name, $label = '' ) {
 		'clock'    => '<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 7.5V12l3 2"/>',
 		'info'     => '<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 11v5.5M12 7.6v.1"/>',
 		'cap'      => '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M6.5 11v5c1.5 1.6 3.4 2.4 5.5 2.4s4-.8 5.5-2.4v-5M21.5 9v5"/>',
+		'facebook' => '<path fill="currentColor" d="M13.5 21v-7.2h2.4l.4-3h-2.8V8.9c0-.9.3-1.4 1.5-1.4h1.4V4.8c-.3 0-1.1-.1-2.1-.1-2.2 0-3.7 1.300-3.700 3.800v2.300H8.200v3h2.400V21z"/>',
 		'share'    => '<circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="6" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="m8.2 10.8 7.6-3.6M8.2 13.2l7.6 3.6"/>',
 	);
 

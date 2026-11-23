@@ -65,6 +65,9 @@ $aq_link = function ( $key, $label ) {
 					</a>
 				</li>
 				<?php $aq_link( 'student-login', 'Student login' ); ?>
+				<?php if ( aquariende_info( 'facebook_page' ) ) : ?>
+					<li><a href="<?php echo esc_url( aquariende_info( 'facebook_page' ) ); ?>" target="_blank" rel="noopener" data-ext="facebook.com"><?php echo aquariende_icon( 'facebook' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span>Facebook page<span class="screen-reader-text"> (opens Facebook)</span></span></a></li>
+				<?php endif; ?>
 				<?php if ( aquariende_info( 'facebook_group' ) ) : ?>
 					<li><a href="<?php echo esc_url( aquariende_info( 'facebook_group' ) ); ?>" rel="noopener">Facebook community<span class="screen-reader-text"> (external site)</span></a></li>
 				<?php endif; ?>
